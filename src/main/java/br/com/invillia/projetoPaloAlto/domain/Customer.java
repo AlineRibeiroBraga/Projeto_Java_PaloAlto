@@ -3,21 +3,26 @@ package br.com.invillia.projetoPaloAlto.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@MappedSuperclass
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Customer {
 
-    @Column(name = "dat_creation", nullable = false)
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Column(name = "dat_creation", nullable = false, columnDefinition = "TIMESTAMP")
+    protected LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "dat_update")
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
 
     @Column(name = "des_name", nullable = false)
-    private String name;
+    protected String name;
 }

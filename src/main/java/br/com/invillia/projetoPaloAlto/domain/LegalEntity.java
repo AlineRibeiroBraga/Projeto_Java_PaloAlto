@@ -14,11 +14,11 @@ public class LegalEntity extends Customer{
     @Id
     @Column(name = "idt_legal_entity", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(name = "des_document", nullable = false, unique = true, length = 14)
-    private String document;
+    protected String document;
 
     @Column(name = "des_trade_name", nullable = false)
-    private String tradeName;
+    protected String tradeName;
 }
