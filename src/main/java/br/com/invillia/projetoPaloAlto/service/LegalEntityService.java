@@ -1,11 +1,11 @@
 package br.com.invillia.projetoPaloAlto.service;
 
+import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
-import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
 

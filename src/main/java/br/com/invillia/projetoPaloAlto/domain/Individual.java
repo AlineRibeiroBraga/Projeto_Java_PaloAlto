@@ -3,6 +3,8 @@ package br.com.invillia.projetoPaloAlto.domain;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
+
+import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -34,5 +36,5 @@ public class Individual extends Customer{
             joinColumns = @JoinColumn(name = "idt_individual"),
             inverseJoinColumns = @JoinColumn(name = "idt_legal_entity")
     )
-    protected List<LegalEntity> legalEntity;
+    protected List<LegalEntityDTO> legalEntity;
 }
