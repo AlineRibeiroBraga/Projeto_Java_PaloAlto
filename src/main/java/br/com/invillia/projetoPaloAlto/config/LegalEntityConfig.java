@@ -11,4 +11,5 @@ public class LegalEntityConfig {
     public Faker createFaker(){
         return Faker.instance();
     }
+
 }

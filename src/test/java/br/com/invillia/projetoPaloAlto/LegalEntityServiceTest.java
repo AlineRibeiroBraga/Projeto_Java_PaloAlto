@@ -21,10 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
-
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +74,7 @@ public class LegalEntityServiceTest {
     public void cadastroOk(){
 
         legalEntityDTO = createLegalEntityDTO();
-        when(legalEntityRepository.findByDocument(legalEntityDTO.getDocument())).thenReturn(Optional.empty());
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
         when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
 
@@ -92,8 +89,8 @@ public class LegalEntityServiceTest {
 
         legalEntityDTO = createLegalEntityDTO();
 
-        when(legalEntityRepository.findByDocument(legalEntityDTO.getDocument())).
-                thenReturn(Optional.ofNullable(createLegalEntity()));
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).
+                thenReturn(true);
 
         Assertions.assertThrows(LegalEntityException.class, () -> legalEntityService.insert(legalEntityDTO));
     }

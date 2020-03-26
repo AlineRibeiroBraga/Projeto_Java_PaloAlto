@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class LegalEntityException extends RuntimeException {
+public class AddressException extends RuntimeException {
 
-    public LegalEntityException(String title) {
+    public AddressException(String title) {
         super(title);
     }
 }

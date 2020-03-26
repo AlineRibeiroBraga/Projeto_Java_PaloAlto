@@ -9,6 +9,8 @@ import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
 
+import java.util.List;
+
 @Service
 public class LegalEntityService {
 
@@ -20,12 +22,19 @@ public class LegalEntityService {
 
     public Long insert(LegalEntityDTO legalEntityDTO) {
 
-        if(legalEntityRepository.findByDocument(legalEntityDTO.getDocument()).isEmpty()){
+        if(!legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())){
             LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
 
             return legalEntityRepository.save(legalEntity).getId();
         }
 
         throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
+    }
+
+    public List<LegalEntityDTO> findAll() {
+
+        List<LegalEntity> legalEntities = legalEntityRepository.findAll();
+
+        return legalEntityMapper.listLegalEntityToListLegalEntityDTO(legalEntities);
     }
 }

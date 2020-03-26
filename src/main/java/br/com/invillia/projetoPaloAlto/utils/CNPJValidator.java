@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto;
+package br.com.invillia.projetoPaloAlto.utils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

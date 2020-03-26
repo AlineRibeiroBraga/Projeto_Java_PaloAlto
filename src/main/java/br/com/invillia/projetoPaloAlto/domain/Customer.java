@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @MappedSuperclass
 @Data
@@ -25,4 +26,8 @@ public abstract class Customer {
 
     @Column(name = "des_name", nullable = false)
     protected String name;
+
+    @OneToMany(cascade = CascadeType.ALL )
+    @JoinColumn(name = "idt_address")
+    protected List<Address> address;
 }

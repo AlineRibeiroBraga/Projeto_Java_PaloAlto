@@ -1,5 +1,7 @@
 package br.com.invillia.projetoPaloAlto.controller;
 
+import br.com.invillia.projetoPaloAlto.domain.Individual;
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.service.LegalEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/legal-entity")
 public class LegalEntityController {
 
@@ -27,5 +30,10 @@ public class LegalEntityController {
                 .build(id);
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping
+    public List<LegalEntityDTO> findAll(){
+        return legalEntityService.findAll();
     }
 }

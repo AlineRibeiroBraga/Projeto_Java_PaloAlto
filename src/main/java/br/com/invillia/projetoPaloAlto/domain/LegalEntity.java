@@ -4,6 +4,7 @@ import lombok.Data;
 import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,4 +22,15 @@ public class LegalEntity extends Customer{
 
     @Column(name = "des_trade_name", nullable = false)
     protected String tradeName;
+
+    @ManyToMany
+    @JoinTable(name="legal_entity_individual",
+            joinColumns = @JoinColumn(name ="idt_legal_entity"),
+            inverseJoinColumns = @JoinColumn(name = "idt_individual" )
+    )
+    protected List<Individual> individuals;
+
+    @OneToMany
+    @JoinColumn(name = "idt_address")
+    protected List<Address> address;
 }

@@ -1,11 +1,13 @@
 package br.com.invillia.projetoPaloAlto.repository;
 
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.Individual;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LegalEntityRepository extends JpaRepository<LegalEntity, Long> {
+public interface IndividualRepository extends JpaRepository<Individual, Long> {
 
     Boolean existsByDocument(String document);
+
+    Boolean existsByRg(String rg);
 }

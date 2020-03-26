@@ -4,11 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 
-import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Individual extends Customer{
@@ -29,12 +30,4 @@ public class Individual extends Customer{
 
     @Column(name = "dat_birth", nullable = false)
     protected LocalDate birthDate;
-
-    @ManyToMany
-    @Column(name = "idt_legal_entity")
-    @JoinTable(name="legal_entity_individual",
-            joinColumns = @JoinColumn(name = "idt_individual"),
-            inverseJoinColumns = @JoinColumn(name = "idt_legal_entity")
-    )
-    protected List<LegalEntityDTO> legalEntity;
 }
