@@ -33,4 +33,14 @@ public class Address {
 
     @Column(name = "flg_main", nullable = false)
     protected Boolean main;
+
+    @ManyToOne
+    @JoinColumn(name = "idt_legal_entity",
+                referencedColumnName = "idt_legal_entity")
+    protected LegalEntity legalEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "idt_individual",
+                referencedColumnName = "idt_individual")
+    protected  Individual individual;
 }

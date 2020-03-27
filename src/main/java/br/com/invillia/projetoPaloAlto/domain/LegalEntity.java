@@ -30,7 +30,29 @@ public class LegalEntity extends Customer{
     )
     protected List<Individual> individuals;
 
-    @OneToMany
-    @JoinColumn(name = "idt_address")
+//    @Column(name = "idt_legal_entity", nullable = false)
+    @OneToMany(mappedBy = "legalEntity", cascade = CascadeType.ALL )
     protected List<Address> address;
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result =1;
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LegalEntity legalEntity = (LegalEntity) o;
+        if(getId() == null){
+            if(legalEntity.getId() != null)
+                return false;
+        }
+        else if(!getId().equals(legalEntity.getId()))
+            return false;
+        return true;
+    }
 }

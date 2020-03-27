@@ -30,4 +30,30 @@ public class Individual extends Customer{
 
     @Column(name = "dat_birth", nullable = false)
     protected LocalDate birthDate;
+
+//    @Column(name = "idt_individual", nullable = false)
+    @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL )
+    protected List<Address> address;
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result =1;
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Individual individual = (Individual) o;
+        if(getId() == null){
+            if(individual.getId() != null)
+                return false;
+        }
+        else if(!getId().equals(individual.getId()))
+            return false;
+        return true;
+    }
 }
