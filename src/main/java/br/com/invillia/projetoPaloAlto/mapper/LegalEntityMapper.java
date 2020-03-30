@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 
 @Component

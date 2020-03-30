@@ -1,7 +1,6 @@
 package br.com.invillia.projetoPaloAlto.repository;
 
-import br.com.invillia.projetoPaloAlto.domain.Address;
-import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

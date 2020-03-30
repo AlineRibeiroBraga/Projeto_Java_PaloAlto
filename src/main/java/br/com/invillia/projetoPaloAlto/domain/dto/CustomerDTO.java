@@ -1,5 +1,6 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
+import br.com.invillia.projetoPaloAlto.domain.enums.CustomerKind;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -12,4 +13,6 @@ public abstract class CustomerDTO {
 
     @NotNull
     protected String name;
+
+    protected CustomerKind customerKind;
 }

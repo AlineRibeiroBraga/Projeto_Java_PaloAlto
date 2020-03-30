@@ -1,6 +1,6 @@
 package br.com.invillia.projetoPaloAlto.service;
 
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;

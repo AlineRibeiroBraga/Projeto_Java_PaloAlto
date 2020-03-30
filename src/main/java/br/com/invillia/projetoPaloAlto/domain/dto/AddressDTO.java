@@ -1,8 +1,8 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
-import br.com.invillia.projetoPaloAlto.domain.Individual;
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

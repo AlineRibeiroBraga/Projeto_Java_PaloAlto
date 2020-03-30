@@ -1,7 +1,7 @@
 package br.com.invillia.projetoPaloAlto;
 
 
-import br.com.invillia.projetoPaloAlto.domain.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
@@ -10,7 +10,6 @@ import br.com.invillia.projetoPaloAlto.service.LegalEntityService;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;
 
@@ -82,6 +81,17 @@ public class LegalEntityServiceTest {
 
         Assert.assertNotNull(id);
         Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
+    }
+
+    public Long insert(LegalEntityDTO legalEntityDTO) {
+
+        if(!legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())){
+            LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
+
+            return legalEntityRepository.save(legalEntity).getId();
+        }
+
+        throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
     }
 
     @Test

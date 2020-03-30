@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.domain;
+package br.com.invillia.projetoPaloAlto.domain.model;
 
 import lombok.Data;
 import javax.persistence.*;
@@ -35,12 +35,10 @@ public class Address {
     protected Boolean main;
 
     @ManyToOne
-    @JoinColumn(name = "idt_legal_entity",
-                referencedColumnName = "idt_legal_entity")
+    @JoinColumn(name = "idt_legal_entity", referencedColumnName = "idt_legal_entity")
     protected LegalEntity legalEntity;
 
     @ManyToOne
-    @JoinColumn(name = "idt_individual",
-                referencedColumnName = "idt_individual")
+    @JoinColumn(name = "idt_individual", referencedColumnName = "idt_individual")
     protected  Individual individual;
 }

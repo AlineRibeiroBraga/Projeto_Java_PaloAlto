@@ -1,8 +1,8 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
-import br.com.invillia.projetoPaloAlto.domain.Address;
-import br.com.invillia.projetoPaloAlto.domain.Individual;
+import br.com.invillia.projetoPaloAlto.domain.model.Address;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

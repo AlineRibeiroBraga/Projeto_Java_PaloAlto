@@ -1,7 +1,5 @@
 package br.com.invillia.projetoPaloAlto.controller;
 
-import br.com.invillia.projetoPaloAlto.domain.Individual;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.service.LegalEntityService;
 import org.springframework.beans.factory.annotation.Autowired;

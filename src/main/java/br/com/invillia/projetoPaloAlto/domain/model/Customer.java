@@ -1,5 +1,6 @@
-package br.com.invillia.projetoPaloAlto.domain;
+package br.com.invillia.projetoPaloAlto.domain.model;
 
+import br.com.invillia.projetoPaloAlto.domain.enums.CustomerKind;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @MappedSuperclass
 @Data

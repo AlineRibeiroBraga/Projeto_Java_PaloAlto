@@ -2,7 +2,6 @@ package br.com.invillia.projetoPaloAlto.domain.dto;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 import br.com.invillia.projetoPaloAlto.anotation.IsRG;
-import br.com.invillia.projetoPaloAlto.domain.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

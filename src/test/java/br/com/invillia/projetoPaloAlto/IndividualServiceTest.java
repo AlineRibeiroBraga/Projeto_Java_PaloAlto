@@ -1,33 +1,25 @@
-package br.com.invillia.projetoPaloAlto.service;
+package br.com.invillia.projetoPaloAlto;
 
-import br.com.invillia.projetoPaloAlto.controller.AddressController;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
-import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
-import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
+import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import javax.transaction.Transactional;
-
-@Service
-@Transactional()
-public class IndividualService {
+public class IndividualServiceTest {
 
     @Autowired
-    private IndividualRepository individualRepository;
+    private Faker faker;
 
-    @Autowired
-    private IndividualMapper individualMapper;
+    private IndividualDTO createIndividualDTO() {
+        IndividualDTO individualDTO = new IndividualDTO();
+    }
 
-    @Autowired
-    private AddressController addressController;
-
+    public void insertOkay(){
+        IndividualDTO individualDTO = createIndividualDTO();
+    }
 
     public Long insert(IndividualDTO individualDTO) {
 
@@ -48,22 +40,7 @@ public class IndividualService {
         throw new IndividualException(Messages.DOCUMENT_ALREADY_EXISTS);
     }
 
-    private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
+    public void insertAlreadyExists(){
 
-        int main = 0;
-
-        for(AddressDTO addressDTO :  addressesDTO){
-            if(addressDTO.getMain()){
-                ++main;
-            }
-
-            if(main > 1){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
-
-

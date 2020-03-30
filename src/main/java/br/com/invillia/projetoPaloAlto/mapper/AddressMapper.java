@@ -1,11 +1,12 @@
 package br.com.invillia.projetoPaloAlto.mapper;
 
-import br.com.invillia.projetoPaloAlto.domain.Address;
-import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import org.springframework.stereotype.Component;
+import br.com.invillia.projetoPaloAlto.domain.model.Address;
+import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 
 @Component
 public class AddressMapper {
@@ -58,5 +59,12 @@ public class AddressMapper {
         }
 
         return addressesDTOS;
+    }
+
+    public void setAddressIndividual(List<Address> addresses, Individual individual) {
+
+        for(Address address : addresses){
+            address.setIndividual(individual);
+        }
     }
 }

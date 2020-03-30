@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.domain;
+package br.com.invillia.projetoPaloAlto.domain.model;
 
 import lombok.Data;
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public class LegalEntity extends Customer{
     protected List<Individual> individuals;
 
 //    @Column(name = "idt_legal_entity", nullable = false)
-    @OneToMany(mappedBy = "legalEntity", cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "legalEntity", cascade = CascadeType.ALL)
     protected List<Address> address;
 
     @Override
