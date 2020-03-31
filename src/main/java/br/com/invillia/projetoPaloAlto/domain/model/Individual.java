@@ -17,20 +17,20 @@ public class Individual extends Customer{
     @Id
     @Column(name = "idt_individual")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @Column(name = "des_document", nullable = false, unique = true, length = 11)
-    protected String document;
+    private String document;
 
     @Column(name = "des_mother_name", nullable = false)
-    protected String motherName;
+    private String motherName;
 
     @Column(name = "des_nacional_document", nullable = false,  unique = true, length = 9)
-    protected String rg;
+    private String rg;
 
     @Column(name = "dat_birth", nullable = false)
-    protected LocalDate birthDate;
+    private LocalDate birthDate;
 
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL )
-    protected List<Address> address;
+    private List<Address> addresses;
 }

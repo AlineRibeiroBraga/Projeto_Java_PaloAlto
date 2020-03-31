@@ -25,15 +25,11 @@ public class IndividualService {
     @Autowired
     private IndividualMapper individualMapper;
 
-    @Autowired
-    private AddressController addressController;
-
-
     public Long insert(IndividualDTO individualDTO) {
 
         if (!individualRepository.existsByDocument(individualDTO.getDocument())) {
             if (!individualRepository.existsByRg(individualDTO.getRg())) {
-                if(mainAddressValidator(individualDTO.getAddress())){
+                if(mainAddressValidator(individualDTO.getAddressesDTO())){
 
                     Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
 
@@ -41,7 +37,6 @@ public class IndividualService {
                 }
 
                 throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-
             }
         }
 

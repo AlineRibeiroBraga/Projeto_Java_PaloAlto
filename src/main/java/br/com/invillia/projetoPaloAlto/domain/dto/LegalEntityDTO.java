@@ -16,16 +16,15 @@ public class LegalEntityDTO extends CustomerDTO {
 
     @NotNull
     @IsCNPJ
-    protected String document;
+    private String document;
 
     @NotNull
-    protected String tradeName;
+    private String tradeName;
 
-
-    protected List<Individual> individuals;
+    private List<IndividualDTO> individualsDTO;
 
     @NotNull
-    protected List<Address> address;
+    private List<AddressDTO> addressesDTO;
 
     @Override
     public String toString() {

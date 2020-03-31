@@ -1,5 +1,6 @@
 package br.com.invillia.projetoPaloAlto.mapper;
 
+import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,13 @@ public class IndividualMapper {
         individual.setBirthDate(individualDTO.getBirthDate());
         individual.setName(individualDTO.getName());
         individual.setCreatedAt(LocalDateTime.now());
-        individual.setAddress(addressMapper.listAddressDTOToListAddress(individualDTO.getAddress()));
+        individual.setAddresses(addressMapper.listAddressDTOToListAddress(individualDTO.getAddressesDTO()));
 
-        addressMapper.setAddressIndividual(individual.getAddress(),individual);
+//        addressMapper.setAddressIndividual(individual.getAddresses(),individual);
 
+        for(Address address : individual.getAddresses()){
+            address.setIndividual(individual);
+        }
         return individual;
     }
 

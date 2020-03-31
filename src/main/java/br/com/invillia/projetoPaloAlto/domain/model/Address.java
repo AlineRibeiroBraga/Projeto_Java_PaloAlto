@@ -14,31 +14,31 @@ public class Address {
     @Id
     @Column(name="idt_address")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @Column(name = "des_district", nullable = false)
-    protected String district;
+    private String district;
 
     @Column(name = "des_number", nullable = false)
-    protected String number;
+    private String number;
 
     @Column(name = "des_city", nullable = false)
-    protected String city;
+    private String city;
 
     @Column(name = "des_state", nullable = false)
-    protected String state;
+    private String state;
 
     @Column(name = "des_zip_code", nullable = false, length = 8)
-    protected String zipCode;
+    private String zipCode;
 
     @Column(name = "flg_main", nullable = false)
-    protected Boolean main;
+    private Boolean main;
 
     @ManyToOne
     @JoinColumn(name = "idt_legal_entity", referencedColumnName = "idt_legal_entity")
-    protected LegalEntity legalEntity;
+    private LegalEntity legalEntity;
 
     @ManyToOne
     @JoinColumn(name = "idt_individual", referencedColumnName = "idt_individual")
-    protected  Individual individual;
+    private  Individual individual;
 }

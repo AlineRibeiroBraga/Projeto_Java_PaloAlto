@@ -1,11 +1,10 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -14,25 +13,25 @@ import javax.validation.constraints.NotNull;
 public class AddressDTO {
 
     @NotNull
-    protected String district;
+    private String district;
 
     @NotNull
-    protected String number;
+    private String number;
 
     @NotNull
-    protected String city;
+    private String city;
 
     @NotNull
-    protected String state;
+    private String state;
 
     @NotNull
     @IsZipCode
-    protected String zipCode;
+    private String zipCode;
 
     @NotNull
-    protected Boolean main;
+    private Boolean main;
 
-    protected LegalEntity legalEntity;
+    private LegalEntityDTO legalEntityDTO;
 
-    protected Individual individual;
+    private IndividualDTO individualDTO;
 }

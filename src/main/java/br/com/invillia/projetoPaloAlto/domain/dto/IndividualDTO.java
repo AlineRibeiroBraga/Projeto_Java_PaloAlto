@@ -16,18 +16,18 @@ public class IndividualDTO extends CustomerDTO{
 
     @IsCPF
     @NotNull
-    protected String document;
+    private String document;
 
     @NotNull
-    protected String motherName;
+    private String motherName;
 
     @IsRG
     @NotNull
-    protected String rg;
+    private String rg;
 
     @NotNull
-    protected LocalDate birthDate;
+    private LocalDate birthDate;
 
     @NotNull
-    protected List<AddressDTO> address;
+    private List<AddressDTO> addressesDTO;
 }
