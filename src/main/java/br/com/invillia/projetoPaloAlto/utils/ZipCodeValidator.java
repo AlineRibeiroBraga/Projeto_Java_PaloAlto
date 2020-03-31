@@ -1,10 +1,9 @@
 package br.com.invillia.projetoPaloAlto.utils;
 
-import br.com.invillia.projetoPaloAlto.anotation.IsRG;
-import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import static org.apache.commons.lang3.StringUtils.length;
+import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
 public class ZipCodeValidator implements ConstraintValidator<IsZipCode, String> {

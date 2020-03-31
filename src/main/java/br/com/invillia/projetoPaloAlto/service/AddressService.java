@@ -1,12 +1,11 @@
 package br.com.invillia.projetoPaloAlto.service;
 
-import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
-import br.com.invillia.projetoPaloAlto.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
+import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
+import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import br.com.invillia.projetoPaloAlto.repository.AddressRepository;
 
 @Service
 public class AddressService {

@@ -1,11 +1,8 @@
 package br.com.invillia.projetoPaloAlto.utils;
 
-import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
-import br.com.invillia.projetoPaloAlto.anotation.IsRG;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
+import br.com.invillia.projetoPaloAlto.anotation.IsRG;
 import static org.apache.commons.lang3.StringUtils.length;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 

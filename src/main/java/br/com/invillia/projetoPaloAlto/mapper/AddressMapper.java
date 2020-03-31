@@ -3,10 +3,12 @@ package br.com.invillia.projetoPaloAlto.mapper;
 import java.util.List;
 import java.util.ArrayList;
 
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import org.springframework.stereotype.Component;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 
 @Component
 public class AddressMapper {
@@ -65,6 +67,20 @@ public class AddressMapper {
 
         for(Address address : addresses){
             address.setIndividual(individual);
+        }
+    }
+
+    public void setAddressLegalEntity(List<Address> addresses, LegalEntity legalEntity) {
+
+        for(Address address : addresses){
+            address.setLegalEntity(legalEntity);
+        }
+    }
+
+    public void setAddressDTOIndividualDTO(List<AddressDTO> addressesDTO, IndividualDTO individualDTO) {
+
+        for(AddressDTO addressDTO : addressesDTO){
+            addressDTO.setIndividualDTO(individualDTO);
         }
     }
 }

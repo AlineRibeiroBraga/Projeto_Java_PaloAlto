@@ -1,10 +1,10 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import br.com.invillia.projetoPaloAlto.domain.enums.CustomerKind;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,6 @@ public abstract class CustomerDTO {
     @NotNull
     protected String name;
 
-    protected CustomerKind customerKind;
+    @NotNull
+    protected List<AddressDTO> addressesDTO;
 }

@@ -1,13 +1,11 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
-import br.com.invillia.projetoPaloAlto.domain.model.Address;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import javax.validation.constraints.NotNull;
+import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
 
 @Data
 @NoArgsConstructor
@@ -22,9 +20,6 @@ public class LegalEntityDTO extends CustomerDTO {
     private String tradeName;
 
     private List<IndividualDTO> individualsDTO;
-
-    @NotNull
-    private List<AddressDTO> addressesDTO;
 
     @Override
     public String toString() {

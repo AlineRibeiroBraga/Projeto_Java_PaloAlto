@@ -1,9 +1,11 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -34,10 +36,14 @@ public class Address {
     @Column(name = "flg_main", nullable = false)
     private Boolean main;
 
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "idt_legal_entity", referencedColumnName = "idt_legal_entity")
     private LegalEntity legalEntity;
 
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "idt_individual", referencedColumnName = "idt_individual")
     private  Individual individual;

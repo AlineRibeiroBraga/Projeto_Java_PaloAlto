@@ -1,19 +1,20 @@
 package br.com.invillia.projetoPaloAlto.service;
 
-import br.com.invillia.projetoPaloAlto.controller.AddressController;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import java.util.List;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
+import br.com.invillia.projetoPaloAlto.utils.Messages;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
-import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import javax.transaction.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Transactional()
@@ -58,6 +59,14 @@ public class IndividualService {
         }
 
         return true;
+    }
+
+    public IndividualDTO findByDocument(String document){
+        return individualMapper.individualToIndividualDTO(individualRepository.findByDocument(document));
+    }
+
+    public IndividualDTO findById(Long id) {
+        return individualMapper.individualToIndividualDTO(individualRepository.findById(id).get());
     }
 }
 

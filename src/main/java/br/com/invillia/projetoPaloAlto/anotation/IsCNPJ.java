@@ -1,13 +1,13 @@
 package br.com.invillia.projetoPaloAlto.anotation;
 
-import br.com.invillia.projetoPaloAlto.utils.CNPJValidator;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
-import javax.validation.Constraint;
 import javax.validation.Payload;
+import java.lang.annotation.Target;
+import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
+import br.com.invillia.projetoPaloAlto.utils.Messages;
+import br.com.invillia.projetoPaloAlto.utils.CNPJValidator;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented

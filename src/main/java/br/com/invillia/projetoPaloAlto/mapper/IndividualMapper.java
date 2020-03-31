@@ -1,12 +1,14 @@
 package br.com.invillia.projetoPaloAlto.mapper;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
+import org.springframework.beans.factory.annotation.Autowired;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class IndividualMapper {
@@ -26,12 +28,36 @@ public class IndividualMapper {
         individual.setCreatedAt(LocalDateTime.now());
         individual.setAddresses(addressMapper.listAddressDTOToListAddress(individualDTO.getAddressesDTO()));
 
-//        addressMapper.setAddressIndividual(individual.getAddresses(),individual);
+        addressMapper.setAddressIndividual(individual.getAddresses(),individual);
 
-        for(Address address : individual.getAddresses()){
-            address.setIndividual(individual);
-        }
         return individual;
     }
 
+    public List<Individual> listIndividualDTOToListIndividual(List<IndividualDTO> individualsDTO) {
+
+        List<Individual> individuals = new ArrayList<>();
+
+        for(IndividualDTO individualDTO : individualsDTO){
+            individuals.add(individualDTOToIndividual(individualDTO));
+        }
+
+        return individuals;
+    }
+
+
+    public IndividualDTO individualToIndividualDTO(Individual individual) {
+
+        IndividualDTO individualDTO = new IndividualDTO();
+
+        individualDTO.setName(individual.getName());
+        individualDTO.setRg(individual.getRg());
+        individualDTO.setMotherName(individual.getMotherName());
+        individualDTO.setDocument(individual.getDocument());
+        individualDTO.setBirthDate(individual.getBirthDate());
+        individualDTO.setAddressesDTO(addressMapper.listAddressToListAddressDTO(individual.getAddresses()));
+
+        addressMapper.setAddressDTOIndividualDTO(individualDTO.getAddressesDTO(),individualDTO);
+
+        return individualDTO;
+    }
 }

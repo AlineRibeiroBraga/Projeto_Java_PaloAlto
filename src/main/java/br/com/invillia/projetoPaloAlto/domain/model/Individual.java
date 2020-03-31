@@ -1,10 +1,9 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
-import java.time.LocalDate;
-import java.util.List;
-import javax.persistence.*;
-
 import lombok.Data;
+import java.util.List;
+import java.time.LocalDate;
+import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 

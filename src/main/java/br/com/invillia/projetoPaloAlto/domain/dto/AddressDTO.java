@@ -1,11 +1,10 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import lombok.AllArgsConstructor;
 import javax.validation.constraints.NotNull;
+import br.com.invillia.projetoPaloAlto.anotation.IsZipCode;
 
 @Data
 @NoArgsConstructor

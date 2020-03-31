@@ -1,10 +1,10 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
 import lombok.Data;
+import java.util.List;
 import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.util.List;
 
 @Data
 @Entity
@@ -23,7 +23,7 @@ public class LegalEntity extends Customer{
     @Column(name = "des_trade_name", nullable = false)
     private String tradeName;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="legal_entity_individual",
             joinColumns = @JoinColumn(name ="idt_legal_entity"),
             inverseJoinColumns = @JoinColumn(name = "idt_individual" )

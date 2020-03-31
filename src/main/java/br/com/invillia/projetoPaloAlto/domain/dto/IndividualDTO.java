@@ -1,13 +1,13 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
-import br.com.invillia.projetoPaloAlto.anotation.IsRG;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.List;
+import lombok.Data;
+import java.time.LocalDate;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import javax.validation.constraints.NotNull;
+import br.com.invillia.projetoPaloAlto.anotation.IsRG;
+import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +27,4 @@ public class IndividualDTO extends CustomerDTO{
 
     @NotNull
     private LocalDate birthDate;
-
-    @NotNull
-    private List<AddressDTO> addressesDTO;
 }
