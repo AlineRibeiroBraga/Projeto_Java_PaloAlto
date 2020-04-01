@@ -30,18 +30,8 @@ public class IndividualController {
         return ResponseEntity.created(location).build();
     }
 
-//    @GetMapping("/{document}")
-//    public IndividualDTO findByDocument(@PathVariable String document){
-//        return individualService.findByDocument(document);
-//    }
-
-//    @GetMapping("/{id}")
-//    public IndividualDTO findByDocument(@PathVariable Long id){
-//        return individualService.findById(id);
-//    }
-
-    @GetMapping("/{id}")
-    public IndividualDTO findByDocument(@PathVariable String id){
-        return individualService.findByDocument(id);
+    @GetMapping("/{document}")
+    public IndividualDTO findByDocument(@PathVariable String document){
+        return individualService.findByDocument(document);
     }
 }

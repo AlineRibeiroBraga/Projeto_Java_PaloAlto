@@ -2,8 +2,11 @@ package br.com.invillia.projetoPaloAlto.service;
 
 import java.util.List;
 
+import br.com.invillia.projetoPaloAlto.controller.IndividualController;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
+import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +26,37 @@ public class LegalEntityService {
     LegalEntityMapper legalEntityMapper;
 
     @Autowired
-    IndividualService individualService;
+    IndividualRepository individualRepository;
 
     public Long insert(LegalEntityDTO legalEntityDTO) {
 
         if(!legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())){
-//            if(IndividualsDTOValidator(legalEntityDTO.getIndividualsDTO())){
 
-                LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
+            LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
+            individualsDTOValidator(legalEntity.getIndividuals());
 
-                return legalEntityRepository.save(legalEntity).getId();
-//            }
+            System.out.println(legalEntity.toString());
+            return legalEntityRepository.save(legalEntity).getId();
 
-//            throw new IndividualException(Messages.INDIVIDUAL_ENTITY_WAS_NOT_SAVED);
         }
 
         throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
     }
 
-//    private Boolean IndividualsDTOValidator(List<IndividualDTO> individualsDTO) {
-//
-//
-//    }
+    private void individualsDTOValidator(List<Individual> individuals) {
+
+        int lenght = individuals.size();
+        Individual individual;
+
+        for(int i=0; i < lenght; i++){
+
+            individual = individualRepository.findByDocument(individuals.get(i).getDocument());
+
+            if(individual != null){
+                individuals.remove(i);
+                individuals.add(i,individual);
+            }
+        }
+    }
+
 }

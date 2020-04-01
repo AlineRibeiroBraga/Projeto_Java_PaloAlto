@@ -1,5 +1,7 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 import java.util.List;
 import java.time.LocalDate;
@@ -9,9 +11,9 @@ import lombok.AllArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Individual extends Customer{
+
+    public Individual(){}
 
     @Id
     @Column(name = "idt_individual")
@@ -32,4 +34,8 @@ public class Individual extends Customer{
 
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL )
     private List<Address> addresses;
+
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "individuals")
+//    private List<LegalEntity> legalEntities;
 }

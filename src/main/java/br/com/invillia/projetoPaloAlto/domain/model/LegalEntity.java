@@ -1,5 +1,6 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
+import lombok.Builder;
 import lombok.Data;
 import java.util.List;
 import javax.persistence.*;
@@ -8,9 +9,9 @@ import lombok.AllArgsConstructor;
 
 @Data
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 public class LegalEntity extends Customer{
+
+    public LegalEntity(){}
 
     @Id
     @Column(name = "idt_legal_entity", nullable = false)
@@ -26,7 +27,7 @@ public class LegalEntity extends Customer{
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="legal_entity_individual",
             joinColumns = @JoinColumn(name ="idt_legal_entity"),
-            inverseJoinColumns = @JoinColumn(name = "idt_individual" )
+            inverseJoinColumns = @JoinColumn(name = "idt_individual")
     )
     private List<Individual> individuals;
 

@@ -37,14 +37,25 @@ public class Address {
     private Boolean main;
 
     @JsonIgnore
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "idt_legal_entity", referencedColumnName = "idt_legal_entity")
     private LegalEntity legalEntity;
 
     @JsonIgnore
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "idt_individual", referencedColumnName = "idt_individual")
     private  Individual individual;
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", district='" + district + '\'' +
+                ", number='" + number + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", main=" + main +
+                '}';
+    }
 }
