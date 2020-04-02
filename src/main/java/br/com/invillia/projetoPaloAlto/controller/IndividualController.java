@@ -1,6 +1,7 @@
 package br.com.invillia.projetoPaloAlto.controller;
 
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
@@ -30,8 +31,18 @@ public class IndividualController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{document}")
-    public IndividualDTO findByDocument(@PathVariable String document){
-        return individualService.findByDocument(document);
+//    @GetMapping("/{document}")
+//    public IndividualDTO findByDocument(@PathVariable String document){
+//        return individualService.findByDocument(document);
+//    }
+
+    @GetMapping("/{id}")
+    public IndividualDTO findByDocument(@PathVariable Long id){
+        return individualService.findById(id);
+    }
+
+    @GetMapping
+    public List<IndividualDTO> findAll(){
+        return individualService.findAll();
     }
 }

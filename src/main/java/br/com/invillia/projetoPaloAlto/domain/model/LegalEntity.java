@@ -25,7 +25,7 @@ public class LegalEntity extends Customer{
     private String tradeName;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="legal_entity_individual",
+    @JoinTable(name="individual_legal_entity",
             joinColumns = @JoinColumn(name ="idt_legal_entity"),
             inverseJoinColumns = @JoinColumn(name = "idt_individual")
     )

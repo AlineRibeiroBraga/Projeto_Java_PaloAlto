@@ -3,6 +3,8 @@ package br.com.invillia.projetoPaloAlto.controller;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
+
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +29,15 @@ public class LegalEntityController {
                 .build(id);
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{id}")
+    public LegalEntityDTO findByDocument(@PathVariable Long id){
+        return legalEntityService.findById(id);
+    }
+
+    @GetMapping
+    public List<LegalEntityDTO> findAll(){
+        return legalEntityService.findAll();
     }
 }

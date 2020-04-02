@@ -1,6 +1,8 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
 import java.util.List;
+
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import lombok.Data;
 import java.time.LocalDate;
 import lombok.NoArgsConstructor;
@@ -14,17 +16,19 @@ import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 @AllArgsConstructor
 public class IndividualDTO extends CustomerDTO{
 
-    @IsCPF
+    @IsCPF(message = "Invalided CPF!")
     @NotNull
     private String document;
 
     @NotNull
     private String motherName;
 
-    @IsRG
+    @IsRG(message = "Invalided RG!")
     @NotNull
     private String rg;
 
     @NotNull
     private LocalDate birthDate;
+
+    private List<LegalEntityDTO> legalEntitiesDTO;
 }

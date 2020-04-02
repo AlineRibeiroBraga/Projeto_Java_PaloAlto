@@ -68,6 +68,10 @@ public class IndividualService {
     public IndividualDTO findById(Long id) {
         return individualMapper.individualToIndividualDTO(individualRepository.findById(id).get());
     }
+
+    public List<IndividualDTO> findAll() {
+        return individualMapper.listIndividualToListIndividualDTO(individualRepository.findAll());
+    }
 }
 
 

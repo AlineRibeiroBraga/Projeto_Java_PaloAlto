@@ -60,4 +60,15 @@ public class IndividualMapper {
 
         return individualDTO;
     }
+
+    public List<IndividualDTO> listIndividualToListIndividualDTO(List<Individual> individuals) {
+
+        List<IndividualDTO> individualsDTO = new ArrayList<>();
+
+        for(Individual individual : individuals){
+            individualsDTO.add(individualToIndividualDTO(individual));
+        }
+
+        return individualsDTO;
+    }
 }

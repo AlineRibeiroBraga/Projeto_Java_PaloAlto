@@ -34,8 +34,4 @@ public class Individual extends Customer{
 
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL )
     private List<Address> addresses;
-
-//    @JsonIgnore
-//    @ManyToMany(mappedBy = "individuals")
-//    private List<LegalEntity> legalEntities;
 }

@@ -13,7 +13,7 @@ import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
 public class LegalEntityDTO extends CustomerDTO {
 
     @NotNull
-    @IsCNPJ
+    @IsCNPJ(message = "Invalided CNPJ")
     private String document;
 
     @NotNull

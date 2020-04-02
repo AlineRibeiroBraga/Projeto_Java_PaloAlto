@@ -59,4 +59,11 @@ public class LegalEntityService {
         }
     }
 
+    public LegalEntityDTO findById(Long id) {
+        return legalEntityMapper.legalEntityToLegalEntityDTO(legalEntityRepository.findById(id).get());
+    }
+
+    public List<LegalEntityDTO> findAll() {
+        return legalEntityMapper.listLegalEntityToListLegalEntityDTO(legalEntityRepository.findAll());
+    }
 }
