@@ -44,28 +44,20 @@ public class LegalEntityInsertTest {
     private LegalEntityRepository legalEntityRepository;
 
     @Spy
-    @InjectMocks
     private LegalEntityService legalEntityService;
 
     @Spy
     @InjectMocks
     private LegalEntityMapper legalEntityMapper;
 
-    @Spy
-    @InjectMocks
-    private IndividualMapper individualMapper;
-
     @Mock
     private IndividualRepository individualRepository;
-
-    @Spy
-    @InjectMocks
-    private AddressMapper addressMapper;
 
     @BeforeAll
     public void setup(){
         MockitoAnnotations.initMocks(this);
         this.faker = new Faker();
+        this.legalEntityMapper = new LegalEntityMapper();
     }
 
     private LegalEntityDTO createLegalEntityDTO(){
@@ -253,7 +245,7 @@ public class LegalEntityInsertTest {
         legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
         when(individualRepository.findByDocument(legalEntityDTO.getIndividualsDTO().get(1).getDocument()))
         .thenReturn(Optional.of(createIndividual()));
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());

@@ -143,12 +143,16 @@ public class IndividualFindByTest {
 
     @Test
     public void findByIdOkay(){
-        when(individualRepository.findById(1L)).thenReturn(Optional.of(createIndividual()));
+
+        Individual individual = createIndividual();
+
+        when(individualRepository.findById(1L)).thenReturn(Optional.of(individual));
 //        when(individualMapper.individualToIndividualDTO(createIndividual())).thenReturn(createIndividualDTO());
 
         IndividualDTO individualDTO = individualService.findById(1L);
 
-        Assertions.assertNotNull(1L);
+        Assertions.assertNotNull(individualDTO);
+        Assertions.assertEquals(individual.getName(),individualDTO.getName());
         verify(individualRepository,times(1)).findById(1L);
     }
 

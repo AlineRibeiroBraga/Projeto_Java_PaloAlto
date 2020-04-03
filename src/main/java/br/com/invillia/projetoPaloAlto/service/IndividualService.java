@@ -68,7 +68,7 @@ public class IndividualService {
         Optional<Individual> optionalIndividual = Optional.ofNullable(individualRepository.findById(id)
                 .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
-        return individualMapper.individualToIndividualDTO(individualRepository.findById(id).get());
+        return individualMapper.individualToIndividualDTO(optionalIndividual.get());
     }
 }
 
