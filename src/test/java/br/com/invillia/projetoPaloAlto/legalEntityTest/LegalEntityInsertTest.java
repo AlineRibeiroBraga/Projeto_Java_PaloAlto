@@ -43,7 +43,7 @@ public class LegalEntityInsertTest {
     @Mock
     private LegalEntityRepository legalEntityRepository;
 
-    @Spy
+    @InjectMocks
     private LegalEntityService legalEntityService;
 
     @Spy
@@ -263,7 +263,6 @@ public class LegalEntityInsertTest {
         legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
         when(individualRepository.findByDocument(legalEntityDTO.getIndividualsDTO().get(1).getDocument()))
                 .thenReturn(null);
