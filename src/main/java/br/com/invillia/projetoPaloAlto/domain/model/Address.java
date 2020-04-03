@@ -10,7 +10,6 @@ import lombok.ToString;
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Address {
 
     @Id

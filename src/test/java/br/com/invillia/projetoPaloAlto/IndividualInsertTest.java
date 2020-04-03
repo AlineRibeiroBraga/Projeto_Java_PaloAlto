@@ -56,7 +56,7 @@ public class IndividualInsertTest {
         individualDTO.setBirthDate(LocalDate.now());
         individualDTO.setDocument(faker.number().digits(11));
         individualDTO.setName(faker.name().fullName());
-        individualDTO.setAddressesDTO(createAddressesDTO());
+        individualDTO.setAddressesDTO(createListAddressDTO());
 
         for(AddressDTO addressDTO : individualDTO.getAddressesDTO()){
             addressDTO.setIndividualDTO(individualDTO);
@@ -65,7 +65,7 @@ public class IndividualInsertTest {
         return individualDTO;
     }
 
-    private List<AddressDTO> createAddressesDTO() {
+    private List<AddressDTO> createListAddressDTO() {
         List<AddressDTO> addressesDTO = new ArrayList<>();
 
         addressesDTO.add(createAddressDTO(true));

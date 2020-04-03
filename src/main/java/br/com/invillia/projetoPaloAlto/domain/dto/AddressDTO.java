@@ -10,7 +10,6 @@ import lombok.ToString;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class AddressDTO {
 
     @NotNull

@@ -1,17 +1,15 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
-import lombok.Builder;
 import lombok.Data;
-import java.util.List;
-import javax.persistence.*;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class LegalEntity extends Customer{
-
-    public LegalEntity(){}
 
     @Id
     @Column(name = "idt_legal_entity", nullable = false)

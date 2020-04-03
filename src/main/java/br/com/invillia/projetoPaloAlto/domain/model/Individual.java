@@ -1,19 +1,16 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Data;
-import java.util.List;
-import java.time.LocalDate;
-import javax.persistence.*;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Individual extends Customer{
-
-    public Individual(){}
 
     @Id
     @Column(name = "idt_individual")

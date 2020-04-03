@@ -28,17 +28,16 @@ public class IndividualService {
 
     public Long insert(IndividualDTO individualDTO) {
 
-        if (!individualRepository.existsByDocument(individualDTO.getDocument())) {
-            if (!individualRepository.existsByRg(individualDTO.getRg())) {
-                if(mainAddressValidator(individualDTO.getAddressesDTO())){
+        if (!individualRepository.existsByDocument(individualDTO.getDocument()) &&
+            !individualRepository.existsByRg(individualDTO.getRg())) {
+            if(mainAddressValidator(individualDTO.getAddressesDTO())){
 
-                    Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
+                Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
 
-                    return individualRepository.save(individual).getId();
-                }
-
-                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+                return individualRepository.save(individual).getId();
             }
+
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
         }
 
         throw new IndividualException(Messages.DOCUMENT_ALREADY_EXISTS);
@@ -52,13 +51,9 @@ public class IndividualService {
             if(addressDTO.getMain()){
                 ++main;
             }
-
-            if(main > 1){
-                return false;
-            }
         }
 
-        return true;
+        return main == 1;
     }
 
     public IndividualDTO findByDocument(String document){

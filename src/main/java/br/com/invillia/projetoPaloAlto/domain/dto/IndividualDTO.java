@@ -13,7 +13,6 @@ import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class IndividualDTO extends CustomerDTO{
 
     @IsCPF(message = "Invalided CPF!")

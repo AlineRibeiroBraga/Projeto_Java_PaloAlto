@@ -9,7 +9,6 @@ import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class LegalEntityDTO extends CustomerDTO {
 
     @NotNull
@@ -20,13 +19,4 @@ public class LegalEntityDTO extends CustomerDTO {
     private String tradeName;
 
     private List<IndividualDTO> individualsDTO;
-
-    @Override
-    public String toString() {
-        return "LegalEntityDTO{" +
-                "document='" + document + '\'' +
-                ", tradeName='" + tradeName + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

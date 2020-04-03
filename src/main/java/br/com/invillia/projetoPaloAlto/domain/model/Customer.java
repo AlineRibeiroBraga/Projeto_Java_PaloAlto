@@ -12,7 +12,6 @@ import org.hibernate.annotations.CreationTimestamp;
 @MappedSuperclass
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public abstract class Customer {
 
     @CreationTimestamp

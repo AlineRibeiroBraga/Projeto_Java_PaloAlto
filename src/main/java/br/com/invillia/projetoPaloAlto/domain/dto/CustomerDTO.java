@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public abstract class CustomerDTO {
 
     @NotNull

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,9 +30,17 @@ public class LegalEntityMapper {
         legalEntity.setCreatedAt(LocalDateTime.now());
         legalEntity.setAddresses(addressMapper.listAddressDTOToListAddress(legalEntityDTO.getAddressesDTO()));
 
-        addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);
+        legalEntity = addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);
+        legalEntity = setIndividualsLegalEntity(legalEntity,legalEntityDTO.getIndividualsDTO());
 
-        legalEntity.setIndividuals(individualMapper.listIndividualDTOToListIndividual(legalEntityDTO.getIndividualsDTO()));
+        return legalEntity;
+    }
+
+    private LegalEntity setIndividualsLegalEntity(LegalEntity legalEntity, List<IndividualDTO> individualsDTO) {
+
+        if(individualsDTO != null){
+            legalEntity.setIndividuals(individualMapper.listIndividualDTOToListIndividual(individualsDTO));
+        }
 
         return legalEntity;
     }
