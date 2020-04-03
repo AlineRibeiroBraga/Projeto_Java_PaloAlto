@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 
+import java.util.Optional;
+
 @Repository
 public interface IndividualRepository extends JpaRepository<Individual, Long> {
 
@@ -11,5 +13,5 @@ public interface IndividualRepository extends JpaRepository<Individual, Long> {
 
     Boolean existsByRg(String rg);
 
-    Individual findByDocument(String document);
+    Optional<Individual> findByDocument(String document);
 }

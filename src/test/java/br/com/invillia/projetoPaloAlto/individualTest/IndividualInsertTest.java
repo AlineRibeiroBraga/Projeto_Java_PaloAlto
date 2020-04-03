@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto;
+package br.com.invillia.projetoPaloAlto.individualTest;
 
 import java.util.List;
 import java.util.ArrayList;

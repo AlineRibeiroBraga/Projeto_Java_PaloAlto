@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 
+import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,13 @@ public class LegalEntityController {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/document/{document}")
+    public LegalEntityDTO findByDocument(@PathVariable  @IsCNPJ String document){
+        return legalEntityService.findByDocument(document);
+    }
+
     @GetMapping("/{id}")
     public LegalEntityDTO findByDocument(@PathVariable Long id){
         return legalEntityService.findById(id);
-    }
-
-    @GetMapping
-    public List<LegalEntityDTO> findAll(){
-        return legalEntityService.findAll();
     }
 }

@@ -1,6 +1,7 @@
 package br.com.invillia.projetoPaloAlto.service;
 
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
@@ -57,15 +58,17 @@ public class IndividualService {
     }
 
     public IndividualDTO findByDocument(String document){
-        return individualMapper.individualToIndividualDTO(individualRepository.findByDocument(document));
+        Optional<Individual> optionalIndividual = Optional.ofNullable(individualRepository.findByDocument(document)
+                .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+
+        return individualMapper.individualToIndividualDTO(optionalIndividual.get());
     }
 
     public IndividualDTO findById(Long id) {
-        return individualMapper.individualToIndividualDTO(individualRepository.findById(id).get());
-    }
+        Optional<Individual> optionalIndividual = Optional.ofNullable(individualRepository.findById(id)
+                .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
-    public List<IndividualDTO> findAll() {
-        return individualMapper.listIndividualToListIndividualDTO(individualRepository.findAll());
+        return individualMapper.individualToIndividualDTO(individualRepository.findById(id).get());
     }
 }
 

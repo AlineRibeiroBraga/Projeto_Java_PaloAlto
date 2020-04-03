@@ -1,6 +1,7 @@
 package br.com.invillia.projetoPaloAlto.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.invillia.projetoPaloAlto.controller.IndividualController;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
@@ -17,6 +18,8 @@ import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
+
+import javax.swing.text.Document;
 
 @Service
 public class LegalEntityService {
@@ -64,25 +67,31 @@ public class LegalEntityService {
 
         if(individuals != null){
             int lenght = individuals.size();
-            Individual individual;
+            Optional<Individual> individual;
 
             for(int i=0; i < lenght; i++){
 
                 individual = individualRepository.findByDocument(individuals.get(i).getDocument());
 
-                if(individual != null){
+                if(!individual.isEmpty()){
                     individuals.remove(i);
-                    individuals.add(i,individual);
+                    individuals.add(i,individual.get());
                 }
             }
         }
     }
 
     public LegalEntityDTO findById(Long id) {
-        return legalEntityMapper.legalEntityToLegalEntityDTO(legalEntityRepository.findById(id).get());
+        Optional<LegalEntity> optionalLegalEntity = Optional.ofNullable(legalEntityRepository.findById(id)
+                .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+
+        return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
     }
 
-    public List<LegalEntityDTO> findAll() {
-        return legalEntityMapper.listLegalEntityToListLegalEntityDTO(legalEntityRepository.findAll());
+    public LegalEntityDTO findByDocument(String document) {
+        Optional<LegalEntity> optionalLegalEntity = Optional.ofNullable(legalEntityRepository.findByDocument(document)
+                .orElseThrow(()->new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+
+        return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
     }
 }

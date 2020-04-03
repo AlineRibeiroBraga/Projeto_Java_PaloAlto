@@ -28,7 +28,7 @@ public class IndividualMapper {
         individual.setCreatedAt(LocalDateTime.now());
         individual.setAddresses(addressMapper.listAddressDTOToListAddress(individualDTO.getAddressesDTO()));
 
-        individual = addressMapper.setAddressIndividual(individual.getAddresses(),individual);
+        addressMapper.setAddressIndividual(individual.getAddresses(),individual);
 
         return individual;
     }

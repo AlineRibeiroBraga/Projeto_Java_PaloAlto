@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto;
+package br.com.invillia.projetoPaloAlto.legalEntityTest;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
@@ -28,13 +28,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(PER_CLASS)
-public class LegalEntityServiceTest {
+public class LegalEntityInsertTest {
 
     private Faker faker;
 
@@ -105,47 +107,6 @@ public class LegalEntityServiceTest {
         return addressDTO;
     }
 
-    private LegalEntity createLegalEntity(){
-        LegalEntity legalEntity = new LegalEntity();
-
-        legalEntity.setName(faker.name().name());
-        legalEntity.setCreatedAt(LocalDateTime.now());
-        legalEntity.setId(1L);
-        legalEntity.setDocument(faker.number().digits(14));
-        legalEntity.setTradeName(faker.name().name());
-
-        legalEntity.setAddresses(createListAddress());
-
-        for(Address address : legalEntity.getAddresses()){
-            address.setLegalEntity(legalEntity);
-        }
-
-        return legalEntity;
-    }
-
-    private List<Address> createListAddress() {
-        List<Address> addresses = new ArrayList<>();
-
-        addresses.add(createAddress(true));
-        addresses.add(createAddress(false));
-
-        return addresses;
-    }
-
-    private Address createAddress(Boolean main) {
-
-        Address address = new Address();
-
-        address.setDistrict(faker.name().name());
-        address.setMain(main);
-        address.setNumber(faker.number().digit());
-        address.setCity(faker.name().name());
-        address.setState(faker.name().name());
-        address.setZipCode(faker.code().gtin8());
-
-        return address;
-    }
-
     private List<IndividualDTO> createListIndividualsDTO() {
 
         List<IndividualDTO> individualsDTO = new ArrayList<>();
@@ -174,6 +135,48 @@ public class LegalEntityServiceTest {
         return individualDTO;
     }
 
+    private LegalEntity createLegalEntity(){
+        LegalEntity legalEntity = new LegalEntity();
+
+        legalEntity.setName(faker.name().name());
+        legalEntity.setCreatedAt(LocalDateTime.now());
+        legalEntity.setId(1L);
+        legalEntity.setDocument(faker.number().digits(14));
+        legalEntity.setTradeName(faker.name().name());
+
+        legalEntity.setAddresses(createListAddress());
+
+        for(Address address : legalEntity.getAddresses()){
+            address.setLegalEntity(legalEntity);
+        }
+
+        return legalEntity;
+    }
+
+    private List<Address> createListAddress() {
+        List<Address> addresses = new ArrayList<>();
+
+        addresses.add(createAddress(true, 1L));
+        addresses.add(createAddress(false, 2L));
+
+        return addresses;
+    }
+
+    private Address createAddress(Boolean main, Long id) {
+
+        Address address = new Address();
+
+        address.setId(id);
+        address.setDistrict(faker.name().name());
+        address.setMain(main);
+        address.setNumber(faker.number().digit());
+        address.setCity(faker.name().name());
+        address.setState(faker.name().name());
+        address.setZipCode(faker.code().gtin8());
+
+        return address;
+    }
+
     private Individual createIndividual() {
 
         Individual individual = new Individual();
@@ -194,21 +197,6 @@ public class LegalEntityServiceTest {
         return individual;
     }
 
-    @Test
-    public void InsertOkayWithoutIndividuals(){
-
-        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
-
-        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
-        when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
-
-        Long id = legalEntityService.insert(legalEntityDTO);
-
-        Assert.assertNotNull(id);
-        Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
-    }
-
     private List<Individual> createListIndividual() {
 
         List<Individual> individuals = new ArrayList<>();
@@ -219,6 +207,45 @@ public class LegalEntityServiceTest {
         return individuals;
     }
 
+    private LegalEntityDTO createLegalEntityDTOAddress() {
+
+        LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
+
+        legalEntityDTO.setDocument(faker.number().digits(14));
+        legalEntityDTO.setTradeName(faker.name().name());
+        legalEntityDTO.setName(faker.name().name());
+        legalEntityDTO.setAddressesDTO(createListAddressDTOAddress());
+
+        for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
+            addressDTO.setLegalEntityDTO(legalEntityDTO);
+        }
+
+        return legalEntityDTO;
+    }
+
+    private List<AddressDTO> createListAddressDTOAddress() {
+        List<AddressDTO> addressesDTO = new ArrayList<>();
+
+        addressesDTO.add(createAddressDTOAddress(true));
+        addressesDTO.add(createAddressDTOAddress(true));
+
+        return addressesDTO;
+    }
+
+    private AddressDTO createAddressDTOAddress(Boolean main) {
+
+        AddressDTO addressDTO = new AddressDTO();
+
+        addressDTO.setDistrict(faker.name().name());
+        addressDTO.setMain(main);
+        addressDTO.setNumber(faker.number().digit());
+        addressDTO.setCity(faker.name().name());
+        addressDTO.setState(faker.name().name());
+        addressDTO.setZipCode(faker.code().gtin8());
+
+        return addressDTO;
+    }
+
     @Test
     public void InsertOkayWithIndividualsSaved(){
 
@@ -226,16 +253,11 @@ public class LegalEntityServiceTest {
         legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-
-        when(individualMapper.individualDTOToIndividual(createIndividualDTO())).thenReturn(createIndividual());
-        when(individualMapper.listIndividualDTOToListIndividual(legalEntityDTO.getIndividualsDTO())).
-                thenReturn(createListIndividual());
-        when(addressMapper.listAddressDTOToListAddress(legalEntityDTO.getAddressesDTO())).thenReturn(createListAddress());
-
         when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
-        when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
         when(individualRepository.findByDocument(legalEntityDTO.getIndividualsDTO().get(1).getDocument()))
-                .thenReturn(createIndividual());
+        .thenReturn(Optional.of(createIndividual()));
+        when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
+
         Long id = legalEntityService.insert(legalEntityDTO);
 
         Assert.assertNotNull(id);
@@ -279,42 +301,18 @@ public class LegalEntityServiceTest {
         Assertions.assertThrows(AddressException.class, () -> legalEntityService.insert(legalEntityDTO));
     }
 
-    private LegalEntityDTO createLegalEntityDTOAddress() {
+    @Test
+    public void InsertOkayWithoutIndividuals(){
 
-        LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
+        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
 
-        legalEntityDTO.setDocument(faker.number().digits(14));
-        legalEntityDTO.setTradeName(faker.name().name());
-        legalEntityDTO.setName(faker.name().name());
-        legalEntityDTO.setAddressesDTO(createListAddressDTOAddress());
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
+        when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
+        when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
 
-        for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
-            addressDTO.setLegalEntityDTO(legalEntityDTO);
-        }
+        Long id = legalEntityService.insert(legalEntityDTO);
 
-        return legalEntityDTO;
-    }
-
-    private List<AddressDTO> createListAddressDTOAddress() {
-        List<AddressDTO> addressesDTO = new ArrayList<>();
-
-        addressesDTO.add(createAddressDTOAddress(true));
-        addressesDTO.add(createAddressDTOAddress(true));
-
-        return addressesDTO;
-    }
-
-    private AddressDTO createAddressDTOAddress(Boolean main) {
-
-        AddressDTO addressDTO = new AddressDTO();
-
-        addressDTO.setDistrict(faker.name().name());
-        addressDTO.setMain(main);
-        addressDTO.setNumber(faker.number().digit());
-        addressDTO.setCity(faker.name().name());
-        addressDTO.setState(faker.name().name());
-        addressDTO.setZipCode(faker.code().gtin8());
-
-        return addressDTO;
+        Assert.assertNotNull(id);
+        Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
     }
 }

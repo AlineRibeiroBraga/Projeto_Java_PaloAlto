@@ -63,22 +63,18 @@ public class AddressMapper {
         return addressesDTOS;
     }
 
-    public Individual setAddressIndividual(List<Address> addresses, Individual individual) {
+    public void setAddressIndividual(List<Address> addresses, Individual individual) {
 
         for(Address address : addresses){
             address.setIndividual(individual);
         }
-
-        return individual;
     }
 
-    public LegalEntity setAddressLegalEntity(List<Address> addresses, LegalEntity legalEntity) {
+    public void setAddressLegalEntity(List<Address> addresses, LegalEntity legalEntity) {
 
-        for(Address address : addresses){
+        for(Address address : addresses) {
             address.setLegalEntity(legalEntity);
         }
-
-        return legalEntity;
     }
 
     public void setAddressDTOIndividualDTO(List<AddressDTO> addressesDTO, IndividualDTO individualDTO) {

@@ -30,19 +30,17 @@ public class LegalEntityMapper {
         legalEntity.setCreatedAt(LocalDateTime.now());
         legalEntity.setAddresses(addressMapper.listAddressDTOToListAddress(legalEntityDTO.getAddressesDTO()));
 
-        legalEntity = addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);
-        legalEntity = setIndividualsLegalEntity(legalEntity,legalEntityDTO.getIndividualsDTO());
+        addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);
+        setIndividualsLegalEntity(legalEntity,legalEntityDTO.getIndividualsDTO());
 
         return legalEntity;
     }
 
-    private LegalEntity setIndividualsLegalEntity(LegalEntity legalEntity, List<IndividualDTO> individualsDTO) {
+    private void setIndividualsLegalEntity(LegalEntity legalEntity, List<IndividualDTO> individualsDTO) {
 
         if(individualsDTO != null){
             legalEntity.setIndividuals(individualMapper.listIndividualDTOToListIndividual(individualsDTO));
         }
-
-        return legalEntity;
     }
 
     public List<LegalEntity> listLegalEntityDTOToListLegalEntity(List<LegalEntityDTO> legalEntitiesDTO) {
@@ -63,6 +61,8 @@ public class LegalEntityMapper {
         legalEntityDTO.setName(legalEntity.getName());
         legalEntityDTO.setDocument(legalEntity.getDocument());
         legalEntityDTO.setTradeName(legalEntity.getTradeName());
+        legalEntityDTO.setAddressesDTO(addressMapper.listAddressToListAddressDTO(legalEntity.getAddresses()));
+        legalEntityDTO.setIndividualsDTO(individualMapper.listIndividualToListIndividualDTO(legalEntity.getIndividuals()));
 
         return legalEntityDTO;
     }

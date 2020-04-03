@@ -28,6 +28,4 @@ public class IndividualDTO extends CustomerDTO{
 
     @NotNull
     private LocalDate birthDate;
-
-    private List<LegalEntityDTO> legalEntitiesDTO;
 }
