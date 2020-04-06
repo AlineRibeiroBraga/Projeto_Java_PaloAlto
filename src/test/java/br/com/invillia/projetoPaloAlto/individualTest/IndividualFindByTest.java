@@ -4,29 +4,26 @@ import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;
 
@@ -43,6 +40,7 @@ public class IndividualFindByTest {
     @InjectMocks
     private IndividualMapper individualMapper;
 
+    @Spy
     @InjectMocks
     private IndividualService individualService;
 
@@ -194,16 +192,6 @@ public class IndividualFindByTest {
     }
 
     @Test
-    public void findByIdNotExists(){
-
-        when(individualRepository.findById(1L)).thenReturn(Optional.empty());
-
-        IndividualDTO individualDTO = individualService.findById(1L);
-
-        Assertions.assertThrows(IndividualException.class, ()-> individualService.findById(1L));
-    }
-
-    @Test
     public void findByDocumentExists(){
 
         Individual individual  = createIndividual();
@@ -244,13 +232,16 @@ public class IndividualFindByTest {
         Assertions.assertEquals(individualDTO2.getBirthDate(),individual2.getBirthDate());
         Assertions.assertEquals(individualDTO2.getMotherName(),individual2.getMotherName());
 
+        verify(individualRepository,times(1)).findByDocument(individualDTO.getDocument());
     }
 
-    public IndividualDTO findById(Long id) {
-        Optional<Individual> optionalIndividual = Optional.of(individualRepository.findById(id)
-                .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
-
-        return individualMapper.individualToIndividualDTO(optionalIndividual.get());
-    }
-
+//    @Test
+//    public void findByIdNotExists(){
+//
+//        when(individualRepository.findById(1L)).thenReturn(Optional.empty());
+//
+//        IndividualDTO individualDTO = individualService.findById(1L);
+//
+//        Assertions.assertThrows(IndividualException.class, ()-> individualService.findById(1L));
+//    }
 }
