@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
+import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import org.mockito.*;
 import org.junit.jupiter.api.Test;
 import com.github.javafaker.Faker;
@@ -38,8 +39,12 @@ public class IndividualInsertTest {
     @InjectMocks
     private IndividualService individualService;
 
-    @Mock
+    @Spy
+    @InjectMocks
     private IndividualMapper individualMapper;
+
+    @Spy
+    private AddressMapper addressMapper;
 
     @BeforeAll
     public void setup(){
@@ -140,7 +145,6 @@ public class IndividualInsertTest {
 
         when(individualRepository.existsByDocument(individualDTO.getDocument())).thenReturn(false);
         when(individualRepository.existsByRg(individualDTO.getRg())).thenReturn(false);
-        when(individualMapper.individualDTOToIndividual(individualDTO)).thenReturn(createIndividual());
         when(individualRepository.save(Mockito.any(Individual.class))).thenReturn(createIndividual());
 
         Long id = individualService.insert(individualDTO);

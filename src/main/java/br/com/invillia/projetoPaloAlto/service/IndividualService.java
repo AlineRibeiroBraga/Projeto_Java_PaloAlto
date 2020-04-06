@@ -58,14 +58,15 @@ public class IndividualService {
     }
 
     public IndividualDTO findByDocument(String document){
-        Optional<Individual> optionalIndividual = Optional.ofNullable(individualRepository.findByDocument(document)
+
+        Optional<Individual> optionalIndividual = Optional.of(individualRepository.findByDocument(document)
                 .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
         return individualMapper.individualToIndividualDTO(optionalIndividual.get());
     }
 
     public IndividualDTO findById(Long id) {
-        Optional<Individual> optionalIndividual = Optional.ofNullable(individualRepository.findById(id)
+        Optional<Individual> optionalIndividual = Optional.of(individualRepository.findById(id)
                 .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
         return individualMapper.individualToIndividualDTO(optionalIndividual.get());

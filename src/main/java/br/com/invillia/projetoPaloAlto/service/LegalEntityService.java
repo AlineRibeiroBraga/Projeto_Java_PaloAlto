@@ -82,14 +82,14 @@ public class LegalEntityService {
     }
 
     public LegalEntityDTO findById(Long id) {
-        Optional<LegalEntity> optionalLegalEntity = Optional.ofNullable(legalEntityRepository.findById(id)
+        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findById(id)
                 .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
 
         return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
     }
 
     public LegalEntityDTO findByDocument(String document) {
-        Optional<LegalEntity> optionalLegalEntity = Optional.ofNullable(legalEntityRepository.findByDocument(document)
+        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findByDocument(document)
                 .orElseThrow(()->new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
 
         return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());

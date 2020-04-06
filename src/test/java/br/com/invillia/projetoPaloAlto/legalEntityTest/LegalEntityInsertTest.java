@@ -23,13 +23,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -43,6 +41,10 @@ public class LegalEntityInsertTest {
     @Mock
     private LegalEntityRepository legalEntityRepository;
 
+    @Mock
+    private IndividualRepository individualRepository;
+
+    @Spy
     @InjectMocks
     private LegalEntityService legalEntityService;
 
@@ -50,14 +52,17 @@ public class LegalEntityInsertTest {
     @InjectMocks
     private LegalEntityMapper legalEntityMapper;
 
-    @Mock
-    private IndividualRepository individualRepository;
+    @Spy
+    private AddressMapper addressMapper;
+
+    @Spy
+    @InjectMocks
+    private IndividualMapper individualMapper;
 
     @BeforeAll
     public void setup(){
         MockitoAnnotations.initMocks(this);
         this.faker = new Faker();
-        this.legalEntityMapper = new LegalEntityMapper();
     }
 
     private LegalEntityDTO createLegalEntityDTO(){
@@ -189,16 +194,6 @@ public class LegalEntityInsertTest {
         return individual;
     }
 
-    private List<Individual> createListIndividual() {
-
-        List<Individual> individuals = new ArrayList<>();
-
-        individuals.add(createIndividual());
-        individuals.add(createIndividual());
-
-        return individuals;
-    }
-
     private LegalEntityDTO createLegalEntityDTOAddress() {
 
         LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
@@ -246,8 +241,7 @@ public class LegalEntityInsertTest {
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(individualRepository.findByDocument(legalEntityDTO.getIndividualsDTO().get(1).getDocument()))
-        .thenReturn(Optional.of(createIndividual()));
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(createIndividual()));
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
 
         Long id = legalEntityService.insert(legalEntityDTO);
@@ -264,8 +258,8 @@ public class LegalEntityInsertTest {
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
-        when(individualRepository.findByDocument(legalEntityDTO.getIndividualsDTO().get(1).getDocument()))
-                .thenReturn(null);
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+
         Long id = legalEntityService.insert(legalEntityDTO);
 
         Assert.assertNotNull(id);
@@ -298,7 +292,6 @@ public class LegalEntityInsertTest {
         LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO)).thenReturn(createLegalEntity());
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
 
         Long id = legalEntityService.insert(legalEntityDTO);
