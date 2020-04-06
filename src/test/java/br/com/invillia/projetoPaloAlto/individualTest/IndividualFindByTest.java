@@ -4,6 +4,7 @@ import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
@@ -14,10 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -149,11 +147,7 @@ public class IndividualFindByTest {
 
         IndividualDTO individualDTO = individualService.findById(1L);
 
-        Assertions.assertNotNull(individualDTO);
-        Assertions.assertEquals(individualDTO.getName(),individual.getName());
-        Assertions.assertEquals(individualDTO.getDocument(),individual.getDocument());
-        Assertions.assertEquals(individualDTO.getBirthDate(),individual.getBirthDate());
-        Assertions.assertEquals(individualDTO.getMotherName(),individual.getMotherName());
+        individualsValidator(individualDTO,individual);
 
         AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
         AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
@@ -164,31 +158,20 @@ public class IndividualFindByTest {
         Individual individual1 = address1.getIndividual();
         Individual individual2 = address2.getIndividual();
 
-        Assertions.assertEquals(addressDTO1.getMain(), address1.getMain());
-        Assertions.assertEquals(addressDTO1.getDistrict(), address1.getDistrict());
-        Assertions.assertEquals(addressDTO1.getNumber(),address1.getNumber());
-        Assertions.assertEquals(addressDTO1.getCity(),address1.getCity());
-        Assertions.assertEquals(addressDTO1.getState(),address1.getState());
-        Assertions.assertEquals(addressDTO1.getZipCode(),address1.getZipCode());
-
-        Assertions.assertEquals(individualDTO1.getName(),individual1.getName());
-        Assertions.assertEquals(individualDTO1.getDocument(),individual1.getDocument());
-        Assertions.assertEquals(individualDTO1.getBirthDate(),individual1.getBirthDate());
-        Assertions.assertEquals(individualDTO1.getMotherName(),individual1.getMotherName());
-
-        Assertions.assertEquals(addressDTO2.getMain(), address2.getMain());
-        Assertions.assertEquals(addressDTO2.getDistrict(), address2.getDistrict());
-        Assertions.assertEquals(addressDTO2.getNumber(),address2.getNumber());
-        Assertions.assertEquals(addressDTO2.getCity(),address2.getCity());
-        Assertions.assertEquals(addressDTO2.getState(),address2.getState());
-        Assertions.assertEquals(addressDTO2.getZipCode(),address2.getZipCode());
-
-        Assertions.assertEquals(individualDTO2.getName(),individual2.getName());
-        Assertions.assertEquals(individualDTO2.getDocument(),individual2.getDocument());
-        Assertions.assertEquals(individualDTO2.getBirthDate(),individual2.getBirthDate());
-        Assertions.assertEquals(individualDTO2.getMotherName(),individual2.getMotherName());
+        addressesValidator(addressDTO1,address1);
+        individualsValidator(individualDTO1,individual1);
+        addressesValidator(addressDTO2,address2);
+        individualsValidator(individualDTO2,individual2);
 
         verify(individualRepository,times(1)).findById(1L);
+    }
+
+    @Test
+    public void findByIdNotExists(){
+
+        when(individualRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(IndividualException.class, ()-> individualService.findById(1L));
     }
 
     @Test
@@ -200,6 +183,8 @@ public class IndividualFindByTest {
 
         IndividualDTO individualDTO = individualService.findByDocument(individual.getDocument());
 
+        individualsValidator(individualDTO,individual);
+
         AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
         AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
         Address address1 = individual.getAddresses().get(0);
@@ -210,38 +195,37 @@ public class IndividualFindByTest {
         Individual individual1 = address1.getIndividual();
         Individual individual2 = address2.getIndividual();
 
-        Assertions.assertEquals(addressDTO1.getZipCode(),address1.getZipCode());
-        Assertions.assertEquals(addressDTO1.getState(),address1.getState());
-        Assertions.assertEquals(addressDTO1.getCity(),address1.getCity());
-        Assertions.assertEquals(addressDTO1.getNumber(),address1.getNumber());
-        Assertions.assertEquals(addressDTO1.getDistrict(),address1.getDistrict());
-
-        Assertions.assertEquals(addressDTO2.getZipCode(),address2.getZipCode());
-        Assertions.assertEquals(addressDTO2.getState(),address2.getState());
-        Assertions.assertEquals(addressDTO2.getCity(),address2.getCity());
-        Assertions.assertEquals(addressDTO2.getNumber(),address2.getNumber());
-        Assertions.assertEquals(addressDTO2.getDistrict(),address2.getDistrict());
-
-        Assertions.assertEquals(individualDTO1.getName(),individual1.getName());
-        Assertions.assertEquals(individualDTO1.getDocument(),individual1.getDocument());
-        Assertions.assertEquals(individualDTO1.getBirthDate(),individual1.getBirthDate());
-        Assertions.assertEquals(individualDTO1.getMotherName(),individual1.getMotherName());
-
-        Assertions.assertEquals(individualDTO2.getName(),individual2.getName());
-        Assertions.assertEquals(individualDTO2.getDocument(),individual2.getDocument());
-        Assertions.assertEquals(individualDTO2.getBirthDate(),individual2.getBirthDate());
-        Assertions.assertEquals(individualDTO2.getMotherName(),individual2.getMotherName());
+        addressesValidator(addressDTO1,address1);
+        addressesValidator(addressDTO2,address2);
+        individualsValidator(individualDTO1,individual1);
+        individualsValidator(individualDTO2,individual2);
 
         verify(individualRepository,times(1)).findByDocument(individualDTO.getDocument());
     }
 
-//    @Test
-//    public void findByIdNotExists(){
-//
-//        when(individualRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        IndividualDTO individualDTO = individualService.findById(1L);
-//
-//        Assertions.assertThrows(IndividualException.class, ()-> individualService.findById(1L));
-//    }
+    @Test
+    public void findByDocumentNotExists(){
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(IndividualException.class,
+                () -> individualService.findByDocument(faker.number().digits(11)));
+    }
+
+    private void individualsValidator(IndividualDTO individualDTO, Individual individual) {
+
+        Assertions.assertEquals(individualDTO.getName(),individual.getName());
+        Assertions.assertEquals(individualDTO.getDocument(),individual.getDocument());
+        Assertions.assertEquals(individualDTO.getBirthDate(),individual.getBirthDate());
+        Assertions.assertEquals(individualDTO.getMotherName(),individual.getMotherName());
+    }
+
+    private void addressesValidator(AddressDTO addressDTO, Address address) {
+
+        Assertions.assertEquals(addressDTO.getMain(), address.getMain());
+        Assertions.assertEquals(addressDTO.getDistrict(), address.getDistrict());
+        Assertions.assertEquals(addressDTO.getNumber(),address.getNumber());
+        Assertions.assertEquals(addressDTO.getCity(),address.getCity());
+        Assertions.assertEquals(addressDTO.getState(),address.getState());
+        Assertions.assertEquals(addressDTO.getZipCode(),address.getZipCode());
+    }
 }
