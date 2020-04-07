@@ -24,4 +24,7 @@ public abstract class Customer {
 
     @Column(name = "des_name", nullable = false)
     protected String name;
+
+    @Column(name = "flg_active", nullable = false)
+    protected Boolean active;
 }

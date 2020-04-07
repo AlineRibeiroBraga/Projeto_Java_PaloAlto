@@ -1,14 +1,13 @@
 package br.com.invillia.projetoPaloAlto.mapper;
 
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Component;
-import br.com.invillia.projetoPaloAlto.domain.model.Address;
-import org.springframework.beans.factory.annotation.Autowired;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 
 @Component
 public class IndividualMapper {
@@ -25,6 +24,7 @@ public class IndividualMapper {
         individual.setRg(individualDTO.getRg());
         individual.setBirthDate(individualDTO.getBirthDate());
         individual.setName(individualDTO.getName());
+        individual.setActive(individualDTO.getActive());
         individual.setCreatedAt(LocalDateTime.now());
         individual.setAddresses(addressMapper.listAddressDTOToListAddress(individualDTO.getAddressesDTO()));
 
@@ -54,6 +54,7 @@ public class IndividualMapper {
         individualDTO.setMotherName(individual.getMotherName());
         individualDTO.setDocument(individual.getDocument());
         individualDTO.setBirthDate(individual.getBirthDate());
+        individualDTO.setActive(individual.getActive());
         individualDTO.setAddressesDTO(addressMapper.listAddressToListAddressDTO(individual.getAddresses()));
 
         addressMapper.setAddressDTOIndividualDTO(individualDTO.getAddressesDTO(),individualDTO);

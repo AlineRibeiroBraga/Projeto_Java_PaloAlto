@@ -15,4 +15,7 @@ public abstract class CustomerDTO {
 
     @NotNull
     protected List<AddressDTO> addressesDTO;
+
+    @NotNull
+    protected Boolean active;
 }

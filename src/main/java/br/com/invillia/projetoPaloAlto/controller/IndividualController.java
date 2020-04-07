@@ -41,4 +41,14 @@ public class IndividualController {
     public IndividualDTO findByDocument(@PathVariable Long id){
         return individualService.findById(id);
     }
+
+    @DeleteMapping("/document/{document}")
+    public String deleteIndividualByDocument(@PathVariable String document){
+        return individualService.deleteIndividualByDocument(document);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteIndividualById(@PathVariable Long id){
+        return individualService.deleteIndividualById(id);
+    }
 }
