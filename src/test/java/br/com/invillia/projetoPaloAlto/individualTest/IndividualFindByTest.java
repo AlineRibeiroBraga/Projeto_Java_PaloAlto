@@ -62,6 +62,7 @@ public class IndividualFindByTest {
         individual.setDocument(faker.number().digits(11));
         individual.setMotherName(faker.name().name());
         individual.setBirthDate(LocalDate.now());
+        individual.setActive(true);
         individual.setAddresses(createListAddress());
 
         for(Address address : individual.getAddresses()){
@@ -105,6 +106,7 @@ public class IndividualFindByTest {
         individualDTO.setDocument(faker.number().digits(11));
         individualDTO.setMotherName(faker.name().name());
         individualDTO.setBirthDate(LocalDate.now());
+        individualDTO.setActive(true);
         individualDTO.setAddressesDTO(createListAddressDTO());
 
         for(AddressDTO addressDTO : individualDTO.getAddressesDTO()){
@@ -213,6 +215,7 @@ public class IndividualFindByTest {
 
     private void individualsValidator(IndividualDTO individualDTO, Individual individual) {
 
+        Assertions.assertEquals(individualDTO.getActive(),individual.getActive());
         Assertions.assertEquals(individualDTO.getName(),individual.getName());
         Assertions.assertEquals(individualDTO.getDocument(),individual.getDocument());
         Assertions.assertEquals(individualDTO.getBirthDate(),individual.getBirthDate());

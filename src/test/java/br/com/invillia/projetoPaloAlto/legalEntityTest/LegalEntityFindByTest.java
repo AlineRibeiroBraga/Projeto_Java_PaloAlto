@@ -67,6 +67,7 @@ public class LegalEntityFindByTest {
         legalEntity.setDocument(faker.number().digits(14));
         legalEntity.setTradeName(faker.name().name());
         legalEntity.setName(faker.name().fullName());
+        legalEntity.setActive(true);
         legalEntity.setAddresses(createListAddress());
         legalEntity.setIndividuals(new ArrayList<>());
 
@@ -102,46 +103,6 @@ public class LegalEntityFindByTest {
         return address;
     }
 
-    private LegalEntityDTO createLegalEntityDTO() {
-
-        LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
-
-        legalEntityDTO.setDocument(faker.number().digits(14));
-        legalEntityDTO.setTradeName(faker.name().name());
-        legalEntityDTO.setName(faker.name().fullName());
-        legalEntityDTO.setAddressesDTO(createListAddressDTO());
-
-        for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
-            addressDTO.setLegalEntityDTO(legalEntityDTO);
-        }
-
-        return legalEntityDTO;
-    }
-
-    private List<AddressDTO> createListAddressDTO() {
-
-        List<AddressDTO> addresses = new ArrayList<>();
-
-        addresses.add(createAddressDTO(true));
-        addresses.add(createAddressDTO(false));
-
-        return addresses;
-    }
-
-    private AddressDTO createAddressDTO(Boolean main) {
-
-        AddressDTO addressDTO = new AddressDTO();
-
-        addressDTO.setZipCode(faker.address().zipCode());
-        addressDTO.setCity(faker.address().city());
-        addressDTO.setNumber(faker.number().digit());
-        addressDTO.setMain(main);
-        addressDTO.setDistrict(faker.address().fullAddress());
-        addressDTO.setState(faker.address().state());
-
-        return addressDTO;
-    }
-
     private List<Individual> createListIndividual() {
         List<Individual> individuals = new ArrayList<>();
 
@@ -162,6 +123,7 @@ public class LegalEntityFindByTest {
         individual.setRg(faker.number().digits(9));
         individual.setCreatedAt(LocalDateTime.now());
         individual.setName(faker.name().name());
+        individual.setActive(true);
         individual.setAddresses(createListAddress());
 
         for(Address address : individual.getAddresses()){
@@ -357,6 +319,7 @@ public class LegalEntityFindByTest {
 
     private void legalEntityValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity) {
 
+        Assertions.assertEquals(legalEntityDTO.getActive(),legalEntity.getActive());
         Assertions.assertEquals(legalEntityDTO.getTradeName(),legalEntity.getTradeName());
         Assertions.assertEquals(legalEntityDTO.getName(),legalEntity.getName());
         Assertions.assertEquals(legalEntityDTO.getDocument(),legalEntity.getDocument());
@@ -374,6 +337,7 @@ public class LegalEntityFindByTest {
 
     private void individualsValidator(IndividualDTO individualDTO, Individual individual) {
 
+        Assertions.assertEquals(individualDTO.getActive(),individual.getActive());
         Assertions.assertEquals(individualDTO.getName(),individual.getName());
         Assertions.assertEquals(individualDTO.getDocument(),individual.getDocument());
         Assertions.assertEquals(individualDTO.getBirthDate(),individual.getBirthDate());

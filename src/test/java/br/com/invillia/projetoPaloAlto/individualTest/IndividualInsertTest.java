@@ -61,6 +61,7 @@ public class IndividualInsertTest {
         individualDTO.setBirthDate(LocalDate.now());
         individualDTO.setDocument(faker.number().digits(11));
         individualDTO.setName(faker.name().fullName());
+        individualDTO.setActive(true);
         individualDTO.setAddressesDTO(createListAddressDTO());
 
         for(AddressDTO addressDTO : individualDTO.getAddressesDTO()){
@@ -104,6 +105,7 @@ public class IndividualInsertTest {
         individual.setRg(faker.number().digits(9));
         individual.setCreatedAt(LocalDateTime.now());
         individual.setName(faker.name().fullName());
+        individual.setActive(true);
         individual.setAddresses(createListAddress());
 
         for(Address address : individual.getAddresses()){

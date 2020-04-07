@@ -72,6 +72,7 @@ public class LegalEntityInsertTest {
         legalEntityDTO.setName(faker.name().name());
         legalEntityDTO.setDocument(faker.number().digits(14));
         legalEntityDTO.setTradeName(faker.name().name());
+        legalEntityDTO.setActive(true);
         legalEntityDTO.setAddressesDTO(createListAddressDTO());
 
         for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
@@ -123,6 +124,7 @@ public class LegalEntityInsertTest {
         individualDTO.setMotherName(faker.name().fullName());
         individualDTO.setRg(faker.number().digits(9));
         individualDTO.setBirthDate(LocalDate.now());
+        individualDTO.setActive(true);
         individualDTO.setAddressesDTO(createListAddressDTO());
 
         for(AddressDTO addressDTO : individualDTO.getAddressesDTO()){
@@ -140,7 +142,7 @@ public class LegalEntityInsertTest {
         legalEntity.setId(1L);
         legalEntity.setDocument(faker.number().digits(14));
         legalEntity.setTradeName(faker.name().name());
-
+        legalEntity.setActive(true);
         legalEntity.setAddresses(createListAddress());
 
         for(Address address : legalEntity.getAddresses()){
@@ -185,6 +187,7 @@ public class LegalEntityInsertTest {
         individual.setRg(faker.number().digits(9));
         individual.setCreatedAt(LocalDateTime.now());
         individual.setName(faker.name().fullName());
+        individual.setActive(true);
         individual.setAddresses(createListAddress());
 
         for(Address address : individual.getAddresses()){
@@ -201,6 +204,7 @@ public class LegalEntityInsertTest {
         legalEntityDTO.setDocument(faker.number().digits(14));
         legalEntityDTO.setTradeName(faker.name().name());
         legalEntityDTO.setName(faker.name().name());
+        legalEntityDTO.setActive(true);
         legalEntityDTO.setAddressesDTO(createListAddressDTOAddress());
 
         for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
