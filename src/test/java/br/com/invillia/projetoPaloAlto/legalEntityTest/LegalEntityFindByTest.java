@@ -6,6 +6,7 @@ import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
+import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
@@ -17,18 +18,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;
 
@@ -50,9 +46,11 @@ public class LegalEntityFindByTest {
     private LegalEntityMapper legalEntityMapper;
 
     @Spy
+    @InjectMocks
     private AddressMapper addressMapper;
 
     @Spy
+    @InjectMocks
     private IndividualMapper individualMapper;
 
     @BeforeAll
@@ -83,16 +81,17 @@ public class LegalEntityFindByTest {
 
         List<Address> addresses = new ArrayList<>();
 
-        addresses.add(createAddress(true));
-        addresses.add(createAddress(false));
+        addresses.add(createAddress(true,1L));
+        addresses.add(createAddress(false,2L));
 
         return addresses;
     }
 
-    private Address createAddress(Boolean main) {
+    private Address createAddress(Boolean main, Long id) {
 
         Address address = new Address();
 
+        address.setId(id);
         address.setZipCode(faker.address().zipCode());
         address.setCity(faker.address().city());
         address.setNumber(faker.number().digit());
@@ -163,7 +162,7 @@ public class LegalEntityFindByTest {
         individual.setRg(faker.number().digits(9));
         individual.setCreatedAt(LocalDateTime.now());
         individual.setName(faker.name().name());
-        individual.setAddresses(createAddress(true));
+        individual.setAddresses(createListAddress());
 
         for(Address address : individual.getAddresses()){
             address.setIndividual(individual);
@@ -238,12 +237,123 @@ public class LegalEntityFindByTest {
         individualsValidator(individualDTO1,individual1);
         individualsValidator(individualDTO2,individual2);
 
-        address1 = individual1.getAddresses().get(0);
-        address2 = individual1.getAddresses().get(1);
-        addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
+        Address address11 = individual1.getAddresses().get(0);
+        Address address12 = individual1.getAddresses().get(1);
+        Address address21 = individual2.getAddresses().get(0);
+        Address address22 = individual2.getAddresses().get(1);
+
+        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
+        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
+        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
+
+        addressesValidator(addressDTO11,address11);
+        addressesValidator(addressDTO12,address12);
+        addressesValidator(addressDTO21,address21);
+        addressesValidator(addressDTO22,address22);
+
+        verify(legalEntityRepository,times(1)).findById(1L);
     }
 
+    @Test
+    public void findByIdNotExists(){
+
+        when(legalEntityRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LegalEntityException.class, ()-> legalEntityService.findById(1L));
+    }
+
+    @Test
+    public void findByDocumentExistsWithoutIndividuals(){
+
+        LegalEntity legalEntity = createLegalEntity();
+
+        when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
+
+        LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(legalEntity.getDocument());
+
+        legalEntityValidator(legalEntityDTO,legalEntity);
+
+        Address address1  = legalEntity.getAddresses().get(0);
+        Address address2  = legalEntity.getAddresses().get(1);
+        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
+        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
+
+        addressesValidator(addressDTO1,address1);
+        addressesValidator(addressDTO2,address2);
+
+        LegalEntity legalEntity1 = address1.getLegalEntity();
+        LegalEntity legalEntity2 = address2.getLegalEntity();
+        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
+        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
+
+        legalEntityValidator(legalEntityDTO1,legalEntity1);
+        legalEntityValidator(legalEntityDTO2,legalEntity2);
+
+        verify(legalEntityRepository,times(1)).findByDocument(legalEntity.getDocument());
+    }
+
+    @Test
+    public void findByDocumentExistsWithIndividuals(){
+
+        LegalEntity legalEntity = createLegalEntity();
+        legalEntity.setIndividuals(createListIndividual());
+
+        when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
+
+        LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(legalEntity.getDocument());
+
+        legalEntityValidator(legalEntityDTO,legalEntity);
+
+        Address address1  = legalEntity.getAddresses().get(0);
+        Address address2  = legalEntity.getAddresses().get(1);
+        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
+        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
+
+        addressesValidator(addressDTO1,address1);
+        addressesValidator(addressDTO2,address2);
+
+        LegalEntity legalEntity1 = address1.getLegalEntity();
+        LegalEntity legalEntity2 = address2.getLegalEntity();
+        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
+        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
+
+        legalEntityValidator(legalEntityDTO1,legalEntity1);
+        legalEntityValidator(legalEntityDTO2,legalEntity2);
+
+        Individual individual1 = legalEntity.getIndividuals().get(0);
+        Individual individual2 = legalEntity.getIndividuals().get(1);
+        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
+        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
+
+        individualsValidator(individualDTO1,individual1);
+        individualsValidator(individualDTO2,individual2);
+
+        Address address11 = individual1.getAddresses().get(0);
+        Address address12 = individual1.getAddresses().get(1);
+        Address address21 = individual2.getAddresses().get(0);
+        Address address22 = individual2.getAddresses().get(1);
+
+        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
+        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
+        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
+
+        addressesValidator(addressDTO11,address11);
+        addressesValidator(addressDTO12,address12);
+        addressesValidator(addressDTO21,address21);
+        addressesValidator(addressDTO22,address22);
+
+        verify(legalEntityRepository,times(1)).findByDocument(legalEntity.getDocument());
+    }
+
+    @Test
+    public void findByDocumentNotExists(){
+
+        when(legalEntityRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(LegalEntityException.class, ()-> legalEntityService.findByDocument(Mockito.anyString()));
+    }
 
     private void legalEntityValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity) {
 
