@@ -9,4 +9,5 @@ public class Messages {
     public static final String INDIVIDUAL_WAS_NOT_FOUND = "This Invidividual wasn't found!";
     public static final String LEGAL_ENTITY_WAS_NOT_FOUND = "This Legal Entity wasn't found!";;
     public static final String INDIVIDUAL_WAS_ALREADY_DELETED = "This Individual was already deleted!";
+    public static final String LEGAL_ENTITY_WAS_ALREADY_DELETED = "This Legal Entity was already deleted!";
 }

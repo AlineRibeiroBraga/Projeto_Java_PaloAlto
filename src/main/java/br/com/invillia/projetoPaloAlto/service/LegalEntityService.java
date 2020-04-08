@@ -10,6 +10,7 @@ import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
+import org.apache.catalina.startup.CopyParentClassLoaderRule;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +94,35 @@ public class LegalEntityService {
                 .orElseThrow(()->new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
 
         return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
+    }
+
+    public String deleteByDocument(String document) {
+
+        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findByDocument(document).
+                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+
+        deleteIndividuals(optionalLegalEntity.get());
+
+        if(optionalLegalEntity.get().getActive()){
+//            optionalLegalEntity.get().setActive(false);
+
+            return optionalLegalEntity.get().getDocument();
+        }
+
+        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
+    }
+
+    private void deleteIndividuals(LegalEntity legalEntity) {
+
+        if(legalEntity.getIndividuals() != null){
+
+            for (Individual individual : legalEntity.getIndividuals()){
+
+                if(individualRepository.findLegalEntityById(individual.getId())){
+                    System.out.println("entrou");
+//                    individual.setActive(false);
+                }
+            }
+        }
     }
 }

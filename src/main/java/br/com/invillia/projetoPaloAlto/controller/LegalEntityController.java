@@ -41,4 +41,9 @@ public class LegalEntityController {
     public LegalEntityDTO findByDocument(@PathVariable Long id){
         return legalEntityService.findById(id);
     }
+
+    @DeleteMapping("/document/{document}")
+    public String deleteByDocument(@PathVariable String document){
+        return legalEntityService.deleteByDocument(document);
+    }
 }
