@@ -44,11 +44,11 @@ public class IndividualController {
 
     @DeleteMapping("/document/{document}")
     public String deleteIndividualByDocument(@PathVariable String document){
-        return individualService.deleteIndividualByDocument(document);
+        return individualService.deleteByDocument(document);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteIndividualById(@PathVariable Long id){
-        return individualService.deleteIndividualById(id);
+    public Long deleteIndividualById(@PathVariable Long id){
+        return individualService.deleteById(id);
     }
 }

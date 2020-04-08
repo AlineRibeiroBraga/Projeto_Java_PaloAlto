@@ -72,32 +72,38 @@ public class IndividualService {
         return individualMapper.individualToIndividualDTO(optionalIndividual.get());
     }
 
-    public String deleteIndividualByDocument(String document) {
+    public String deleteByDocument(String document) {
 
         Optional<Individual> individual = Optional.of(individualRepository.findByDocument(document)
                 .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
-        individual.get().setActive(false);
+        if(individual.get().getActive()){
+            individual.get().setActive(false);
+        }
+        else{
+            throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
+        }
 
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual.get());
-
-        individualDTO.setActive(false);
 
         return individualDTO.getDocument();
     }
 
-    public String deleteIndividualById(Long id) {
+    public Long deleteById(Long id) {
 
         Optional<Individual> individual = Optional.of(individualRepository.findById(id)
                 .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
 
-        individual.get().setActive(false);
+        if(individual.get().getActive()){
+            individual.get().setActive(false);
+        }
+        else{
+            throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
+        }
 
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual.get());
 
-        individualDTO.setActive(false);
-
-        return individualDTO.getDocument();
+        return individual.get().getId();
     }
 }
 
