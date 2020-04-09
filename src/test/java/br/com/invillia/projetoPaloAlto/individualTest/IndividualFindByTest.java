@@ -17,11 +17,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;
 
@@ -149,23 +151,30 @@ public class IndividualFindByTest {
 
         IndividualDTO individualDTO = individualService.findById(1L);
 
+        fieldsValidator(individualDTO, individual);
+
+        verify(individualRepository,times(1)).findById(1L);
+    }
+
+    private void fieldsValidator(IndividualDTO individualDTO, Individual individual) {
+
         individualsValidator(individualDTO,individual);
 
         AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
         AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
         Address address1 = individual.getAddresses().get(0);
         Address address2 = individual.getAddresses().get(1);
+
+        addressesValidator(addressDTO1,address1);
+        addressesValidator(addressDTO2,address2);
+
         IndividualDTO individualDTO1 = addressDTO1.getIndividualDTO();
         IndividualDTO individualDTO2 = addressDTO2.getIndividualDTO();
         Individual individual1 = address1.getIndividual();
         Individual individual2 = address2.getIndividual();
 
-        addressesValidator(addressDTO1,address1);
         individualsValidator(individualDTO1,individual1);
-        addressesValidator(addressDTO2,address2);
         individualsValidator(individualDTO2,individual2);
-
-        verify(individualRepository,times(1)).findById(1L);
     }
 
     @Test
@@ -185,22 +194,7 @@ public class IndividualFindByTest {
 
         IndividualDTO individualDTO = individualService.findByDocument(individual.getDocument());
 
-        individualsValidator(individualDTO,individual);
-
-        AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
-        Address address1 = individual.getAddresses().get(0);
-        Address address2 = individual.getAddresses().get(1);
-
-        IndividualDTO individualDTO1 = addressDTO1.getIndividualDTO();
-        IndividualDTO individualDTO2 = addressDTO2.getIndividualDTO();
-        Individual individual1 = address1.getIndividual();
-        Individual individual2 = address2.getIndividual();
-
-        addressesValidator(addressDTO1,address1);
-        addressesValidator(addressDTO2,address2);
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
+        fieldsValidator(individualDTO,individual);
 
         verify(individualRepository,times(1)).findByDocument(individualDTO.getDocument());
     }

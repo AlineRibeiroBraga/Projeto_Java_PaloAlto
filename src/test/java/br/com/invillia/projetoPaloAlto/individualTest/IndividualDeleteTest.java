@@ -111,6 +111,13 @@ public class IndividualDeleteTest {
         String document = individualService.deleteByDocument(individual.getDocument());
         IndividualDTO individualDTO = individualService.findByDocument(document);
 
+        fieldsValidator(individualDTO,individual);
+
+        verify(individualService,times(1)).deleteByDocument(individual.getDocument());
+    }
+
+    private void fieldsValidator(IndividualDTO individualDTO, Individual individual) {
+
         individualValidator(individualDTO,individual);
 
         Address address1 = individual.getAddresses().get(0);
@@ -128,8 +135,6 @@ public class IndividualDeleteTest {
 
         individualValidator(individualDTO1,individual1);
         individualValidator(individualDTO2,individual2);
-
-        verify(individualService,times(1)).deleteByDocument(individual.getDocument());
     }
 
     @Test
@@ -163,23 +168,7 @@ public class IndividualDeleteTest {
         Long id = individualService.deleteById(individual.getId());
         IndividualDTO individualDTO = individualService.findById(id);
 
-        individualValidator(individualDTO,individual);
-
-        Address address1 = individual.getAddresses().get(0);
-        Address address2 = individual.getAddresses().get(1);
-        AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
-
-        AddressValidator(address1,addressDTO1);
-        AddressValidator(address2,addressDTO2);
-
-        Individual individual1 = address1.getIndividual();
-        Individual individual2 = address2.getIndividual();
-        IndividualDTO individualDTO1 = addressDTO1.getIndividualDTO();
-        IndividualDTO individualDTO2 = addressDTO2.getIndividualDTO();
-
-        individualValidator(individualDTO1,individual1);
-        individualValidator(individualDTO2,individual2);
+        fieldsValidator(individualDTO,individual);
 
         verify(individualService,times(1)).deleteById(individual.getId());
     }

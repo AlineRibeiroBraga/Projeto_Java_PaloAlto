@@ -72,8 +72,9 @@ public class LegalEntityDeleteTest {
         legalEntity.setCreatedAt(LocalDateTime.now());
         legalEntity.setTradeName(faker.name().name());
         legalEntity.setName(faker.name().name());
-        legalEntity.setAddresses(createListAddress());
         legalEntity.setIndividuals(new ArrayList<>());
+        legalEntity.setAddresses(createListAddress());
+
         for(Address address : legalEntity.getAddresses()){
             address.setLegalEntity(legalEntity);
         }
@@ -147,23 +148,7 @@ public class LegalEntityDeleteTest {
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
+        fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
     }
@@ -180,61 +165,7 @@ public class LegalEntityDeleteTest {
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
-
-        Individual individual1 = legalEntity.getIndividuals().get(0);
-        Individual individual2 = legalEntity.getIndividuals().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
-
-        Address address11 = individual1.getAddresses().get(0);
-        Address address12 = individual1.getAddresses().get(1);
-        Address address21 = individual2.getAddresses().get(0);
-        Address address22 = individual2.getAddresses().get(1);
-
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO11,address11);
-        addressValidator(addressDTO12,address12);
-        addressValidator(addressDTO21,address21);
-        addressValidator(addressDTO22,address22);
-
-        Individual individual11 = address11.getIndividual();
-        Individual individual12 = address12.getIndividual();
-        Individual individual21 = address21.getIndividual();
-        Individual individual22 = address22.getIndividual();
-
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-        IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
-
-        individualsValidator(individualDTO11,individual11);
-        individualsValidator(individualDTO12,individual12);
-        individualsValidator(individualDTO21,individual21);
-        individualsValidator(individualDTO22,individual22);
+        fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
     }
@@ -251,6 +182,13 @@ public class LegalEntityDeleteTest {
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
+        fieldValidator(legalEntityDTO,legalEntity);
+
+        verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
+    }
+
+    private void fieldValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity){
+
         legalEntityValidator(legalEntityDTO,legalEntity);
 
         Address address1 = legalEntity.getAddresses().get(0);
@@ -269,45 +207,46 @@ public class LegalEntityDeleteTest {
         legalEntityValidator(legalEntityDTO1,legalEntity1);
         legalEntityValidator(legalEntityDTO2,legalEntity2);
 
-        Individual individual1 = legalEntity.getIndividuals().get(0);
-        Individual individual2 = legalEntity.getIndividuals().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
+        if(legalEntity.getIndividuals().size() != 0){
 
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
+            Individual individual1 = legalEntity.getIndividuals().get(0);
+            Individual individual2 = legalEntity.getIndividuals().get(1);
+            IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
+            IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
 
-        Address address11 = individual1.getAddresses().get(0);
-        Address address12 = individual1.getAddresses().get(1);
-        Address address21 = individual2.getAddresses().get(0);
-        Address address22 = individual2.getAddresses().get(1);
+            individualsValidator(individualDTO1,individual1);
+            individualsValidator(individualDTO2,individual2);
 
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
+            Address address11 = individual1.getAddresses().get(0);
+            Address address12 = individual1.getAddresses().get(1);
+            Address address21 = individual2.getAddresses().get(0);
+            Address address22 = individual2.getAddresses().get(1);
 
-        addressValidator(addressDTO11,address11);
-        addressValidator(addressDTO12,address12);
-        addressValidator(addressDTO21,address21);
-        addressValidator(addressDTO22,address22);
+            AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+            AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
+            AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
+            AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
 
-        Individual individual11 = address11.getIndividual();
-        Individual individual12 = address12.getIndividual();
-        Individual individual21 = address21.getIndividual();
-        Individual individual22 = address22.getIndividual();
+            addressValidator(addressDTO11,address11);
+            addressValidator(addressDTO12,address12);
+            addressValidator(addressDTO21,address21);
+            addressValidator(addressDTO22,address22);
 
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-        IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
+            Individual individual11 = address11.getIndividual();
+            Individual individual12 = address12.getIndividual();
+            Individual individual21 = address21.getIndividual();
+            Individual individual22 = address22.getIndividual();
 
-        individualsValidator(individualDTO11,individual11);
-        individualsValidator(individualDTO12,individual12);
-        individualsValidator(individualDTO21,individual21);
-        individualsValidator(individualDTO22,individual22);
+            IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
+            IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
+            IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
+            IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
 
-        verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
+            individualsValidator(individualDTO11,individual11);
+            individualsValidator(individualDTO12,individual12);
+            individualsValidator(individualDTO21,individual21);
+            individualsValidator(individualDTO22,individual22);
+        }
     }
 
     @Test
@@ -341,23 +280,7 @@ public class LegalEntityDeleteTest {
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
+        fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
@@ -374,61 +297,7 @@ public class LegalEntityDeleteTest {
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
-
-        Individual individual1 = legalEntity.getIndividuals().get(0);
-        Individual individual2 = legalEntity.getIndividuals().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
-
-        Address address11 = individual1.getAddresses().get(0);
-        Address address12 = individual1.getAddresses().get(1);
-        Address address21 = individual2.getAddresses().get(0);
-        Address address22 = individual2.getAddresses().get(1);
-
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO11,address11);
-        addressValidator(addressDTO12,address12);
-        addressValidator(addressDTO21,address21);
-        addressValidator(addressDTO22,address22);
-
-        Individual individual11 = address11.getIndividual();
-        Individual individual12 = address12.getIndividual();
-        Individual individual21 = address21.getIndividual();
-        Individual individual22 = address22.getIndividual();
-
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-        IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
-
-        individualsValidator(individualDTO11,individual11);
-        individualsValidator(individualDTO12,individual12);
-        individualsValidator(individualDTO21,individual21);
-        individualsValidator(individualDTO22,individual22);
+        fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
@@ -445,61 +314,7 @@ public class LegalEntityDeleteTest {
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
-
-        Individual individual1 = legalEntity.getIndividuals().get(0);
-        Individual individual2 = legalEntity.getIndividuals().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
-
-        Address address11 = individual1.getAddresses().get(0);
-        Address address12 = individual1.getAddresses().get(1);
-        Address address21 = individual2.getAddresses().get(0);
-        Address address22 = individual2.getAddresses().get(1);
-
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-        AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
-
-        addressValidator(addressDTO11,address11);
-        addressValidator(addressDTO12,address12);
-        addressValidator(addressDTO21,address21);
-        addressValidator(addressDTO22,address22);
-
-        Individual individual11 = address11.getIndividual();
-        Individual individual12 = address12.getIndividual();
-        Individual individual21 = address21.getIndividual();
-        Individual individual22 = address22.getIndividual();
-
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-        IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
-
-        individualsValidator(individualDTO11,individual11);
-        individualsValidator(individualDTO12,individual12);
-        individualsValidator(individualDTO21,individual21);
-        individualsValidator(individualDTO22,individual22);
+        fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
