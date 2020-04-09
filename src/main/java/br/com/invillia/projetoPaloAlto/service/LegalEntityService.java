@@ -104,12 +104,30 @@ public class LegalEntityService {
         deleteIndividuals(optionalLegalEntity.get());
 
         if(optionalLegalEntity.get().getActive()){
-//            optionalLegalEntity.get().setActive(false);
-
-            return optionalLegalEntity.get().getDocument();
+            optionalLegalEntity.get().setActive(false);
+        }
+        else{
+            throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
         }
 
-        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
+        return optionalLegalEntity.get().getDocument();
+    }
+
+    public Long deleteById(Long id) {
+
+        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findById(id).
+                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+
+        deleteIndividuals(optionalLegalEntity.get());
+
+        if(optionalLegalEntity.get().getActive()){
+            optionalLegalEntity.get().setActive(false);
+        }
+        else{
+            throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
+        }
+
+        return optionalLegalEntity.get().getId();
     }
 
     private void deleteIndividuals(LegalEntity legalEntity) {
@@ -118,9 +136,10 @@ public class LegalEntityService {
 
             for (Individual individual : legalEntity.getIndividuals()){
 
-                if(individualRepository.findLegalEntityById(individual.getId())){
-                    System.out.println("entrou");
-//                    individual.setActive(false);
+                if(!individualRepository.findLegalEntityById(individual.getId())){
+                    if(individual.getActive()){
+                        individual.setActive(false);
+                    }
                 }
             }
         }
