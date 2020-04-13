@@ -3,6 +3,8 @@ package br.com.invillia.projetoPaloAlto.service;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
+
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
 import org.springframework.stereotype.Service;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
@@ -48,10 +50,16 @@ public class IndividualService {
 
         int main = 0;
 
-        for(AddressDTO addressDTO :  addressesDTO){
-            if(addressDTO.getMain()){
-                ++main;
+        if(addressesDTO != null){
+
+            for(AddressDTO addressDTO :  addressesDTO){
+                if(addressDTO.getMain()){
+                    ++main;
+                }
             }
+        }
+        else{
+            return true;
         }
 
         return main == 1;
@@ -101,6 +109,49 @@ public class IndividualService {
 
         return individual.get().getId();
     }
+
+    public String updateByDocument(String document, IndividualDTOUpdate individualDTOUpdate) {
+
+        Optional<Individual> individual = Optional.of(individualRepository.findByDocument(document)).
+                orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
+
+        if(individual.get().getActive()){
+            if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())) {
+                individualMapper.update(individual.get(), individualDTOUpdate);
+
+                individualRepository.save(individual.get());
+            }
+            else{
+                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+            }
+        }
+        else{
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        }
+
+        return individual.get().getDocument();
+    }
+
+    public Long updateById( Long id, IndividualDTOUpdate individualDTOUpdate) {
+
+        Optional<Individual> individual = Optional.of(individualRepository.findById(id).
+                orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+
+        if(individual.get().getActive()){
+            if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())){
+
+                individualMapper.update(individual.get(),individualDTOUpdate);
+
+                individualRepository.save(individual.get());
+            }
+            else{
+                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+            }
+        }
+        else{
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        }
+
+        return individual.get().getId();
+    }
 }
-
-

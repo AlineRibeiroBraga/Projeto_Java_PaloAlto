@@ -83,4 +83,23 @@ public class AddressMapper {
             addressDTO.setIndividualDTO(individualDTO);
         }
     }
+
+
+    public void update(List<Address> addresses, List<AddressDTO> addressesDTO) {
+
+        if(addressesDTO != null){
+
+            for(Address address : addresses){
+                if(address.getMain()){
+                    address.setMain(false);
+                }
+            }
+
+            List<Address> addressesList = listAddressDTOToListAddress(addressesDTO);
+
+            for(Address address : addressesList){
+                addresses.add(address);
+            }
+        }
+    }
 }

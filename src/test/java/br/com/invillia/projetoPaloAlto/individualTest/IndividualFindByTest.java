@@ -201,6 +201,7 @@ public class IndividualFindByTest {
 
     @Test
     public void findByDocumentNotExists(){
+
         when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(IndividualException.class,

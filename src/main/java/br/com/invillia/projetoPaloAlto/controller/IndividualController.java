@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class IndividualController {
     private IndividualService individualService;
 
     @PostMapping
-    public ResponseEntity insert(@RequestBody @Valid IndividualDTO individualDTO){
+    public ResponseEntity insert(@RequestBody @Valid IndividualDTO individualDTO) {
 
         Long id = individualService.insert(individualDTO);
 
@@ -33,22 +34,33 @@ public class IndividualController {
     }
 
     @GetMapping("/document/{document}")
-    public IndividualDTO findByDocument(@PathVariable @IsCPF String document){
+    public IndividualDTO findByDocument(@PathVariable @IsCPF String document) {
         return individualService.findByDocument(document);
     }
 
     @GetMapping("/{id}")
-    public IndividualDTO findByDocument(@PathVariable Long id){
+    public IndividualDTO findByDocument(@PathVariable Long id) {
         return individualService.findById(id);
     }
 
     @DeleteMapping("/document/{document}")
-    public String deleteIndividualByDocument(@PathVariable String document){
+    public String deleteIndividualByDocument(@PathVariable String document) {
         return individualService.deleteByDocument(document);
     }
 
     @DeleteMapping("/{id}")
-    public Long deleteIndividualById(@PathVariable Long id){
+    public Long deleteIndividualById(@PathVariable Long id) {
         return individualService.deleteById(id);
     }
+
+    @PutMapping("/document/{document}")
+    public String updateByDocument(@RequestBody IndividualDTOUpdate individualDTOUpdate, @PathVariable String document) {
+        return individualService.updateByDocument(document, individualDTOUpdate);
+    }
+
+    @PutMapping("/{id}")
+    public Long updateById(@RequestBody IndividualDTOUpdate individualDTOUpdate, @PathVariable Long id){
+        return individualService.updateById(id,individualDTOUpdate);
+    }
 }
+
