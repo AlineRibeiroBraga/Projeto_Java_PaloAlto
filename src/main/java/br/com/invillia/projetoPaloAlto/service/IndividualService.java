@@ -1,23 +1,19 @@
 package br.com.invillia.projetoPaloAlto.service;
 
-import java.util.List;
-import java.util.Optional;
-import javax.transaction.Transactional;
-
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
-import org.springframework.stereotype.Service;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
+import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import br.com.invillia.projetoPaloAlto.utils.Messages;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional()
@@ -67,10 +63,10 @@ public class IndividualService {
 
     public IndividualDTO findByDocument(String document){
 
-        Optional<Individual> optionalIndividual = Optional.of(individualRepository.findByDocument(document)
-                .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+        Individual Individual = individualRepository.findByDocument(document)
+                .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        return individualMapper.individualToIndividualDTO(optionalIndividual.get());
+        return individualMapper.individualToIndividualDTO(Individual);
     }
 
     public IndividualDTO findById(Long id) {
@@ -82,76 +78,71 @@ public class IndividualService {
 
     public String deleteByDocument(String document) {
 
-        Optional<Individual> individual = Optional.of(individualRepository.findByDocument(document)
-                .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+        Individual individual = individualRepository.findByDocument(document)
+                .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(individual.get().getActive()){
-            individual.get().setActive(false);
-        }
-        else{
-            throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
+        if(individual.getActive()){
+            individual.setActive(false);
+
+            return individual.getDocument();
         }
 
-        return individual.get().getDocument();
+        throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
     }
 
     public Long deleteById(Long id) {
 
-        Optional<Individual> individual = Optional.of(individualRepository.findById(id)
-                .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+        Individual individual = individualRepository.findById(id)
+                .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if (individual.get().getActive()) {
-            individual.get().setActive(false);
-        }
-        else {
-            throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
+        if (individual.getActive()) {
+            individual.setActive(false);
+
+            return individual.getId();
         }
 
-        return individual.get().getId();
+        throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
     }
 
     public String updateByDocument(String document, IndividualDTOUpdate individualDTOUpdate) {
 
-        Optional<Individual> individual = Optional.of(individualRepository.findByDocument(document)).
+        Individual individual = individualRepository.findByDocument(document).
                 orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(individual.get().getActive()){
-            if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())) {
-                individualMapper.update(individual.get(), individualDTOUpdate);
-
-                individualRepository.save(individual.get());
-            }
-            else{
-                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-            }
-        }
-        else{
+        if(!individual.getActive()) {
             throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
-        return individual.get().getDocument();
+        if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())) {
+            individualMapper.update(individual, individualDTOUpdate);
+
+            individualRepository.save(individual);
+
+            return individual.getDocument();
+        }
+
+        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+
     }
 
     public Long updateById( Long id, IndividualDTOUpdate individualDTOUpdate) {
 
-        Optional<Individual> individual = Optional.of(individualRepository.findById(id).
-                orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND)));
+        Individual individual = individualRepository.findById(id).
+                orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(individual.get().getActive()){
-            if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())){
-
-                individualMapper.update(individual.get(),individualDTOUpdate);
-
-                individualRepository.save(individual.get());
-            }
-            else{
-                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-            }
-        }
-        else{
+        if(!individual.getActive()){
             throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
-        return individual.get().getId();
+        if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())){
+
+            individualMapper.update(individual,individualDTOUpdate);
+
+            individualRepository.save(individual);
+
+            return individual.getId();
+        }
+
+        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
     }
 }

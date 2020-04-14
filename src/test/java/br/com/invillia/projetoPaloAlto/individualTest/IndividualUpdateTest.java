@@ -11,9 +11,7 @@ import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
-import org.hibernate.boot.model.naming.ImplicitIndexColumnNameSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -234,12 +231,20 @@ public class IndividualUpdateTest {
     }
 
     @Test
+    public void updateByIdNotExists(){
+
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(IndividualException.class,
+                () -> individualService.updateByDocument(faker.number().digits(11),createIndividualDTOUpdate()));
+    }
+
+    @Test
     public void updateByIdNotActive(){
         Individual individual = createIndividual();
         individual.setActive(false);
 
         when(individualRepository.findById(individual.getId())).thenReturn(Optional.of(individual));
-
 
         Assertions.assertThrows(IndividualException.class,
                 () -> individualService.updateById(individual.getId(),createIndividualDTOUpdate()));
@@ -287,26 +292,4 @@ public class IndividualUpdateTest {
         Assertions.assertEquals(individualDTOUpdate.getMotherName(),individualDTO.getMotherName());
         Assertions.assertEquals(individualDTOUpdate.getName(),individualDTO.getName());
     }
-
-//    public String updateByDocument(String document, IndividualDTOUpdate individualDTOUpdate) {
-//
-//        Optional<Individual> individual = Optional.of(individualRepository.findByDocument(document)).
-//                orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
-//
-//        if(individual.get().getActive()){
-//            if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())) {
-//                individualMapper.update(individual.get(), individualDTOUpdate);
-//
-//                individualRepository.save(individual.get());
-//            }
-//            else{
-//                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-//            }
-//        }
-//        else{
-//            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
-//        }
-//
-//        return individual.get().getDocument();
-//    }
 }
