@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -46,15 +48,15 @@ public class Address {
     private  Individual individual;
 
     @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", district='" + district + '\'' +
-                ", number='" + number + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", main=" + main +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(zipCode, address.zipCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(zipCode);
     }
 }

@@ -75,13 +75,50 @@ public class IndividualMapper {
         return individualsDTO;
     }
 
-    public void update(Individual individual, IndividualDTOUpdate individualDTOUpdate) {
+    public void update(Individual individual, IndividualDTO individualDTO) {
 
-        individual.setName(individualDTOUpdate.getName());
-        individual.setMotherName(individualDTOUpdate.getMotherName());
+        individual.setName(individualDTO.getName());
+        individual.setMotherName(individualDTO.getMotherName());
         individual.setUpdatedAt(LocalDateTime.now());
 
-        addressMapper.update(individual.getAddresses(),individualDTOUpdate.getAddressesDTO());
+        addressMapper.update(individual.getAddresses(),individualDTO.getAddressesDTO());
+
+        for(Address address : individual.getAddresses()){
+            if(address.getIndividual() == null){
+                address.setIndividual(individual);
+            }
+        }
+    }
+
+    public void partners(List<Individual> individuals, List<IndividualDTO> individualsDTO) {
+
+        if(individualsDTO != null){
+
+            Boolean flg;
+
+            for(IndividualDTO individualDTO : individualsDTO){
+                flg = false;
+                for(Individual individual : individuals){
+                    if(individualDTO.getDocument().equals(individual.getDocument())){
+                        update(individual,individualDTO);
+                        flg = true;
+                    }
+                }
+
+                if(!flg){
+                    individuals.add(individualDTOToIndividual(individualDTO));
+                }
+            }
+        }
+    }
+
+    public void updateIndividual(Individual individual, Individual individualR) {
+
+        individualR.setName(individual.getName());
+        individualR.setMotherName(individual.getMotherName());
+        individualR.setUpdatedAt(LocalDateTime.now());
+
+        addressMapper.updateAddress(individual.getAddresses(),individualR.getAddresses());
 
         for(Address address : individual.getAddresses()){
             if(address.getIndividual() == null){

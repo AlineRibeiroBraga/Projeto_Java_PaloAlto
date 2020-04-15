@@ -53,14 +53,14 @@ public class IndividualController {
         return individualService.deleteById(id);
     }
 
-    @PutMapping("/document/{document}")
-    public String updateByDocument(@RequestBody IndividualDTOUpdate individualDTOUpdate, @PathVariable String document) {
-        return individualService.updateByDocument(document, individualDTOUpdate);
+    @PutMapping("/document")
+    public String updateByDocument(@RequestBody IndividualDTO individualDTO) {
+        return individualService.updateByDocument(individualDTO);
     }
 
     @PutMapping("/{id}")
-    public Long updateById(@RequestBody IndividualDTOUpdate individualDTOUpdate, @PathVariable Long id){
-        return individualService.updateById(id,individualDTOUpdate);
+    public Long updateById(@RequestBody IndividualDTO individualDTO, @PathVariable Long id){
+        return individualService.updateById(id,individualDTO);
     }
 }
 

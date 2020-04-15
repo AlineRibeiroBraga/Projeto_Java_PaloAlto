@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
+import br.com.invillia.projetoPaloAlto.config.LegalEntityConfig;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.LegalEntityDTOUpdate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +52,15 @@ public class LegalEntityController {
     @DeleteMapping("/{id}")
     public Long deleteById(@PathVariable Long id){
         return legalEntityService.deleteById(id);
+    }
+
+    @PutMapping("/document")
+    public String updateByDocument(@RequestBody LegalEntityDTO legalEntityDTO){
+        return legalEntityService.updateByDocument(legalEntityDTO);
+    }
+
+    @PutMapping("/{id}}")
+    public Long updateById(@RequestBody LegalEntityDTO legalEntityDTO, @PathVariable Long id){
+        return legalEntityService.updateById(id,legalEntityDTO);
     }
 }

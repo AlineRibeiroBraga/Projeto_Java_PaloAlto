@@ -14,6 +14,6 @@ public class CustomerDTOUpdate {
     @NotNull
     protected String name;
 
+    @NotNull
     protected List<AddressDTO> addressesDTO;
-
 }

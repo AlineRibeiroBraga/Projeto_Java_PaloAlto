@@ -104,17 +104,17 @@ public class IndividualService {
         throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
     }
 
-    public String updateByDocument(String document, IndividualDTOUpdate individualDTOUpdate) {
+    public String updateByDocument(IndividualDTO individualDTO) {
 
-        Individual individual = individualRepository.findByDocument(document).
+        Individual individual = individualRepository.findByDocument(individualDTO.getDocument()).
                 orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individual.getActive()) {
-            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        if(!individualDTO.getDocument().equals(individual.getDocument()) || !individual.getActive()){
+            throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
-        if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())) {
-            individualMapper.update(individual, individualDTOUpdate);
+        if(mainAddressValidator(individualDTO.getAddressesDTO())) {
+            individualMapper.update(individual, individualDTO);
 
             individualRepository.save(individual);
 
@@ -122,21 +122,20 @@ public class IndividualService {
         }
 
         throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-
     }
 
-    public Long updateById( Long id, IndividualDTOUpdate individualDTOUpdate) {
+    public Long updateById( Long id, IndividualDTO individualDTO) {
 
         Individual individual = individualRepository.findById(id).
                 orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individual.getActive()){
-            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        if(!individualDTO.getDocument().equals(individual.getDocument()) || !individual.getActive()){
+            throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
-        if(mainAddressValidator(individualDTOUpdate.getAddressesDTO())){
+        if(mainAddressValidator(individualDTO.getAddressesDTO())){
 
-            individualMapper.update(individual,individualDTOUpdate);
+            individualMapper.update(individual,individualDTO);
 
             individualRepository.save(individual);
 

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.LegalEntityDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -84,5 +85,21 @@ public class LegalEntityMapper {
         }
 
         return legalEntitiesDTO;
+    }
+
+    public void update(LegalEntity legalEntity, LegalEntityDTO legalEntityDTO) {
+
+        legalEntity.setName(legalEntityDTO.getName());
+        legalEntity.setTradeName(legalEntityDTO.getTradeName());
+
+        addressMapper.update(legalEntity.getAddresses(),legalEntityDTO.getAddressesDTO());
+
+        for(Address address : legalEntity.getAddresses()){
+            if(address.getIndividual() == null){
+                address.setLegalEntity(legalEntity);
+            }
+        }
+
+        individualMapper.partners(legalEntity.getIndividuals(),legalEntityDTO.getIndividualsDTO());
     }
 }

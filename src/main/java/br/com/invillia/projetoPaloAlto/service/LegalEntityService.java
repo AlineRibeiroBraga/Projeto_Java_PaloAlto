@@ -6,9 +6,11 @@ import java.util.Optional;
 import br.com.invillia.projetoPaloAlto.controller.IndividualController;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.LegalEntityDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
+import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import org.apache.catalina.startup.CopyParentClassLoaderRule;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class LegalEntityService {
     @Autowired
     IndividualRepository individualRepository;
 
+    @Autowired
+    IndividualMapper individualMapper;
+
     public Long insert(LegalEntityDTO legalEntityDTO) {
 
         if(!legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())){
@@ -54,11 +59,16 @@ public class LegalEntityService {
     private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
 
         int main = 0;
+        if(addressesDTO != null){
 
-        for(AddressDTO addressDTO :  addressesDTO){
-            if(addressDTO.getMain()){
-                ++main;
+            for(AddressDTO addressDTO :  addressesDTO){
+                if(addressDTO.getMain()){
+                    ++main;
+                }
             }
+        }
+        else{
+            return true;
         }
 
         return main == 1;
@@ -83,51 +93,49 @@ public class LegalEntityService {
     }
 
     public LegalEntityDTO findById(Long id) {
-        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findById(id)
-                .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+        LegalEntity legalEntity = legalEntityRepository.findById(id)
+                .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
 
-        return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
+        return legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
     }
 
     public LegalEntityDTO findByDocument(String document) {
-        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findByDocument(document)
-                .orElseThrow(()->new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+        LegalEntity legalEntity = legalEntityRepository.findByDocument(document)
+                .orElseThrow(()->new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
 
-        return legalEntityMapper.legalEntityToLegalEntityDTO(optionalLegalEntity.get());
+        return legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
     }
 
     public String deleteByDocument(String document) {
 
-        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findByDocument(document).
-                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+        LegalEntity legalEntity = legalEntityRepository.findByDocument(document).
+                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
 
-        deleteIndividuals(optionalLegalEntity.get());
+        deleteIndividuals(legalEntity);
 
-        if(optionalLegalEntity.get().getActive()){
-            optionalLegalEntity.get().setActive(false);
+        if(legalEntity.getActive()){
+            legalEntity.setActive(false);
+
+            return legalEntity.getDocument();
         }
-        else{
-            throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
-        }
 
-        return optionalLegalEntity.get().getDocument();
+        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
     }
 
     public Long deleteById(Long id) {
 
-        Optional<LegalEntity> optionalLegalEntity = Optional.of(legalEntityRepository.findById(id).
-                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND)));
+        LegalEntity legalEntity = legalEntityRepository.findById(id).
+                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
 
-        deleteIndividuals(optionalLegalEntity.get());
+        deleteIndividuals(legalEntity);
 
-        if(optionalLegalEntity.get().getActive()){
-            optionalLegalEntity.get().setActive(false);
+        if(legalEntity.getActive()){
+            legalEntity.setActive(false);
+
+            return legalEntity.getId();
         }
-        else{
-            throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
-        }
 
-        return optionalLegalEntity.get().getId();
+        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
     }
 
     private void deleteIndividuals(LegalEntity legalEntity) {
@@ -143,5 +151,68 @@ public class LegalEntityService {
                 }
             }
         }
+    }
+
+    public String updateByDocument(LegalEntityDTO legalEntityDTO) {
+
+        LegalEntity legalEntity = legalEntityRepository.findByDocument(legalEntityDTO.getDocument())
+                .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
+
+        if(!legalEntityDTO.getDocument().equals(legalEntity.getDocument()) || !legalEntity.getActive()){
+            throw new LegalEntityException(Messages.INVALIDATED_LEGAL_ENTITY);
+        }
+
+        if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
+
+            legalEntityMapper.update(legalEntity,legalEntityDTO);
+            partners(legalEntity);
+
+            legalEntityRepository.save(legalEntity);
+
+            return legalEntity.getDocument();
+        }
+
+        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+    }
+
+    private void partners(LegalEntity legalEntity) {
+
+        int tam = legalEntity.getIndividuals().size();
+
+        for(int i=0; i < tam; i++){
+            Individual individual = legalEntity.getIndividuals().get(i);
+
+            if(individual.getId() == null){
+
+                Individual individualR = individualRepository.findByDocument(individual.getDocument()).get();
+
+                if(individualR != null){
+                    individualMapper.updateIndividual(individual,individualR);
+                    legalEntity.getIndividuals().remove(i);
+                    legalEntity.getIndividuals().add(i,individualR);
+                }
+            }
+        }
+    }
+
+    public Long updateById(Long id, LegalEntityDTO legalEntityDTO) {
+
+        LegalEntity legalEntity = legalEntityRepository.findById(id)
+                .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
+
+        if(!legalEntityDTO.getDocument().equals(legalEntity.getDocument()) || !legalEntity.getActive()){
+            throw new LegalEntityException(Messages.INVALIDATED_LEGAL_ENTITY);
+        }
+
+        if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
+
+            legalEntityMapper.update(legalEntity,legalEntityDTO);
+
+            legalEntityRepository.save(legalEntity);
+
+            return legalEntity.getId();
+        }
+
+        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
     }
 }

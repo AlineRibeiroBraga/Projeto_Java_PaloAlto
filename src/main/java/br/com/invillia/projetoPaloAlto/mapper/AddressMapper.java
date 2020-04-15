@@ -89,17 +89,59 @@ public class AddressMapper {
 
         if(addressesDTO != null){
 
-            for(Address address : addresses){
-                if(address.getMain()){
-                    address.setMain(false);
-                }
-            }
+            deactivateAddress(addresses);
 
             List<Address> addressesList = listAddressDTOToListAddress(addressesDTO);
 
             for(Address address : addressesList){
-                addresses.add(address);
+                if(addresses.contains(address)){
+                    setAddress(addresses,address);
+                }
+                else {
+                    addresses.add(address);
+                }
             }
         }
+    }
+
+    private void setAddress(List<Address> addresses, Address address1) {
+
+        for(Address address : addresses){
+            if(address.getZipCode().equals(address1.getZipCode())){
+                address.setMain(address1.getMain());
+                address.setDistrict(address1.getDistrict());
+                address.setNumber(address1.getNumber());
+                address.setCity(address1.getCity());
+                address.setState(address1.getState());
+                address.setIndividual(address1.getIndividual());
+            }
+        }
+    }
+
+    private void deactivateAddress(List<Address> addresses) {
+
+        for(Address address : addresses){
+            if(address.getMain()){
+                address.setMain(false);
+            }
+        }
+    }
+
+    public void updateAddress(List<Address> addresses, List<Address> addressesR) {
+
+        if(addresses != null){
+
+            deactivateAddress(addressesR);
+
+            for(Address address : addresses){
+                if(addressesR.contains(address)){
+                    setAddress(addresses,address);
+                }
+                else {
+                    addresses.add(address);
+                }
+            }
+        }
+
     }
 }
