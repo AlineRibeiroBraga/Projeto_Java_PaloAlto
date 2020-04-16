@@ -1,15 +1,12 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import java.util.List;
-
-import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
-import lombok.Data;
-import java.time.LocalDate;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import javax.validation.constraints.NotNull;
-import br.com.invillia.projetoPaloAlto.anotation.IsRG;
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
+import br.com.invillia.projetoPaloAlto.anotation.IsRG;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor

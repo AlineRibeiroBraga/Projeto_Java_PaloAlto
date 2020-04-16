@@ -1,18 +1,15 @@
 package br.com.invillia.projetoPaloAlto.controller;
 
-import java.net.URI;
-import java.util.List;
-import javax.validation.Valid;
-
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
 
 @RestController()
 @RequestMapping("/individual")

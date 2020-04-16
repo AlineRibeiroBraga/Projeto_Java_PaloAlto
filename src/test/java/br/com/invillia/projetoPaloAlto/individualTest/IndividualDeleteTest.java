@@ -9,9 +9,7 @@ import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,6 +17,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -125,8 +124,8 @@ public class IndividualDeleteTest {
         AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
         AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
 
-        AddressValidator(address1,addressDTO1);
-        AddressValidator(address2,addressDTO2);
+        addressValidator(address1,addressDTO1);
+        addressValidator(address2,addressDTO2);
 
         Individual individual1 = address1.getIndividual();
         Individual individual2 = address2.getIndividual();
@@ -204,7 +203,7 @@ public class IndividualDeleteTest {
         Assertions.assertEquals(individualDTO.getName(),individual.getName());
     }
 
-    private void AddressValidator(Address address, AddressDTO addressDTO) {
+    private void addressValidator(Address address, AddressDTO addressDTO) {
 
         Assertions.assertEquals(addressDTO.getDistrict(),address.getDistrict());
         Assertions.assertEquals(addressDTO.getNumber(),address.getNumber());

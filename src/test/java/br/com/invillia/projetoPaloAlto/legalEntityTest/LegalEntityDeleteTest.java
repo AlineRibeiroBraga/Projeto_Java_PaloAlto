@@ -13,6 +13,7 @@ import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
 import br.com.invillia.projetoPaloAlto.service.LegalEntityService;
+import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -151,6 +152,22 @@ public class LegalEntityDeleteTest {
         fieldValidator(legalEntityDTO,legalEntity);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
+    }
+
+    public String deleteByDocument(String document) {
+
+        LegalEntity legalEntity = legalEntityRepository.findByDocument(document).
+                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
+
+//        deleteIndividuals(legalEntity);
+
+        if(legalEntity.getActive()){
+            legalEntity.setActive(false);
+
+            return legalEntity.getDocument();
+        }
+
+        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
     }
 
     @Test

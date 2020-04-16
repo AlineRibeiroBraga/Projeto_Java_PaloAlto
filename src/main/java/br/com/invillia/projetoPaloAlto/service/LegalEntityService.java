@@ -1,28 +1,21 @@
 package br.com.invillia.projetoPaloAlto.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import br.com.invillia.projetoPaloAlto.controller.IndividualController;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.LegalEntityDTOUpdate;
+import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
+import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
+import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
-import org.apache.catalina.startup.CopyParentClassLoaderRule;
-import org.springframework.stereotype.Service;
+import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
 import br.com.invillia.projetoPaloAlto.utils.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
-import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
-import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
-import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
-import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
-import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
-
-import javax.swing.text.Document;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LegalEntityService {
@@ -45,9 +38,12 @@ public class LegalEntityService {
             if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
                 LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
 
-                individualsDTOValidator(legalEntity.getIndividuals());
+                if(partners(legalEntity.getIndividuals())){
 
-                return legalEntityRepository.save(legalEntity).getId();
+                    return legalEntityRepository.save(legalEntity).getId();
+                }
+
+                throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
             }
 
             throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
@@ -67,29 +63,8 @@ public class LegalEntityService {
                 }
             }
         }
-        else{
-            return true;
-        }
 
         return main == 1;
-    }
-
-    private void individualsDTOValidator(List<Individual> individuals) {
-
-        if(individuals != null){
-            int lenght = individuals.size();
-            Optional<Individual> individual;
-
-            for(int i=0; i < lenght; i++){
-
-                individual = individualRepository.findByDocument(individuals.get(i).getDocument());
-
-                if(!individual.isEmpty()){
-                    individuals.remove(i);
-                    individuals.add(i,individual.get());
-                }
-            }
-        }
     }
 
     public LegalEntityDTO findById(Long id) {
@@ -165,34 +140,60 @@ public class LegalEntityService {
         if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
 
             legalEntityMapper.update(legalEntity,legalEntityDTO);
-            partners(legalEntity);
 
-            legalEntityRepository.save(legalEntity);
+            if(partners(legalEntity.getIndividuals())){
 
-            return legalEntity.getDocument();
+                legalEntityRepository.save(legalEntity);
+
+                return legalEntity.getDocument();
+            }
+
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
         throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
     }
 
-    private void partners(LegalEntity legalEntity) {
+    private Boolean partners(List<Individual> individuals) {
 
-        int tam = legalEntity.getIndividuals().size();
+        if(individuals == null){
+            return true;
+        }
+
+        int tam = individuals.size();
+
+        Optional<Individual> individual1 = null;
+        Optional<Individual> individual2 = null;
 
         for(int i=0; i < tam; i++){
-            Individual individual = legalEntity.getIndividuals().get(i);
+            Individual individual = individuals.get(i);
 
             if(individual.getId() == null){
 
-                Individual individualR = individualRepository.findByDocument(individual.getDocument()).get();
+                individual1 = individualRepository.findByDocument(individual.getDocument());
+                individual2 = individualRepository.findByRg(individual.getRg());
 
-                if(individualR != null){
-                    individualMapper.updateIndividual(individual,individualR);
-                    legalEntity.getIndividuals().remove(i);
-                    legalEntity.getIndividuals().add(i,individualR);
+                if(!individual1.isEmpty()) {
+                    if(!individual2.isEmpty()) {
+
+                        Individual individualR1 = individual1.get();
+                        Individual individualR2 = individual2.get();
+
+                        if (individualR1.getRg().equals(individualR2.getRg()) &&
+                                individualR1.getDocument().equals(individualR2.getDocument())) {
+
+                            individualMapper.updateIndividual(individual, individualR1);
+                            individuals.remove(i);
+                            individuals.add(i, individualR1);
+
+                            return true;
+                        }
+                    }
                 }
             }
         }
+
+        return individual1.isEmpty() && individual2.isEmpty();
     }
 
     public Long updateById(Long id, LegalEntityDTO legalEntityDTO) {
@@ -207,10 +208,14 @@ public class LegalEntityService {
         if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
 
             legalEntityMapper.update(legalEntity,legalEntityDTO);
+            if(partners(legalEntity.getIndividuals())){
 
-            legalEntityRepository.save(legalEntity);
+                legalEntityRepository.save(legalEntity);
 
-            return legalEntity.getId();
+                return legalEntity.getId();
+            }
+
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
         throw new AddressException(Messages.MUCH_MAIN_ADDRESS);

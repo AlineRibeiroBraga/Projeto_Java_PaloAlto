@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 @Repository
 public interface IndividualRepository extends JpaRepository<Individual, Long> {
@@ -19,4 +20,6 @@ public interface IndividualRepository extends JpaRepository<Individual, Long> {
     @Query(value = "select count (idt_legal_entity) > 1 from individual_legal_entity " +
             "where idt_individual = ?1 group by idt_individual", nativeQuery = true)
     Boolean findLegalEntityById(Long id);
+
+    Optional<Individual> findByRg(String rg);
 }

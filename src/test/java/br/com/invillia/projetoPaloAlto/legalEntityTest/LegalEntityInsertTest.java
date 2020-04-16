@@ -7,6 +7,7 @@ import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
+import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
 import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
@@ -242,10 +243,12 @@ public class LegalEntityInsertTest {
 
         LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
         legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
+        Individual individual = individualMapper.individualDTOToIndividual(legalEntityDTO.getIndividualsDTO().get(0));
+        individual.setId(1L);
 
         when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
-        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(createIndividual()));
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(individual));
+        when(individualRepository.findByRg(Mockito.anyString())).thenReturn(Optional.of(individual));
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(createLegalEntity());
 
         Long id = legalEntityService.insert(legalEntityDTO);
@@ -253,6 +256,45 @@ public class LegalEntityInsertTest {
         Assert.assertNotNull(id);
         Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
     }
+
+    @Test
+    public void InsertOkayWithInvalidedRgIndividuals(){
+
+        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
+        legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
+
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(createIndividual()));
+        when(individualRepository.findByRg(Mockito.anyString())).thenReturn(Optional.empty());
+
+       Assertions.assertThrows(IndividualException.class, () -> legalEntityService.insert(legalEntityDTO));
+    }
+
+    @Test
+    public void InsertOkayWithInvalidedDocumentIndividuals(){
+
+        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
+        legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
+
+        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
+        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+        when(individualRepository.findByRg(Mockito.anyString())).thenReturn(Optional.of(createIndividual()));
+
+        Assertions.assertThrows(IndividualException.class, () -> legalEntityService.insert(legalEntityDTO));
+    }
+
+//    @Test
+//    public void InsertOkayWithInvalidedDocumentIndividuals(){
+//
+//        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
+//        legalEntityDTO.setIndividualsDTO(createListIndividualsDTO());
+//
+//        when(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())).thenReturn(false);
+//        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
+//        when(individualRepository.findByRg(Mockito.anyString())).thenReturn(Optional.empty());
+//
+//        Assertions.assertThrows(IndividualException.class, () -> legalEntityService.insert(legalEntityDTO));
+//    }
 
     @Test
     public void InsertOkayWithIndividualsNotSave(){

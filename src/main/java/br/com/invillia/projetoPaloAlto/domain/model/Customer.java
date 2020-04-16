@@ -1,13 +1,13 @@
 package br.com.invillia.projetoPaloAlto.domain.model;
 
 import lombok.Data;
-import java.time.LocalDateTime;
-import javax.persistence.Column;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import javax.persistence.MappedSuperclass;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data

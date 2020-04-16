@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.LegalEntityDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,7 @@ public class LegalEntityMapper {
         legalEntity.setDocument(legalEntityDTO.getDocument());
         legalEntity.setTradeName(legalEntityDTO.getTradeName());
         legalEntity.setCreatedAt(LocalDateTime.now());
-        legalEntity.setActive(legalEntityDTO.getActive());
+        legalEntity.setActive(true);
         legalEntity.setAddresses(addressMapper.listAddressDTOToListAddress(legalEntityDTO.getAddressesDTO()));
 
         addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);
@@ -61,10 +60,10 @@ public class LegalEntityMapper {
 
         LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
 
+        legalEntityDTO.setActive(legalEntity.getActive());
         legalEntityDTO.setName(legalEntity.getName());
         legalEntityDTO.setDocument(legalEntity.getDocument());
         legalEntityDTO.setTradeName(legalEntity.getTradeName());
-        legalEntityDTO.setActive(legalEntity.getActive());
         legalEntityDTO.setAddressesDTO(addressMapper.listAddressToListAddressDTO(legalEntity.getAddresses()));
 
         for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){

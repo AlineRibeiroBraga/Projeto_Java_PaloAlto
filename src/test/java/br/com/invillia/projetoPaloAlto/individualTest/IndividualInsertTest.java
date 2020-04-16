@@ -1,30 +1,31 @@
 package br.com.invillia.projetoPaloAlto.individualTest;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import br.com.invillia.projetoPaloAlto.exception.AddressException;
-import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
-import org.mockito.*;
-import org.junit.jupiter.api.Test;
-import com.github.javafaker.Faker;
-import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
+import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
+import com.github.javafaker.Faker;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(PER_CLASS)

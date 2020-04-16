@@ -1,11 +1,11 @@
 package br.com.invillia.projetoPaloAlto.domain.dto;
 
-import lombok.Data;
-import java.util.List;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import javax.validation.constraints.NotNull;
 import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @NoArgsConstructor

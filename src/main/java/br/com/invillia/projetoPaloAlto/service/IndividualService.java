@@ -2,7 +2,6 @@ package br.com.invillia.projetoPaloAlto.service;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
@@ -53,9 +52,6 @@ public class IndividualService {
                     ++main;
                 }
             }
-        }
-        else{
-            return true;
         }
 
         return main == 1;
@@ -109,11 +105,13 @@ public class IndividualService {
         Individual individual = individualRepository.findByDocument(individualDTO.getDocument()).
                 orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individualDTO.getDocument().equals(individual.getDocument()) || !individual.getActive()){
+        if(!individualDTO.getDocument().equals(individual.getDocument()) &&
+           !individualDTO.getRg().equals(individual.getRg()) || !individual.getActive()){
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
         if(mainAddressValidator(individualDTO.getAddressesDTO())) {
+
             individualMapper.update(individual, individualDTO);
 
             individualRepository.save(individual);
@@ -129,7 +127,8 @@ public class IndividualService {
         Individual individual = individualRepository.findById(id).
                 orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individualDTO.getDocument().equals(individual.getDocument()) || !individual.getActive()){
+        if(!individualDTO.getDocument().equals(individual.getDocument()) &&
+                !individualDTO.getRg().equals(individual.getRg()) || !individual.getActive()){
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 

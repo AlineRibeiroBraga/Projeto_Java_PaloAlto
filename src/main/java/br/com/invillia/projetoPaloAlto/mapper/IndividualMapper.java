@@ -1,7 +1,6 @@
 package br.com.invillia.projetoPaloAlto.mapper;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import br.com.invillia.projetoPaloAlto.domain.dtoUpdate.IndividualDTOUpdate;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +79,7 @@ public class IndividualMapper {
         individual.setName(individualDTO.getName());
         individual.setMotherName(individualDTO.getMotherName());
         individual.setUpdatedAt(LocalDateTime.now());
+        individual.setActive(true);
 
         addressMapper.update(individual.getAddresses(),individualDTO.getAddressesDTO());
 
@@ -99,7 +99,8 @@ public class IndividualMapper {
             for(IndividualDTO individualDTO : individualsDTO){
                 flg = false;
                 for(Individual individual : individuals){
-                    if(individualDTO.getDocument().equals(individual.getDocument())){
+                    if(individualDTO.getDocument().equals(individual.getDocument()) &&
+                            individualDTO.getRg().equals(individual.getRg())){
                         update(individual,individualDTO);
                         flg = true;
                     }
