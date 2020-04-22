@@ -1,6 +1,7 @@
 package br.com.invillia.projetoPaloAlto.service;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
@@ -50,21 +51,6 @@ public class LegalEntityService {
         }
 
         throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
-    }
-
-    private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
-
-        int main = 0;
-        if(addressesDTO != null){
-
-            for(AddressDTO addressDTO :  addressesDTO){
-                if(addressDTO.getMain()){
-                    ++main;
-                }
-            }
-        }
-
-        return main == 1;
     }
 
     public LegalEntityDTO findById(Long id) {
@@ -137,21 +123,53 @@ public class LegalEntityService {
             throw new LegalEntityException(Messages.INVALIDATED_LEGAL_ENTITY);
         }
 
-        if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
+        if(!mainAddressValidator(legalEntityDTO.getAddressesDTO())) {
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        }
 
-            legalEntityMapper.update(legalEntity,legalEntityDTO);
+        if(!addressesIndividualsValidator(legalEntityDTO.getIndividualsDTO())){
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        }
 
-            if(partners(legalEntity.getIndividuals())){
+        legalEntityMapper.update(legalEntity,legalEntityDTO);
 
-                legalEntityRepository.save(legalEntity);
-
-                return legalEntity.getDocument();
-            }
-
+        if(!partners(legalEntity.getIndividuals())){
             throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
-        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        legalEntityRepository.save(legalEntity);
+
+        return legalEntity.getDocument();
+    }
+
+    private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
+
+        int main = 0;
+        if(addressesDTO != null){
+
+            for(AddressDTO addressDTO :  addressesDTO){
+                if(addressDTO.getMain()){
+                    ++main;
+                }
+            }
+        }
+
+        return main == 1;
+    }
+
+    private Boolean addressesIndividualsValidator(List<IndividualDTO> individualsDTO) {
+
+        if(individualsDTO == null){
+           return true;
+        }
+
+        for(IndividualDTO individual : individualsDTO){
+            if(!mainAddressValidator(individual.getAddressesDTO())){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private Boolean partners(List<Individual> individuals) {
@@ -161,15 +179,17 @@ public class LegalEntityService {
         }
 
         int tam = individuals.size();
+        int nullId = 0;
+        int validatedId = 0;
 
-        Optional<Individual> individual1 = null;
-        Optional<Individual> individual2 = null;
+        Optional<Individual> individual1 = Optional.empty();
+        Optional<Individual> individual2 = Optional.empty();
 
         for(int i=0; i < tam; i++){
             Individual individual = individuals.get(i);
 
             if(individual.getId() == null){
-
+                nullId++;
                 individual1 = individualRepository.findByDocument(individual.getDocument());
                 individual2 = individualRepository.findByRg(individual.getRg());
 
@@ -185,12 +205,15 @@ public class LegalEntityService {
                             individualMapper.updateIndividual(individual, individualR1);
                             individuals.remove(i);
                             individuals.add(i, individualR1);
-
-                            return true;
+                            ++validatedId;
                         }
                     }
                 }
             }
+        }
+
+        if(nullId == validatedId){
+            return true;
         }
 
         return individual1.isEmpty() && individual2.isEmpty();
@@ -205,19 +228,19 @@ public class LegalEntityService {
             throw new LegalEntityException(Messages.INVALIDATED_LEGAL_ENTITY);
         }
 
-        if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
+        if(!mainAddressValidator(legalEntityDTO.getAddressesDTO()) ||
+                !addressesIndividualsValidator(legalEntityDTO.getIndividualsDTO())) {
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        }
 
-            legalEntityMapper.update(legalEntity,legalEntityDTO);
-            if(partners(legalEntity.getIndividuals())){
+        legalEntityMapper.update(legalEntity,legalEntityDTO);
 
-                legalEntityRepository.save(legalEntity);
-
-                return legalEntity.getId();
-            }
-
+        if(!partners(legalEntity.getIndividuals())){
             throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
         }
 
-        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        legalEntityRepository.save(legalEntity);
+
+        return legalEntity.getId();
     }
 }

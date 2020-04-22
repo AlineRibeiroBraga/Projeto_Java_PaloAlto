@@ -135,13 +135,12 @@ public class AddressMapper {
 
             for(Address address : addresses){
                 if(addressesR.contains(address)){
-                    setAddress(addresses,address);
+                    setAddress(addressesR,address);
                 }
                 else {
                     addresses.add(address);
                 }
             }
         }
-
     }
 }

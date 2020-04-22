@@ -70,7 +70,9 @@ public class LegalEntityMapper {
             addressDTO.setLegalEntityDTO(legalEntityDTO);
         }
 
-        legalEntityDTO.setIndividualsDTO(individualMapper.listIndividualToListIndividualDTO(legalEntity.getIndividuals()));
+        if(legalEntity.getIndividuals() != null){
+            legalEntityDTO.setIndividualsDTO(individualMapper.listIndividualToListIndividualDTO(legalEntity.getIndividuals()));
+        }
 
         return legalEntityDTO;
     }
