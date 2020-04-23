@@ -39,7 +39,6 @@ public class LegalEntityMapperTest {
         List<Address> addresses = new ArrayList<>();
 
         addresses.add(createAddress(true, 1L));
-        addresses.add(createAddress(false, 2L));
 
         return addresses;
     }

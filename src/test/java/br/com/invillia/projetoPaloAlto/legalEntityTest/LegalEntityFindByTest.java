@@ -74,7 +74,7 @@ public class LegalEntityFindByTest {
 
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(1L);
 
-        fieldsValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityRepository,times(1)).findById(1L);
     }
