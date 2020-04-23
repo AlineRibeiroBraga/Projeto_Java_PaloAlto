@@ -18,4 +18,5 @@ public abstract class CustomerDTO {
 
     @NotNull
     protected Boolean active;
+
 }

@@ -140,6 +140,63 @@ public class IndividualMapperTest {
         return individuals;
     }
 
+    public List<IndividualDTO> createListIndividualsDTO() {
+
+        List<IndividualDTO> individualsDTO = new ArrayList<>();
+
+        individualsDTO.add(createIndividualDTO());
+
+        return individualsDTO;
+    }
+
+    public Individual newIndividual(Individual individual1) {
+
+        Individual individual = new Individual();
+
+        individual.setId(individual1.getId());
+        individual.setName(individual1.getName());
+        individual.setMotherName(individual1.getMotherName());
+        individual.setCreatedAt(individual1.getCreatedAt());
+        individual.setRg(individual1.getRg());
+        individual.setDocument(individual1.getDocument());
+        individual.setBirthDate(individual1.getBirthDate());
+        individual.setUpdatedAt(individual1.getUpdatedAt());
+        individual.setActive(individual1.getActive());
+        individual.setAddresses(newListAddress(individual1.getAddresses()));
+
+        for(Address address : individual.getAddresses()){
+            address.setIndividual(individual);
+        }
+
+        return individual;
+    }
+
+    private List<Address> newListAddress(List<Address> addresses1) {
+
+        List<Address> addresses = new ArrayList<>();
+
+        for(Address address : addresses1){
+            addresses.add(newAddress(address));
+        }
+
+        return addresses;
+    }
+
+    private Address newAddress(Address address1) {
+
+        Address address = new Address();
+
+        address.setId(address1.getId());
+        address.setMain(address1.getMain());
+        address.setDistrict(address1.getDistrict());
+        address.setNumber(address1.getNumber());
+        address.setCity(address1.getCity());
+        address.setState(address1.getState());
+        address.setZipCode(address1.getZipCode());
+
+        return address;
+    }
+
 //    private Individual createIndividual() {
 //
 //        Individual individual = new Individual();

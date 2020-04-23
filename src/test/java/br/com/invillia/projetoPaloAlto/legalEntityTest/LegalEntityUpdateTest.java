@@ -1,9 +1,10 @@
 package br.com.invillia.projetoPaloAlto.legalEntityTest;
 
+import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
+import br.com.invillia.projetoPaloAlto.LegalEntityMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
-import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
@@ -23,11 +24,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
+
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +35,10 @@ import static org.mockito.Mockito.*;
 public class LegalEntityUpdateTest {
 
     private Faker faker;
+
+    private LegalEntityMapperTest legalEntityMapperTest;
+
+    private IndividualMapperTest individualMapperTest;
 
     @Mock
     private LegalEntityRepository legalEntityRepository;
@@ -62,171 +65,14 @@ public class LegalEntityUpdateTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         this.faker = new Faker();
-    }
-
-    private LegalEntity createLegalEntity() {
-
-        LegalEntity legalEntity = new LegalEntity();
-
-        legalEntity.setId(1L);
-        legalEntity.setActive(true);
-        legalEntity.setTradeName(faker.name().name());
-        legalEntity.setName(faker.name().name());
-        legalEntity.setDocument(faker.number().digits(14));
-        legalEntity.setAddresses(createListAddress());
-
-        for(Address address : legalEntity.getAddresses()){
-            address.setLegalEntity(legalEntity);
-        }
-
-        return legalEntity;
-    }
-
-    private List<Address> createListAddress() {
-
-        List<Address> addresses = new ArrayList<>();
-
-        addresses.add(createAddress(1L, true));
-
-        return addresses;
-    }
-
-    private Address createAddress(Long id, Boolean main) {
-
-        Address address = new Address();
-
-        address.setId(id);
-        address.setMain(main);
-        address.setDistrict(faker.address().fullAddress());
-        address.setNumber(faker.address().buildingNumber());
-        address.setCity(faker.address().city());
-        address.setState(faker.address().state());
-        address.setZipCode(faker.address().zipCode());
-
-        return address;
-    }
-
-    private List<Individual> createListIndividual() {
-
-        List<Individual> individuals = new ArrayList<>();
-
-        individuals.add(createIndividual(1L));
-
-        return individuals;
-    }
-
-    private Individual createIndividual(Long id) {
-
-        Individual individual = new Individual();
-
-        individual.setId(id);
-        individual.setActive(true);
-        individual.setName(faker.name().name());
-        individual.setBirthDate(LocalDate.now());
-        individual.setDocument(faker.number().digits(11));
-        individual.setRg(faker.number().digits(9));
-        individual.setCreatedAt(LocalDateTime.now());
-        individual.setMotherName(faker.name().fullName());
-        individual.setAddresses(createListAddress());
-
-        for(Address address :individual.getAddresses()){
-            address.setIndividual(individual);
-        }
-
-        return individual;
-    }
-
-    private Individual newIndividual(Individual individual1) {
-
-        Individual individual = new Individual();
-
-        individual.setId(individual1.getId());
-        individual.setName(individual1.getName());
-        individual.setMotherName(individual1.getMotherName());
-        individual.setCreatedAt(individual1.getCreatedAt());
-        individual.setRg(individual1.getRg());
-        individual.setDocument(individual1.getDocument());
-        individual.setBirthDate(individual1.getBirthDate());
-        individual.setUpdatedAt(individual1.getUpdatedAt());
-        individual.setActive(individual1.getActive());
-        individual.setAddresses(newListAddress(individual1.getAddresses()));
-
-        for(Address address : individual.getAddresses()){
-            address.setIndividual(individual);
-        }
-
-        return individual;
-    }
-
-    private List<Address> newListAddress(List<Address> addresses1) {
-
-        List<Address> addresses = new ArrayList<>();
-
-        for(Address address : addresses1){
-            addresses.add(newAddress(address));
-        }
-
-        return addresses;
-    }
-
-    private Address newAddress(Address address1) {
-
-        Address address = new Address();
-
-        address.setId(address1.getId());
-        address.setMain(address1.getMain());
-        address.setDistrict(address1.getDistrict());
-        address.setNumber(address1.getNumber());
-        address.setCity(address1.getCity());
-        address.setState(address1.getState());
-        address.setZipCode(address1.getZipCode());
-
-        return address;
-    }
-
-    private LegalEntityDTO createLegalEntityDTO(){
-
-        LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
-
-        legalEntityDTO.setName(faker.name().name());
-        legalEntityDTO.setDocument(faker.number().digits(14));
-        legalEntityDTO.setTradeName(faker.name().name());
-        legalEntityDTO.setActive(true);
-        legalEntityDTO.setAddressesDTO(createListAddressDTO());
-
-        for(AddressDTO addressDTO : legalEntityDTO.getAddressesDTO()){
-            addressDTO.setLegalEntityDTO(legalEntityDTO);
-        }
-
-        return legalEntityDTO;
-    }
-
-    private List<AddressDTO> createListAddressDTO() {
-        List<AddressDTO> addressesDTO = new ArrayList<>();
-
-        addressesDTO.add(createAddressDTO(true));
-
-        return addressesDTO;
-    }
-
-    private AddressDTO createAddressDTO(Boolean main) {
-
-        AddressDTO addressDTO = new AddressDTO();
-
-        addressDTO.setDistrict(faker.name().name());
-        addressDTO.setNumber(faker.number().digit());
-        addressDTO.setCity(faker.name().name());
-        addressDTO.setState(faker.name().name());
-        addressDTO.setZipCode(faker.code().gtin8());
-        addressDTO.setMain(main);
-
-        return addressDTO;
+        this.legalEntityMapperTest = new LegalEntityMapperTest();
+        this.individualMapperTest = new IndividualMapperTest();
     }
 
     @Test
     public void updateByDocumentExistsWithExistsAddressWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
@@ -236,18 +82,6 @@ public class LegalEntityUpdateTest {
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
 
-//        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
-//
-//        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-//        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-//
-//        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-//
-//        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-//        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-//
-//        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
-
         verify(legalEntityService, times(1)).updateByDocument(legalEntityDTO);
 
     }
@@ -255,8 +89,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentExistsWithoutExistsAddressWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.getAddresses().add(createAddress(2L,false));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.getAddresses().add(legalEntityMapperTest.createAddress(2L,false));
         legalEntity.getAddresses().get(1).setLegalEntity(legalEntity);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -274,12 +108,12 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentExistsWithExistsAddressWithIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
-        legalEntity.getIndividuals().add(createIndividual(2L));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1l);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
+        legalEntity.getIndividuals().add(individualMapperTest.createIndividual(2L));
         legalEntity.getIndividuals().get(1).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(1));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(1));
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
@@ -299,7 +133,7 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentNotFound(){
 
-        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
+        LegalEntityDTO legalEntityDTO = legalEntityMapperTest.createLegalEntityDTO();
 
         when(legalEntityRepository.findByDocument(legalEntityDTO.getDocument())).thenReturn(Optional.empty());
 
@@ -309,15 +143,17 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentInvalidedDocument(){
 
-        when(legalEntityRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(createLegalEntity()));
+        when(legalEntityRepository.findByDocument(Mockito.anyString()))
+                .thenReturn(Optional.of(legalEntityMapperTest.createLegalEntity(1L)));
 
-        Assertions.assertThrows(LegalEntityException.class, () -> legalEntityService.updateByDocument(createLegalEntityDTO()));
+        Assertions.assertThrows(LegalEntityException.class,
+                () -> legalEntityService.updateByDocument(legalEntityMapperTest.createLegalEntityDTO()));
     }
 
     @Test
     public void updateByDocumentNotAticve(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.setActive(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -329,8 +165,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentMoreThanOneMainAddressLegalEntity(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.getAddresses().add(createAddress(2L,true));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.getAddresses().add(legalEntityMapperTest.createAddress(2L,true));
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
@@ -341,7 +177,7 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentNoOneMainAddressLegalEntity(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.getAddresses().get(0).setMain(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -353,9 +189,9 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentMoreThanOneMainAddressIndividual(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
-        legalEntity.getIndividuals().get(0).getAddresses().add(createAddress(2L,true));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
+        legalEntity.getIndividuals().get(0).getAddresses().add(legalEntityMapperTest.createAddress(2L,true));
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
@@ -366,8 +202,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentNoOneMainAddressIndividual(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).getAddresses().get(0).setMain(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -379,11 +215,11 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentInvalidedPartnersEmpty1(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.empty());
@@ -395,11 +231,11 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentInvalidedPartnersEmpty2(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
@@ -411,15 +247,16 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByDocumentInvalidedPartnersDifferent(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
-        when(individualRepository.findByRg(individualR.getRg())).thenReturn(Optional.of(createIndividual(2L)));
+        when(individualRepository.findByRg(individualR.getRg()))
+                .thenReturn(Optional.of(individualMapperTest.createIndividual(2L)));
 
         Assertions.assertThrows(IndividualException.class, ()-> legalEntityService.updateByDocument(legalEntityDTO));
     }
@@ -427,7 +264,7 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdExistsWithExistsAddressWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
@@ -444,8 +281,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdExistsWithoutExistsAddressWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.getAddresses().add(createAddress(2L,false));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.getAddresses().add(legalEntityMapperTest.createAddress(2L,false));
         legalEntity.getAddresses().get(1).setLegalEntity(legalEntity);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -463,12 +300,12 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdExistsWithExistsAddressWithIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
-        legalEntity.getIndividuals().add(createIndividual(2L));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
+        legalEntity.getIndividuals().add(individualMapperTest.createIndividual(2L));
         legalEntity.getIndividuals().get(1).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(1));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(1));
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
@@ -488,7 +325,7 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdNotFound(){
 
-        LegalEntityDTO legalEntityDTO = createLegalEntityDTO();
+        LegalEntityDTO legalEntityDTO = legalEntityMapperTest.createLegalEntityDTO();
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -498,16 +335,16 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdInvalidedId(){
 
-        when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(createLegalEntity()));
+        when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntityMapperTest.createLegalEntity(1L)));
 
         Assertions.assertThrows(LegalEntityException.class,
-                () -> legalEntityService.updateById(1L,createLegalEntityDTO()));
+                () -> legalEntityService.updateById(1L,legalEntityMapperTest.createLegalEntityDTO()));
     }
 
     @Test
     public void updateByIdNotAticve(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.setActive(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -519,8 +356,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdMoreThanOneMainAddressLegalEntity(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.getAddresses().add(createAddress(2L,true));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.getAddresses().add(legalEntityMapperTest.createAddress(2L,true));
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
@@ -531,7 +368,7 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdNoOneMainAddressLegalEntity(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.getAddresses().get(0).setMain(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -543,9 +380,9 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdMoreThanOneMainAddressIndividual(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
-        legalEntity.getIndividuals().get(0).getAddresses().add(createAddress(2L,true));
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
+        legalEntity.getIndividuals().get(0).getAddresses().add(legalEntityMapperTest.createAddress(2L,true));
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
@@ -556,8 +393,8 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdNoOneMainAddressIndividual(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).getAddresses().get(0).setMain(false);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
 
@@ -569,11 +406,11 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdInvalidedPartnersEmpty1(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.empty());
@@ -585,11 +422,11 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdInvalidedPartnersEmpty2(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
@@ -601,15 +438,16 @@ public class LegalEntityUpdateTest {
     @Test
     public void updateByIdInvalidedPartnersDifferent(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
         legalEntity.getIndividuals().get(0).setId(null);
         LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-        Individual individualR = newIndividual(legalEntity.getIndividuals().get(0));
+        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
-        when(individualRepository.findByRg(individualR.getRg())).thenReturn(Optional.of(createIndividual(2L)));
+        when(individualRepository.findByRg(individualR.getRg()))
+                .thenReturn(Optional.of(individualMapperTest.createIndividual(2L)));
 
         Assertions.assertThrows(IndividualException.class, ()-> legalEntityService.updateById(1L,legalEntityDTO));
     }

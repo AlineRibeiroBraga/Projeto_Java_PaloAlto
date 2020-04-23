@@ -79,46 +79,6 @@ public class LegalEntityFindByTest {
         verify(legalEntityRepository,times(1)).findById(1L);
     }
 
-    private void fieldsValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity,int index) {
-
-        legalEntityValidator(legalEntityDTO,legalEntity);
-
-        Address address1 = legalEntity.getAddresses().get(index);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(index);
-
-        addressesValidator(addressDTO1,address1);
-
-        LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-
-        legalEntityValidator(legalEntityDTO1,legalEntity1);
-
-        if(legalEntity.getIndividuals().size() != 0){
-            Individual individual1 = legalEntity.getIndividuals().get(0);
-            Individual individual2 = legalEntity.getIndividuals().get(1);
-            IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-            IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-            individualsValidator(individualDTO1,individual1);
-            individualsValidator(individualDTO2,individual2);
-
-            Address address11 = individual1.getAddresses().get(0);
-            Address address12 = individual1.getAddresses().get(1);
-            Address address21 = individual2.getAddresses().get(0);
-            Address address22 = individual2.getAddresses().get(1);
-
-            AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-            AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-            AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-            AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
-
-            addressesValidator(addressDTO11,address11);
-            addressesValidator(addressDTO12,address12);
-            addressesValidator(addressDTO21,address21);
-            addressesValidator(addressDTO22,address22);
-        }
-    }
-
     @Test
     public void findByIdExistsWithIndividuals(){
 
@@ -129,7 +89,8 @@ public class LegalEntityFindByTest {
 
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(1L);
 
-        fieldsValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityRepository,times(1)).findById(1L);
     }
@@ -151,7 +112,7 @@ public class LegalEntityFindByTest {
 
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(legalEntity.getDocument());
 
-        fieldsValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityRepository,times(1)).findByDocument(legalEntity.getDocument());
     }
@@ -166,7 +127,8 @@ public class LegalEntityFindByTest {
 
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(legalEntity.getDocument());
 
-        fieldsValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityRepository,times(1)).findByDocument(legalEntity.getDocument());
     }
@@ -177,6 +139,34 @@ public class LegalEntityFindByTest {
         when(legalEntityRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(LegalEntityException.class, ()-> legalEntityService.findByDocument(Mockito.anyString()));
+    }
+
+    private void fieldsValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity,int index) {
+
+        legalEntityValidator(legalEntityDTO,legalEntity);
+
+        Address address1 = legalEntity.getAddresses().get(index);
+        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(index);
+
+        addressesValidator(addressDTO1,address1);
+
+        LegalEntity legalEntity1 = address1.getLegalEntity();
+        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
+
+        legalEntityValidator(legalEntityDTO1,legalEntity1);
+    }
+
+    private void fieldsPartnersValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity, int index){
+
+        Individual individual1 = legalEntity.getIndividuals().get(index);
+        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(index);
+
+        individualsValidator(individualDTO1,individual1);
+
+        Address address11 = individual1.getAddresses().get(0);
+        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+
+        addressesValidator(addressDTO11,address11);
     }
 
     private void legalEntityValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity) {
