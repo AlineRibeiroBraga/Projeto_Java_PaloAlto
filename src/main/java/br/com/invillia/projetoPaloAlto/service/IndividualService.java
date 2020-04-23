@@ -110,16 +110,15 @@ public class IndividualService {
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
-        if(mainAddressValidator(individualDTO.getAddressesDTO())) {
-
-            individualMapper.update(individual, individualDTO);
-
-            individualRepository.save(individual);
-
-            return individual.getDocument();
+        if(!mainAddressValidator(individualDTO.getAddressesDTO())) {
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
         }
 
-        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        individualMapper.update(individual, individualDTO);
+
+        individualRepository.save(individual);
+
+        return individual.getDocument();
     }
 
     public Long updateById( Long id, IndividualDTO individualDTO) {
@@ -132,15 +131,14 @@ public class IndividualService {
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
-        if(mainAddressValidator(individualDTO.getAddressesDTO())){
-
-            individualMapper.update(individual,individualDTO);
-
-            individualRepository.save(individual);
-
-            return individual.getId();
+        if(!mainAddressValidator(individualDTO.getAddressesDTO())){
+            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
         }
 
-        throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+        individualMapper.update(individual,individualDTO);
+
+        individualRepository.save(individual);
+
+        return individual.getId();
     }
 }

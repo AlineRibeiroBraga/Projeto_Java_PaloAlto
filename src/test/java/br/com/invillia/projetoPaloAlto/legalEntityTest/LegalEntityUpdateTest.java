@@ -234,19 +234,22 @@ public class LegalEntityUpdateTest {
         String document = legalEntityService.updateByDocument(legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
 
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
+//        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
+//
+//        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
+//        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
+//
+//        addressDTOValidator(addressDTOUpdate1,addressDTO1);
+//
+//        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
+//        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
+//
+//        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
 
         verify(legalEntityService, times(1)).updateByDocument(legalEntityDTO);
+
     }
 
     @Test
@@ -262,23 +265,8 @@ public class LegalEntityUpdateTest {
         String document = legalEntityService.updateByDocument(legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
-
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTOUpdate2 = legalEntityDTOUpdate.getAddressesDTO().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-        addressDTOValidator(addressDTOUpdate2,addressDTO2);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTOUpdate2 = addressDTOUpdate2.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
-        legalEntityDTOValidator(legalEntityDTOUpdate2,legalEntityDTO2);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,1);
 
         verify(legalEntityService, times(1)).updateByDocument(legalEntityDTO);
     }
@@ -300,42 +288,10 @@ public class LegalEntityUpdateTest {
         String document = legalEntityService.updateByDocument(legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
 
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
-
-        IndividualDTO individualDTOUpdate1 = legalEntityDTOUpdate.getIndividualsDTO().get(0);
-        IndividualDTO individualDTOUpdate2 = legalEntityDTOUpdate.getIndividualsDTO().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-        individualValidator(individualDTOUpdate1,individualDTO1);
-        individualValidator(individualDTOUpdate2,individualDTO2);
-
-        AddressDTO addressDTOUpdate11 = individualDTOUpdate1.getAddressesDTO().get(0);
-        AddressDTO addressDTOUpdate21 = individualDTOUpdate2.getAddressesDTO().get(0);
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate11,addressDTO11);
-        addressDTOValidator(addressDTOUpdate21,addressDTO21);
-
-        IndividualDTO individualDTOUpdate11 = addressDTOUpdate11.getIndividualDTO();
-        IndividualDTO individualDTOUpdate21 = addressDTOUpdate21.getIndividualDTO();
-
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-
-        individualValidator(individualDTOUpdate11,individualDTO11);
-        individualValidator(individualDTOUpdate21,individualDTO21);
+        fieldsPartnersValidator(legalEntityDTOUpdate,legalEntityDTO,0);
+        fieldsPartnersValidator(legalEntityDTOUpdate,legalEntityDTO,1);
 
         verify(legalEntityService, times(1)).updateByDocument(legalEntityDTO);
     }
@@ -479,20 +435,11 @@ public class LegalEntityUpdateTest {
         Long id = legalEntityService.updateById(1L,legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
-
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
 
         verify(legalEntityService, times(1)).updateById(1L,legalEntityDTO);
     }
+
 
     @Test
     public void updateByIdExistsWithoutExistsAddressWithoutIndividuals(){
@@ -507,23 +454,8 @@ public class LegalEntityUpdateTest {
         Long id = legalEntityService.updateById(1L,legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
-
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTOUpdate2 = legalEntityDTOUpdate.getAddressesDTO().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-        addressDTOValidator(addressDTOUpdate2,addressDTO2);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTOUpdate2 = addressDTOUpdate2.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
-        legalEntityDTOValidator(legalEntityDTOUpdate2,legalEntityDTO2);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,1);
 
         verify(legalEntityService, times(1)).updateById(1L,legalEntityDTO);
     }
@@ -545,42 +477,10 @@ public class LegalEntityUpdateTest {
         Long id = legalEntityService.updateById(1L,legalEntityDTO);
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
-        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
+        fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
 
-        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(0);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate1,addressDTO1);
-
-        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-
-        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
-
-        IndividualDTO individualDTOUpdate1 = legalEntityDTOUpdate.getIndividualsDTO().get(0);
-        IndividualDTO individualDTOUpdate2 = legalEntityDTOUpdate.getIndividualsDTO().get(1);
-        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-        IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
-
-        individualValidator(individualDTOUpdate1,individualDTO1);
-        individualValidator(individualDTOUpdate2,individualDTO2);
-
-        AddressDTO addressDTOUpdate11 = individualDTOUpdate1.getAddressesDTO().get(0);
-        AddressDTO addressDTOUpdate21 = individualDTOUpdate2.getAddressesDTO().get(0);
-        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-        AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-
-        addressDTOValidator(addressDTOUpdate11,addressDTO11);
-        addressDTOValidator(addressDTOUpdate21,addressDTO21);
-
-        IndividualDTO individualDTOUpdate11 = addressDTOUpdate11.getIndividualDTO();
-        IndividualDTO individualDTOUpdate21 = addressDTOUpdate21.getIndividualDTO();
-
-        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-        IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-
-        individualValidator(individualDTOUpdate11,individualDTO11);
-        individualValidator(individualDTOUpdate21,individualDTO21);
+        fieldsPartnersValidator(legalEntityDTOUpdate,legalEntityDTO,0);
+        fieldsPartnersValidator(legalEntityDTOUpdate,legalEntityDTO,1);
 
         verify(legalEntityService, times(1)).updateById(1L,legalEntityDTO);
     }
@@ -712,6 +612,40 @@ public class LegalEntityUpdateTest {
         when(individualRepository.findByRg(individualR.getRg())).thenReturn(Optional.of(createIndividual(2L)));
 
         Assertions.assertThrows(IndividualException.class, ()-> legalEntityService.updateById(1L,legalEntityDTO));
+    }
+
+
+    private void fieldsValidator(LegalEntityDTO legalEntityDTOUpdate, LegalEntityDTO legalEntityDTO, int index) {
+
+        legalEntityDTOValidator(legalEntityDTOUpdate,legalEntityDTO);
+
+        AddressDTO addressDTOUpdate1 = legalEntityDTOUpdate.getAddressesDTO().get(index);
+        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(index);
+
+        addressDTOValidator(addressDTOUpdate1,addressDTO1);
+
+        LegalEntityDTO legalEntityDTOUpdate1 = addressDTOUpdate1.getLegalEntityDTO();
+        LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
+
+        legalEntityDTOValidator(legalEntityDTOUpdate1,legalEntityDTO1);
+    }
+
+    private void fieldsPartnersValidator(LegalEntityDTO legalEntityDTOUpdate, LegalEntityDTO legalEntityDTO, int index) {
+
+        IndividualDTO individualDTOUpdate1 = legalEntityDTOUpdate.getIndividualsDTO().get(index);
+        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(index);
+
+        individualValidator(individualDTOUpdate1,individualDTO1);
+
+        AddressDTO addressDTOUpdate11 = individualDTOUpdate1.getAddressesDTO().get(0);
+        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+
+        addressDTOValidator(addressDTOUpdate11,addressDTO11);
+
+        IndividualDTO individualDTOUpdate11 = addressDTOUpdate11.getIndividualDTO();
+        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
+
+        individualValidator(individualDTOUpdate11,individualDTO11);
     }
 
     private void individualValidator(IndividualDTO individualDTOUpdate, IndividualDTO individualDTO) {

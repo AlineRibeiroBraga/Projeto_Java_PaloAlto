@@ -1,8 +1,8 @@
 package br.com.invillia.projetoPaloAlto.individualTest;
 
+import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import br.com.invillia.projetoPaloAlto.domain.model.Address;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
@@ -10,7 +10,6 @@ import br.com.invillia.projetoPaloAlto.mapper.AddressMapper;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,10 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -34,6 +29,8 @@ import static org.mockito.Mockito.*;
 public class IndividualUpdateTest {
 
     private Faker faker;
+
+    private IndividualMapperTest individualMapperTest;
 
     @Mock
     private IndividualRepository individualRepository;
@@ -53,109 +50,21 @@ public class IndividualUpdateTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         this.faker = new Faker();
-    }
-
-    private Individual createIndividual() {
-
-        Individual individual = new Individual();
-
-        individual.setId(1L);
-        individual.setActive(true);
-        individual.setMotherName(faker.name().name());
-        individual.setName(faker.name().name());
-        individual.setCreatedAt(LocalDateTime.now());
-        individual.setDocument(faker.number().digits(11));
-        individual.setRg(faker.number().digits(9));
-        individual.setBirthDate(LocalDate.now());
-        individual.setAddresses(createListAddress());
-
-        for(Address address : individual.getAddresses()){
-            address.setIndividual(individual);
-        }
-
-        return individual;
-    }
-
-    private List<Address> createListAddress() {
-
-        List<Address> addresses = new ArrayList<>();
-
-        addresses.add(createAddress(1L,true));
-        addresses.add(createAddress(2L,false));
-
-        return addresses;
-    }
-
-    private Address createAddress(Long id, Boolean main) {
-
-        Address address = new Address();
-
-        address.setId(id);
-        address.setMain(main);
-        address.setDistrict(faker.address().fullAddress());
-        address.setNumber(faker.address().buildingNumber());
-        address.setCity(faker.address().city());
-        address.setState(faker.address().state());
-        address.setZipCode(faker.address().zipCode());
-
-        return address;
-    }
-
-    private IndividualDTO createIndividualDTO() {
-
-        IndividualDTO individualDTO = new IndividualDTO();
-
-        individualDTO.setName(faker.name().name());
-        individualDTO.setMotherName(faker.name().fullName());
-        individualDTO.setActive(true);
-        individualDTO.setDocument(faker.number().digits(11));
-        individualDTO.setBirthDate(LocalDate.now());
-        individualDTO.setRg(faker.number().digits(9));
-        individualDTO.setAddressesDTO(createListAddressDTO());
-
-        for (AddressDTO addressDTO : individualDTO.getAddressesDTO()){
-            addressDTO.setIndividualDTO(individualDTO);
-        }
-
-        return individualDTO;
-    }
-
-    private List<AddressDTO> createListAddressDTO() {
-
-        List<AddressDTO> addressDTOS = new ArrayList<>();
-
-        addressDTOS.add(createAddressDTO(true));
-        addressDTOS.add(createAddressDTO(false));
-
-        return addressDTOS;
-    }
-
-    private AddressDTO createAddressDTO(Boolean main) {
-
-        AddressDTO addressDTO = new AddressDTO();
-
-        addressDTO.setMain(main);
-        addressDTO.setDistrict(faker.address().fullAddress());
-        addressDTO.setNumber(faker.address().buildingNumber());
-        addressDTO.setCity(faker.address().city());
-        addressDTO.setState(faker.address().state());
-        addressDTO.setZipCode(faker.address().zipCode());
-
-        return addressDTO;
+        this.individualMapperTest = new IndividualMapperTest();
     }
 
     @Test
     public void updateByDocument(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
         when(individualRepository.findByDocument(individualDTO.getDocument())).thenReturn(Optional.of(individual));
 
-        String documento = individualService.updateByDocument(individualDTO);
-        individualDTO = individualService.findByDocument(documento);
+        String document = individualService.updateByDocument(individualDTO);
+        IndividualDTO individualDTOUpdate = individualService.findByDocument(document);
 
-        fieldsValidator(individualDTO,individual);
+        fieldsValidator(individualDTOUpdate,individualDTO);
 
         verify(individualService,times(1)).updateByDocument(individualDTO);
     }
@@ -166,21 +75,22 @@ public class IndividualUpdateTest {
         when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(IndividualException.class,
-                () -> individualService.updateByDocument(createIndividualDTO()));
+                () -> individualService.updateByDocument(individualMapperTest.createIndividualDTO()));
     }
 
     @Test
     public void updateByDocumentInvalided(){
 
-        when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.of(createIndividual()));
+        when(individualRepository.findByDocument(Mockito.anyString()))
+                .thenReturn(Optional.of(individualMapperTest.createIndividual(1L)));
 
         Assertions.assertThrows(IndividualException.class,
-                () -> individualService.updateByDocument(createIndividualDTO()));
+                () -> individualService.updateByDocument(individualMapperTest.createIndividualDTO()));
     }
 
     @Test
     public void updateByDocumentNotActive(){
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         individual.setActive(false);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
@@ -193,9 +103,9 @@ public class IndividualUpdateTest {
     @Test
     public void updateByDocumentMoreThanOneMainAddress(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
+        individual.getAddresses().add(individualMapperTest.createAddress(2L,true));
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
-        individualDTO.getAddressesDTO().get(1).setMain(true);
 
         when(individualRepository.findByDocument(individual.getDocument())).thenReturn(Optional.of(individual));
 
@@ -206,7 +116,7 @@ public class IndividualUpdateTest {
     @Test
     public void updateByDocumentNoMainAddress(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
         individualDTO.getAddressesDTO().get(0).setMain(false);
@@ -220,15 +130,15 @@ public class IndividualUpdateTest {
     @Test
     public void updateById(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
         when(individualRepository.findById(individual.getId())).thenReturn(Optional.of(individual));
 
         Long id = individualService.updateById(individual.getId(),individualDTO);
-        individualDTO = individualService.findById(id);
+        IndividualDTO individualDTOUpdate = individualService.findById(id);
 
-        fieldsValidator(individualDTO,individual);
+        fieldsValidator(individualDTOUpdate,individualDTO);
 
         verify(individualService,times(1)).updateById(individual.getId(),individualDTO);
     }
@@ -239,21 +149,21 @@ public class IndividualUpdateTest {
         when(individualRepository.findById(1L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(IndividualException.class,
-                () -> individualService.updateById(1L,createIndividualDTO()));
+                () -> individualService.updateById(1L, individualMapperTest.createIndividualDTO()));
     }
 
     @Test
     public void updateByIdDocumentInvalided(){
 
-        when(individualRepository.findById(1L)).thenReturn(Optional.of(createIndividual()));
+        when(individualRepository.findById(1L)).thenReturn(Optional.of(individualMapperTest.createIndividual(1L)));
 
         Assertions.assertThrows(IndividualException.class,
-                () -> individualService.updateById(1L,createIndividualDTO()));
+                () -> individualService.updateById(1L, individualMapperTest.createIndividualDTO()));
     }
 
     @Test
     public void updateByIdNotActive(){
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         individual.setActive(false);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
@@ -266,9 +176,9 @@ public class IndividualUpdateTest {
     @Test
     public void updateByIdMoreThanOneMainAddress(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
+        individual.getAddresses().add(individualMapperTest.createAddress(2L,true));
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
-        individualDTO.getAddressesDTO().get(1).setMain(true);
 
         when(individualRepository.findById(individual.getId())).thenReturn(Optional.of(individual));
 
@@ -279,7 +189,7 @@ public class IndividualUpdateTest {
     @Test
     public void updateByIdNoMainAddress(){
 
-        Individual individual = createIndividual();
+        Individual individual = individualMapperTest.createIndividual(1L);
         IndividualDTO individualDTO = individualMapper.individualToIndividualDTO(individual);
 
         individualDTO.getAddressesDTO().get(0).setMain(false);
@@ -290,43 +200,37 @@ public class IndividualUpdateTest {
                 () -> individualService.updateById(individual.getId(),individualDTO));
     }
 
-    private void fieldsValidator(IndividualDTO individualDTO, Individual individual) {
+    private void fieldsValidator(IndividualDTO individualDTOUpdate, IndividualDTO individualDTO) {
 
-        individualsValidator(individualDTO,individual);
+        individualsDTOValidator(individualDTOUpdate,individualDTO);
 
+        AddressDTO addressDTOUpdate1 = individualDTOUpdate.getAddressesDTO().get(0);
         AddressDTO addressDTO1 = individualDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = individualDTO.getAddressesDTO().get(1);
-        Address address1 = individual.getAddresses().get(0);
-        Address address2 = individual.getAddresses().get(1);
 
-        addressesValidator(addressDTO1,address1);
-        addressesValidator(addressDTO2,address2);
+        addressesDTOValidator(addressDTOUpdate1,addressDTO1);
 
+        IndividualDTO individualDTOUpdate1 = addressDTOUpdate1.getIndividualDTO();
         IndividualDTO individualDTO1 = addressDTO1.getIndividualDTO();
-        IndividualDTO individualDTO2 = addressDTO2.getIndividualDTO();
-        Individual individual1 = address1.getIndividual();
-        Individual individual2 = address2.getIndividual();
 
-        individualsValidator(individualDTO1,individual1);
-        individualsValidator(individualDTO2,individual2);
+        individualsDTOValidator(individualDTOUpdate1,individualDTO1);
     }
 
-    private void individualsValidator(IndividualDTO individualDTO, Individual individual) {
+    private void individualsDTOValidator(IndividualDTO individualDTOUpdate, IndividualDTO individual) {
 
-        Assertions.assertEquals(individualDTO.getActive(),individual.getActive());
-        Assertions.assertEquals(individualDTO.getName(),individual.getName());
-        Assertions.assertEquals(individualDTO.getDocument(),individual.getDocument());
-        Assertions.assertEquals(individualDTO.getBirthDate(),individual.getBirthDate());
-        Assertions.assertEquals(individualDTO.getMotherName(),individual.getMotherName());
+        Assertions.assertEquals(individualDTOUpdate.getActive(),individual.getActive());
+        Assertions.assertEquals(individualDTOUpdate.getName(),individual.getName());
+        Assertions.assertEquals(individualDTOUpdate.getDocument(),individual.getDocument());
+        Assertions.assertEquals(individualDTOUpdate.getBirthDate(),individual.getBirthDate());
+        Assertions.assertEquals(individualDTOUpdate.getMotherName(),individual.getMotherName());
     }
 
-    private void addressesValidator(AddressDTO addressDTO, Address address) {
+    private void addressesDTOValidator(AddressDTO addressDTOUpdate, AddressDTO address) {
 
-        Assertions.assertEquals(addressDTO.getMain(), address.getMain());
-        Assertions.assertEquals(addressDTO.getDistrict(), address.getDistrict());
-        Assertions.assertEquals(addressDTO.getNumber(),address.getNumber());
-        Assertions.assertEquals(addressDTO.getCity(),address.getCity());
-        Assertions.assertEquals(addressDTO.getState(),address.getState());
-        Assertions.assertEquals(addressDTO.getZipCode(),address.getZipCode());
+        Assertions.assertEquals(addressDTOUpdate.getMain(), address.getMain());
+        Assertions.assertEquals(addressDTOUpdate.getDistrict(), address.getDistrict());
+        Assertions.assertEquals(addressDTOUpdate.getNumber(),address.getNumber());
+        Assertions.assertEquals(addressDTOUpdate.getCity(),address.getCity());
+        Assertions.assertEquals(addressDTOUpdate.getState(),address.getState());
+        Assertions.assertEquals(addressDTOUpdate.getZipCode(),address.getZipCode());
     }
 }

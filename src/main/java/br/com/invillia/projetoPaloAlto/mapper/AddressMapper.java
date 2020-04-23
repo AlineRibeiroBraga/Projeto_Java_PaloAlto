@@ -132,8 +132,12 @@ public class AddressMapper {
         if(addresses != null){
 
             deactivateAddress(addressesR);
+            int tam = addresses.size();
 
-            for(Address address : addresses){
+            for(int i=0; i < tam; i++){
+
+                Address address = addresses.get(i);
+
                 if(addressesR.contains(address)){
                     setAddress(addressesR,address);
                 }

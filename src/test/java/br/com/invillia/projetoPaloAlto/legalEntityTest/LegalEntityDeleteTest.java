@@ -1,5 +1,7 @@
 package br.com.invillia.projetoPaloAlto.legalEntityTest;
 
+import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
+import br.com.invillia.projetoPaloAlto.LegalEntityMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
@@ -36,6 +38,10 @@ public class LegalEntityDeleteTest {
 
     private Faker faker;
 
+    private LegalEntityMapperTest legalEntityMapperTest;
+
+    private IndividualMapperTest individualMapperTest;
+
     @Mock
     private LegalEntityRepository legalEntityRepository;
 
@@ -61,120 +67,30 @@ public class LegalEntityDeleteTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         this.faker = new Faker();
-    }
-
-    private LegalEntity createLegalEntity() {
-
-        LegalEntity legalEntity = new LegalEntity();
-
-        legalEntity.setId(1L);
-        legalEntity.setActive(true);
-        legalEntity.setDocument(faker.number().digits(11));
-        legalEntity.setCreatedAt(LocalDateTime.now());
-        legalEntity.setTradeName(faker.name().name());
-        legalEntity.setName(faker.name().name());
-        legalEntity.setIndividuals(new ArrayList<>());
-        legalEntity.setAddresses(createListAddress());
-
-        for(Address address : legalEntity.getAddresses()){
-            address.setLegalEntity(legalEntity);
-        }
-
-        return legalEntity;
-    }
-
-    private List<Address> createListAddress() {
-
-        List<Address> addresses = new ArrayList<>();
-
-        addresses.add(createAddress(true, 1L));
-        addresses.add(createAddress(false, 2L));
-
-        return addresses;
-    }
-
-    private Address createAddress(Boolean main, Long id) {
-
-        Address address = new Address();
-
-        address.setId(id);
-        address.setMain(main);
-        address.setDistrict(faker.address().fullAddress());
-        address.setNumber(faker.address().buildingNumber());
-        address.setCity(faker.address().city());
-        address.setState(faker.address().state());
-        address.setZipCode(faker.address().zipCode());
-
-        return address;
-    }
-
-    private List<Individual> createListIndividual() {
-
-        List<Individual> individuals = new ArrayList<>();
-
-        individuals.add(createIndividual(1L));
-        individuals.add(createIndividual(1L));
-
-        return individuals;
-    }
-
-    private Individual createIndividual(Long id) {
-
-        Individual individual = new Individual();
-
-        individual.setId(id);
-        individual.setActive(true);
-        individual.setDocument(faker.number().digits(11));
-        individual.setBirthDate(LocalDate.now());
-        individual.setMotherName(faker.name().name());
-        individual.setRg(faker.number().digits(9));
-        individual.setName(faker.name().name());
-        individual.setCreatedAt(LocalDateTime.now());
-        individual.setAddresses(createListAddress());
-
-        for(Address address :  individual.getAddresses()){
-            address.setIndividual(individual);
-        }
-
-        return individual;
+        this.legalEntityMapperTest = new LegalEntityMapperTest();
+        this.individualMapperTest = new IndividualMapperTest();
     }
 
     @Test
     public void deleteByDocumentWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
 
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
-    }
-
-    public String deleteByDocument(String document) {
-
-        LegalEntity legalEntity = legalEntityRepository.findByDocument(document).
-                orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
-
-//        deleteIndividuals(legalEntity);
-
-        if(legalEntity.getActive()){
-            legalEntity.setActive(false);
-
-            return legalEntity.getDocument();
-        }
-
-        throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
     }
 
     @Test
     public void deleteByDocumentWithActiveIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
@@ -182,7 +98,8 @@ public class LegalEntityDeleteTest {
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
     }
@@ -190,8 +107,8 @@ public class LegalEntityDeleteTest {
     @Test
     public void deleteByDocumentWithNotActiveIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
@@ -199,77 +116,49 @@ public class LegalEntityDeleteTest {
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findByDocument(legalEntity.getDocument());
     }
 
-    private void fieldValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity){
+    private void fieldsValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity, int index){
 
         legalEntityValidator(legalEntityDTO,legalEntity);
 
-        Address address1 = legalEntity.getAddresses().get(0);
-        Address address2 = legalEntity.getAddresses().get(1);
-        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(0);
-        AddressDTO addressDTO2 = legalEntityDTO.getAddressesDTO().get(1);
+        Address address1 = legalEntity.getAddresses().get(index);
+        AddressDTO addressDTO1 = legalEntityDTO.getAddressesDTO().get(index);
 
         addressValidator(addressDTO1,address1);
-        addressValidator(addressDTO2,address2);
 
         LegalEntity legalEntity1 = address1.getLegalEntity();
-        LegalEntity legalEntity2 = address2.getLegalEntity();
         LegalEntityDTO legalEntityDTO1 = addressDTO1.getLegalEntityDTO();
-        LegalEntityDTO legalEntityDTO2 = addressDTO2.getLegalEntityDTO();
 
         legalEntityValidator(legalEntityDTO1,legalEntity1);
-        legalEntityValidator(legalEntityDTO2,legalEntity2);
+    }
 
-        if(legalEntity.getIndividuals().size() != 0){
+    private void fieldsPartnersValidator(LegalEntityDTO legalEntityDTO, LegalEntity legalEntity, int index) {
 
-            Individual individual1 = legalEntity.getIndividuals().get(0);
-            Individual individual2 = legalEntity.getIndividuals().get(1);
-            IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
-            IndividualDTO individualDTO2 = legalEntityDTO.getIndividualsDTO().get(1);
+        Individual individual1 = legalEntity.getIndividuals().get(0);
+        IndividualDTO individualDTO1 = legalEntityDTO.getIndividualsDTO().get(0);
 
-            individualsValidator(individualDTO1,individual1);
-            individualsValidator(individualDTO2,individual2);
+        individualsValidator(individualDTO1,individual1);
 
-            Address address11 = individual1.getAddresses().get(0);
-            Address address12 = individual1.getAddresses().get(1);
-            Address address21 = individual2.getAddresses().get(0);
-            Address address22 = individual2.getAddresses().get(1);
+        AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
+        Address address11 = individual1.getAddresses().get(0);
 
-            AddressDTO addressDTO11 = individualDTO1.getAddressesDTO().get(0);
-            AddressDTO addressDTO12 = individualDTO1.getAddressesDTO().get(1);
-            AddressDTO addressDTO21 = individualDTO2.getAddressesDTO().get(0);
-            AddressDTO addressDTO22 = individualDTO2.getAddressesDTO().get(1);
+        addressValidator(addressDTO11,address11);
 
-            addressValidator(addressDTO11,address11);
-            addressValidator(addressDTO12,address12);
-            addressValidator(addressDTO21,address21);
-            addressValidator(addressDTO22,address22);
+        IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
+        Individual individual11 = address11.getIndividual();
 
-            Individual individual11 = address11.getIndividual();
-            Individual individual12 = address12.getIndividual();
-            Individual individual21 = address21.getIndividual();
-            Individual individual22 = address22.getIndividual();
-
-            IndividualDTO individualDTO11 = addressDTO11.getIndividualDTO();
-            IndividualDTO individualDTO12 = addressDTO12.getIndividualDTO();
-            IndividualDTO individualDTO21 = addressDTO21.getIndividualDTO();
-            IndividualDTO individualDTO22 = addressDTO22.getIndividualDTO();
-
-            individualsValidator(individualDTO11,individual11);
-            individualsValidator(individualDTO12,individual12);
-            individualsValidator(individualDTO21,individual21);
-            individualsValidator(individualDTO22,individual22);
-        }
+        individualsValidator(individualDTO11,individual11);
     }
 
     @Test
     public void deleteByDocumentAlreadyDeleted(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.setActive(false);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
@@ -290,14 +179,14 @@ public class LegalEntityDeleteTest {
     @Test
     public void deleteByIdtWithoutIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
 
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
@@ -305,8 +194,8 @@ public class LegalEntityDeleteTest {
     @Test
     public void deleteByIdWithActiveIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
@@ -314,7 +203,8 @@ public class LegalEntityDeleteTest {
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
@@ -322,8 +212,8 @@ public class LegalEntityDeleteTest {
     @Test
     public void deleteByIdWithNotActiveIndividuals(){
 
-        LegalEntity legalEntity = createLegalEntity();
-        legalEntity.setIndividuals(createListIndividual());
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
+        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
@@ -331,7 +221,8 @@ public class LegalEntityDeleteTest {
         Long id = legalEntityService.deleteById(1L);
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
-        fieldValidator(legalEntityDTO,legalEntity);
+        fieldsValidator(legalEntityDTO,legalEntity,0);
+        fieldsPartnersValidator(legalEntityDTO,legalEntity,0);
 
         verify(legalEntityService,times(1)).findById(1L);
     }
@@ -339,7 +230,7 @@ public class LegalEntityDeleteTest {
     @Test
     public void deleteByIdAlreadyDeleted(){
 
-        LegalEntity legalEntity = createLegalEntity();
+        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
         legalEntity.setActive(false);
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
