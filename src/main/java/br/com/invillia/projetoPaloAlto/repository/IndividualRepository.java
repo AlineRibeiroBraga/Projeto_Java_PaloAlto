@@ -22,4 +22,6 @@ public interface IndividualRepository extends JpaRepository<Individual, Long> {
     Boolean findLegalEntityById(Long id);
 
     Optional<Individual> findByRg(String rg);
+
+    String findNameById(Long id);
 }

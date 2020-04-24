@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.controller;
+package br.com.invillia.projetoPaloAlto.API.rest;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 
 @RestController()
 @RequestMapping("/individual")
-public class IndividualController {
+public class IndividualController{
 
     @Autowired
     private IndividualService individualService;

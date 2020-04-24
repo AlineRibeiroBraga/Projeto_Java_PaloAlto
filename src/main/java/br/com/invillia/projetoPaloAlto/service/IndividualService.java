@@ -141,4 +141,8 @@ public class IndividualService {
 
         return individual.getId();
     }
+
+    public IndividualDTO findIndividualDTOById(Long id) {
+        return findById(id);
+    }
 }
