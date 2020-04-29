@@ -1,7 +1,6 @@
-package br.com.invillia.projetoPaloAlto.legalEntityTest;
+package br.com.invillia.projetoPaloAlto.unitTest.legalEntityTest;
 
-import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
-import br.com.invillia.projetoPaloAlto.LegalEntityMapperTest;
+import br.com.invillia.projetoPaloAlto.unitTest.individualTest.IndividualMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;

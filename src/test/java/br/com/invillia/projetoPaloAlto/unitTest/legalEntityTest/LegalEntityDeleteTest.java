@@ -1,7 +1,6 @@
-package br.com.invillia.projetoPaloAlto.legalEntityTest;
+package br.com.invillia.projetoPaloAlto.unitTest.legalEntityTest;
 
-import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
-import br.com.invillia.projetoPaloAlto.LegalEntityMapperTest;
+import br.com.invillia.projetoPaloAlto.unitTest.individualTest.IndividualMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
@@ -15,7 +14,6 @@ import br.com.invillia.projetoPaloAlto.mapper.LegalEntityMapper;
 import br.com.invillia.projetoPaloAlto.repository.IndividualRepository;
 import br.com.invillia.projetoPaloAlto.repository.LegalEntityRepository;
 import br.com.invillia.projetoPaloAlto.service.LegalEntityService;
-import br.com.invillia.projetoPaloAlto.utils.Messages;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,10 +22,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.Mockito.*;

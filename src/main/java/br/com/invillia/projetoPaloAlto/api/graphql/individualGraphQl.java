@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.API.graphql;
+package br.com.invillia.projetoPaloAlto.api.graphql;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;

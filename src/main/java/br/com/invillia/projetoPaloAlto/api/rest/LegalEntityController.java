@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.API.rest;
+package br.com.invillia.projetoPaloAlto.api.rest;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCNPJ;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;

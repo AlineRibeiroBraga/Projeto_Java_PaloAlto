@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto;
+package br.com.invillia.projetoPaloAlto.unitTest.individualTest;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;

@@ -1,14 +1,11 @@
-package br.com.invillia.projetoPaloAlto;
+package br.com.invillia.projetoPaloAlto.unitTest.legalEntityTest;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
-import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
 import com.github.javafaker.Faker;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

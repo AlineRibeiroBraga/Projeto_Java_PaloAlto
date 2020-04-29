@@ -1,6 +1,5 @@
-package br.com.invillia.projetoPaloAlto.individualTest;
+package br.com.invillia.projetoPaloAlto.unitTest.individualTest;
 
-import br.com.invillia.projetoPaloAlto.IndividualMapperTest;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Address;
