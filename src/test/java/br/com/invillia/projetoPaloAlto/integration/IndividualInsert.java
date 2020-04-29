@@ -15,8 +15,6 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.time.LocalDate;
 
-import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
-
 public class IndividualInsert {
 
     private String url = "/individual";
