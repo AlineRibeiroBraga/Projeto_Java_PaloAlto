@@ -41,76 +41,76 @@ public class IndividualInsert {
         individualDTO = new IndividualDTO();
     }
 
-    @And("The name is {string}")
-    public void theNameIs(String name) {
-        individualDTO.setName(name);
-    }
-
-    @And("The motherName is {string}")
-    public void theMotherNameIs(String motherName) {
-        individualDTO.setMotherName(motherName);
-    }
-
-    @And("The document is {string}")
-    public void theDocumentIs(String document) {
-        individualDTO.setDocument(document);
-    }
-
-    @And("The rg id {string}")
-    public void theRgId(String rg) {
-        individualDTO.setRg(rg);
-    }
-
-    @And("The birthDate is {string}")
-    public void theBirthDateIs(String birthDate) {
-        LocalDate localDate = LocalDate.parse(birthDate);
-        individualDTO.setBirthDate(localDate);
-    }
-
-    @And("The active is active")
-    public void theActiveIs() {
-        individualDTO.setActive(true);
-    }
-
-    @Given("Create a AndressDTO")
-    public void createAAndressDTO() {
-        List<AddressDTO> addressesDTO = new ArrayList<>();
-        this.addressDTO = new AddressDTO();
-        addressesDTO.add(addressDTO);
-        this.addressDTO.setIndividualDTO(individualDTO);
-        this.individualDTO.setAddressesDTO(addressesDTO);
-    }
-
-    @And("The district is {string}")
-    public void theDistrictIs(String district) {
-        addressDTO.setDistrict(district);
-    }
-
-    @And("The number is {string}")
-    public void theNumberIs(String number) {
-        addressDTO.setNumber(number);
-    }
-
-    @And("The city is {string}")
-    public void theCityIs(String city) {
-        addressDTO.setCity(city);
-    }
-
-    @And("The state is {string}")
-    public void theStateIs(String state) {
-        addressDTO.setState(state);
-    }
-
-    @And("The zipCode is {string}")
-    public void theZipCodeIs(String zipCode) {
-        addressDTO.setZipCode(zipCode);
-    }
-
-    @And("The main is {string}")
-    public void theMainIs(String main) {
-        Boolean bool = Boolean.valueOf(main);
-        addressDTO.setMain(bool);
-    }
+//    @And("The name is {string}")
+//    public void theNameIs(String name) {
+//        individualDTO.setName(name);
+//    }
+//
+//    @And("The motherName is {string}")
+//    public void theMotherNameIs(String motherName) {
+//        individualDTO.setMotherName(motherName);
+//    }
+//
+//    @And("The document is {string}")
+//    public void theDocumentIs(String document) {
+//        individualDTO.setDocument(document);
+//    }
+//
+//    @And("The rg id {string}")
+//    public void theRgId(String rg) {
+//        individualDTO.setRg(rg);
+//    }
+//
+//    @And("The birthDate is {string}")
+//    public void theBirthDateIs(String birthDate) {
+//        LocalDate localDate = LocalDate.parse(birthDate);
+//        individualDTO.setBirthDate(localDate);
+//    }
+//
+//    @And("The active is active")
+//    public void theActiveIs() {
+//        individualDTO.setActive(true);
+//    }
+//
+//    @Given("Create a AndressDTO")
+//    public void createAAndressDTO() {
+//        List<AddressDTO> addressesDTO = new ArrayList<>();
+//        this.addressDTO = new AddressDTO();
+//        addressesDTO.add(addressDTO);
+//        this.addressDTO.setIndividualDTO(individualDTO);
+//        this.individualDTO.setAddressesDTO(addressesDTO);
+//    }
+//
+//    @And("The district is {string}")
+//    public void theDistrictIs(String district) {
+//        addressDTO.setDistrict(district);
+//    }
+//
+//    @And("The number is {string}")
+//    public void theNumberIs(String number) {
+//        addressDTO.setNumber(number);
+//    }
+//
+//    @And("The city is {string}")
+//    public void theCityIs(String city) {
+//        addressDTO.setCity(city);
+//    }
+//
+//    @And("The state is {string}")
+//    public void theStateIs(String state) {
+//        addressDTO.setState(state);
+//    }
+//
+//    @And("The zipCode is {string}")
+//    public void theZipCodeIs(String zipCode) {
+//        addressDTO.setZipCode(zipCode);
+//    }
+//
+//    @And("The main is {string}")
+//    public void theMainIs(String main) {
+//        Boolean bool = Boolean.valueOf(main);
+//        addressDTO.setMain(bool);
+//    }
 
     @When("User executes a Post")
     public void userExecutesAPost() {
