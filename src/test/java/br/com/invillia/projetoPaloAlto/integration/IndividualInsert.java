@@ -3,6 +3,7 @@ package br.com.invillia.projetoPaloAlto.integration;
 import br.com.invillia.projetoPaloAlto.api.rest.IndividualController;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,15 +12,16 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IndividualInsert {
 
     private String url = "/individual";
-
-    private IndividualController individualController;
 
     private IndividualDTO individualDTO;
 
@@ -31,7 +33,6 @@ public class IndividualInsert {
 
     @BeforeAll()
     public void setUp(){
-        this.individualController = new IndividualController();
         RestAssured.baseURI = "http://localhost:8080";
     }
 
@@ -73,8 +74,11 @@ public class IndividualInsert {
 
     @Given("Create a AndressDTO")
     public void createAAndressDTO() {
-        addressDTO = new AddressDTO();
-        addressDTO.setIndividualDTO(individualDTO);
+        List<AddressDTO> addressesDTO = new ArrayList<>();
+        this.addressDTO = new AddressDTO();
+        addressesDTO.add(addressDTO);
+        this.addressDTO.setIndividualDTO(individualDTO);
+        this.individualDTO.setAddressesDTO(addressesDTO);
     }
 
     @And("The district is {string}")
@@ -110,13 +114,12 @@ public class IndividualInsert {
 
     @When("User executes a Post")
     public void userExecutesAPost() {
-
         this.requestSpecification = RestAssured.given().contentType(ContentType.JSON).with().body(individualDTO);
+        responseEntity = this.requestSpecification.post(url);
     }
 
-    @Then("the server should return a {string}")
-    public void theServerShouldReturnA(String arg0) {
-
-        responseEntity = this.requestSpecification.post(url);
+    @Then("the server should return a {int}")
+    public void theServerShouldReturnA(int http) {
+        Assertions.assertEquals(http, responseEntity.getStatusCode());
     }
 }
