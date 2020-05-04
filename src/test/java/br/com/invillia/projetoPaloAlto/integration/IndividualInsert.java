@@ -68,7 +68,7 @@ public class IndividualInsert {
         individualDTO.setActive(Boolean.valueOf(active));
     }
 
-    @Given("A Address")
+    @And("A Address")
     public void createAAndressDTO() {
         List<AddressDTO> addressesDTO = new ArrayList<>();
         this.addressDTO = new AddressDTO();
