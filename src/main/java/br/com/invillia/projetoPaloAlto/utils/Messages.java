@@ -11,4 +11,5 @@ public class Messages {
     public static final String LEGAL_ENTITY_WAS_ALREADY_DELETED = "This Legal Entity was already deleted!";
     public static final String INVALIDATED_INDIVIDUAL = "Invalidated Individual";
     public static final String INVALIDATED_LEGAL_ENTITY = "Invalidated Legal Entity";
+    public static final String FALSE_INDIVIDUAL = "Individual isn't active";
 }

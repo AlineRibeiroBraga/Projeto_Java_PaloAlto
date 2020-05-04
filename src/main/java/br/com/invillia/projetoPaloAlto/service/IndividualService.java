@@ -28,14 +28,17 @@ public class IndividualService {
 
         if (!individualRepository.existsByDocument(individualDTO.getDocument()) &&
             !individualRepository.existsByRg(individualDTO.getRg())) {
-            if(mainAddressValidator(individualDTO.getAddressesDTO())){
-
-                Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
-
-                return individualRepository.save(individual).getId();
+            if(!mainAddressValidator(individualDTO.getAddressesDTO())) {
+                throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
             }
 
-            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
+            if(!individualDTO.getActive()){
+                throw new IndividualException(Messages.FALSE_INDIVIDUAL);
+            }
+
+            Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
+
+            return individualRepository.save(individual).getId();
         }
 
         throw new IndividualException(Messages.DOCUMENT_ALREADY_EXISTS);
