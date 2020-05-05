@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.integration;
+package br.com.invillia.projetoPaloAlto.integration.individual;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
@@ -12,7 +12,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 
-public class IndividualFindBy {
+public class IndividualFindById {
 
     private String url = "/individual";
 
@@ -35,7 +35,7 @@ public class IndividualFindBy {
     }
 
     @And("The key: {string}")
-    public void theUrl(String key) {
+    public void theUrl(String key)   {
         url = url.concat(key);
     }
 
@@ -51,8 +51,8 @@ public class IndividualFindBy {
     }
 
     @And("The statusCode is {int}")
-    public void theStatusCodeIsHttpStatusCode(int http) {
-        Assertions.assertEquals(http,response.getStatusCode());
+    public void theStatusCodeIsHttpStatusCode(int httpStatusCode) {
+        Assertions.assertEquals(httpStatusCode,response.getStatusCode());
     }
 
     @And("Name is {string}")

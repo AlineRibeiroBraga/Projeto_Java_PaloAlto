@@ -1,4 +1,4 @@
-package br.com.invillia.projetoPaloAlto.integration;
+package br.com.invillia.projetoPaloAlto.integration.individual;
 
 import java.util.List;
 import java.time.LocalDate;
