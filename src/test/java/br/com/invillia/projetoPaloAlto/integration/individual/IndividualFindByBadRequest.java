@@ -48,7 +48,6 @@ public class IndividualFindByBadRequest {
 
     @And("The message is {string}")
     public void theMessageIs(String message) {
-        System.out.println((String) response.then().extract().path(this.url,"message"));
-//        Assertions.assertEquals(message,response.then().extract().path(message));
+        Assertions.assertEquals(message,response.then().extract().path("message"));
     }
 }
