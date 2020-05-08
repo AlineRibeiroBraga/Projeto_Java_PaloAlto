@@ -44,9 +44,7 @@ public class IndividualDeleteById {
 
     @Then("The server should return a {string}")
     public void theServerShouldReturnA(String key) {
-
-        Assertions.assertEquals(key,response.getBody());
-//        System.out.println(response.getBody().prettyPrint());
+        Assertions.assertEquals(key,response.getBody().jsonPath().getString("response"));
     }
 
     @And("The StatusCode is {int}")

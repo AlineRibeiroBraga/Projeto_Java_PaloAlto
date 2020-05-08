@@ -20,4 +20,4 @@ Feature: Find a individual by document
 
     Examples:
       |      url     |     key       | httpStatusCode |         name        |     motherName                  |    rg     | birthDate  | active | district                 | number |   city      | state     | zipCode  | main |
-      |  /document/  |  40328944098  |     200        | Aline Ribeiro Braga | Angelica Ribeiro de Paula Braga | 911225341 | 2000-10-05 |  false | Av. João Soares e Arruda | 1444   | Araraquara  | São Paulo | 14801790 | true |
+      |  /document/  |  40328944098  |     200        | Aline Ribeiro Braga | Angelica Ribeiro de Paula Braga | 911225341 | 2000-10-05 |  true  | Av. João Soares e Arruda | 1444   | Araraquara  | São Paulo | 14801790 | true |

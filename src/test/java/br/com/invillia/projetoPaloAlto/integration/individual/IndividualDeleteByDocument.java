@@ -43,7 +43,7 @@ public class IndividualDeleteByDocument {
 
     @Then("the server should return {string}")
     public void theServerShouldReturn(String response) {
-        Assertions.assertEquals(response,this.response.getBody().prettyPrint());
+        Assertions.assertEquals(response,this.response.getBody().path("response"));
     }
 
     @And("the statusCode is {int}")

@@ -59,7 +59,7 @@ public class IndividualDeleteTest {
 
         when(individualRepository.findByDocument(individual.getDocument())).thenReturn(Optional.of(individual));
 
-        String document = individualService.deleteByDocument(individual.getDocument());
+        String document = individualService.deleteByDocument(individual.getDocument()).getResponse();
         IndividualDTO individualDTO = individualService.findByDocument(document);
 
         fieldsValidator(individualDTO,individual,0);
@@ -95,7 +95,7 @@ public class IndividualDeleteTest {
 
         when(individualRepository.findById(individual.getId())).thenReturn(Optional.of(individual));
 
-        Long id = individualService.deleteById(individual.getId());
+        Long id = Long.valueOf(individualService.deleteById(individual.getId()).getResponse());
         IndividualDTO individualDTO = individualService.findById(id);
 
         fieldsValidator(individualDTO,individual,0);

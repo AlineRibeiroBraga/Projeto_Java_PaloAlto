@@ -2,6 +2,7 @@ package br.com.invillia.projetoPaloAlto.api.rest;
 
 import br.com.invillia.projetoPaloAlto.anotation.IsCPF;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
+import br.com.invillia.projetoPaloAlto.domain.response.Response;
 import br.com.invillia.projetoPaloAlto.service.IndividualService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,22 +41,22 @@ public class IndividualController{
     }
 
     @DeleteMapping("/document/{document}")
-    public String deleteIndividualByDocument(@PathVariable String document) {
+    public Response deleteIndividualByDocument(@PathVariable String document) {
         return individualService.deleteByDocument(document);
     }
 
     @DeleteMapping("/{id}")
-    public Long deleteIndividualById(@PathVariable Long id) {
+    public Response deleteIndividualById(@PathVariable Long id) {
         return individualService.deleteById(id);
     }
 
     @PutMapping("/document")
-    public String updateByDocument(@RequestBody IndividualDTO individualDTO) {
+    public Response updateByDocument(@RequestBody IndividualDTO individualDTO) {
         return individualService.updateByDocument(individualDTO);
     }
 
     @PutMapping("/{id}")
-    public Long updateById(@RequestBody IndividualDTO individualDTO, @PathVariable Long id){
+    public Response updateById(@RequestBody IndividualDTO individualDTO, @PathVariable Long id){
         return individualService.updateById(id,individualDTO);
     }
 }

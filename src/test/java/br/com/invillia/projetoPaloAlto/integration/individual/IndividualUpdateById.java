@@ -121,13 +121,13 @@ public class IndividualUpdateById {
         this.response = this.requestSpecification.put(url);
     }
 
-    @Then("the server should return a <httpStatusCode>")
+    @Then("the server should return a {int}")
     public void theServerShouldReturnAHttpStatusCode(int httpStatusCode) {
         Assertions.assertEquals(httpStatusCode, response.getStatusCode());
     }
 
     @And("the id {string}")
     public void theId(String key) {
-        Assertions.assertEquals(key, response.getBody().prettyPrint());
+        Assertions.assertEquals(key, response.getBody().jsonPath().getString("response"));
     }
 }

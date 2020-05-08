@@ -60,7 +60,7 @@ public class IndividualUpdateTest {
 
         when(individualRepository.findByDocument(individualDTO.getDocument())).thenReturn(Optional.of(individual));
 
-        String document = individualService.updateByDocument(individualDTO);
+        String document = individualService.updateByDocument(individualDTO).getResponse();
         IndividualDTO individualDTOUpdate = individualService.findByDocument(document);
 
         fieldsValidator(individualDTOUpdate,individualDTO);
@@ -134,7 +134,7 @@ public class IndividualUpdateTest {
 
         when(individualRepository.findById(individual.getId())).thenReturn(Optional.of(individual));
 
-        Long id = individualService.updateById(individual.getId(),individualDTO);
+        Long id = Long.valueOf(individualService.updateById(individual.getId(),individualDTO).getResponse());
         IndividualDTO individualDTOUpdate = individualService.findById(id);
 
         fieldsValidator(individualDTOUpdate,individualDTO);

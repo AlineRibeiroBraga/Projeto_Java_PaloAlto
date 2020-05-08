@@ -3,6 +3,7 @@ package br.com.invillia.projetoPaloAlto.service;
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
+import br.com.invillia.projetoPaloAlto.domain.response.Response;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.mapper.IndividualMapper;
@@ -75,7 +76,7 @@ public class IndividualService {
         return individualMapper.individualToIndividualDTO(optionalIndividual.get());
     }
 
-    public String deleteByDocument(String document) {
+    public Response deleteByDocument(String document) {
 
         Individual individual = individualRepository.findByDocument(document)
                 .orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
@@ -83,13 +84,13 @@ public class IndividualService {
         if(individual.getActive()){
             individual.setActive(false);
 
-            return individual.getDocument();
+            return convertObject(individual.getDocument());
         }
 
         throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
     }
 
-    public Long deleteById(Long id) {
+    public Response deleteById(Long id) {
 
         Individual individual = individualRepository.findById(id)
                 .orElseThrow(() -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
@@ -97,19 +98,19 @@ public class IndividualService {
         if (individual.getActive()) {
             individual.setActive(false);
 
-            return individual.getId();
+            return convertObject(individual.getId().toString());
         }
 
         throw new IndividualException(Messages.INDIVIDUAL_WAS_ALREADY_DELETED);
     }
 
-    public String updateByDocument(IndividualDTO individualDTO) {
+    public Response updateByDocument(IndividualDTO individualDTO) {
 
         Individual individual = individualRepository.findByDocument(individualDTO.getDocument()).
                 orElseThrow( () -> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individualDTO.getDocument().equals(individual.getDocument()) &&
-           !individualDTO.getRg().equals(individual.getRg()) || !individual.getActive()){
+        if(!(individualDTO.getDocument().equals(individual.getDocument()) && individualDTO.getRg().equals(individual.getRg()))
+                || !individual.getActive() || !individualDTO.getActive()){
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
@@ -121,16 +122,16 @@ public class IndividualService {
 
         individualRepository.save(individual);
 
-        return individual.getDocument();
+        return convertObject(individual.getDocument());
     }
 
-    public Long updateById( Long id, IndividualDTO individualDTO) {
+    public Response updateById( Long id, IndividualDTO individualDTO) {
 
         Individual individual = individualRepository.findById(id).
                 orElseThrow(()-> new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND));
 
-        if(!individualDTO.getDocument().equals(individual.getDocument()) &&
-                !individualDTO.getRg().equals(individual.getRg()) || !individual.getActive()){
+        if(!(individualDTO.getDocument().equals(individual.getDocument()) && individualDTO.getRg().equals(individual.getRg()))
+                || !individual.getActive() || !individualDTO.getActive()){
             throw new IndividualException(Messages.INDIVIDUAL_WAS_NOT_FOUND);
         }
 
@@ -142,7 +143,11 @@ public class IndividualService {
 
         individualRepository.save(individual);
 
-        return individual.getId();
+        return convertObject(individual.getId().toString());
+    }
+
+    private Response convertObject(String document) {
+        return new Response(document);
     }
 
     public IndividualDTO findIndividualDTOById(Long id) {
