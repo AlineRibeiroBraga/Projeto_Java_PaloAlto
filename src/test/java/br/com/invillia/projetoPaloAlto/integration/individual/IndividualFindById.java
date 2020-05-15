@@ -113,6 +113,6 @@ public class IndividualFindById {
 
     @And("Main is {string}")
     public void theMainIs(String main) {
-        Assertions.assertEquals(addressDTO.getMain().toString(),main);
+        Assertions.assertEquals(addressDTO.getMain().toString(), main);
     }
 }

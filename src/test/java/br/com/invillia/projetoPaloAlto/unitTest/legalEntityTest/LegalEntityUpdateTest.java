@@ -76,7 +76,7 @@ public class LegalEntityUpdateTest {
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
 
-        String document = legalEntityService.updateByDocument(legalEntityDTO);
+        String document = legalEntityService.updateByDocument(legalEntityDTO).getResponse();
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
@@ -95,7 +95,7 @@ public class LegalEntityUpdateTest {
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
 
-        String document = legalEntityService.updateByDocument(legalEntityDTO);
+        String document = legalEntityService.updateByDocument(legalEntityDTO).getResponse();
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
@@ -118,7 +118,7 @@ public class LegalEntityUpdateTest {
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
         when(individualRepository.findByRg(individualR.getRg())).thenReturn(Optional.of(individualR));
 
-        String document = legalEntityService.updateByDocument(legalEntityDTO);
+        String document = legalEntityService.updateByDocument(legalEntityDTO).getResponse();
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
@@ -268,7 +268,7 @@ public class LegalEntityUpdateTest {
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
 
-        Long id = legalEntityService.updateById(1L,legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.updateById(1L,legalEntityDTO).getResponse());
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
@@ -287,7 +287,7 @@ public class LegalEntityUpdateTest {
 
         when(legalEntityRepository.findById(legalEntity.getId())).thenReturn(Optional.of(legalEntity));
 
-        Long id = legalEntityService.updateById(1L,legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.updateById(1L,legalEntityDTO).getResponse());
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);
@@ -310,7 +310,7 @@ public class LegalEntityUpdateTest {
         when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
         when(individualRepository.findByRg(individualR.getRg())).thenReturn(Optional.of(individualR));
 
-        Long id = legalEntityService.updateById(1L,legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.updateById(1L,legalEntityDTO).getResponse());
         LegalEntityDTO legalEntityDTOUpdate = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTOUpdate,legalEntityDTO,0);

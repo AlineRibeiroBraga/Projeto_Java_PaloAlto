@@ -118,14 +118,12 @@ public class IndividualMapper {
         individualR.setName(individual.getName());
         individualR.setMotherName(individual.getMotherName());
         individualR.setUpdatedAt(LocalDateTime.now());
-        individualR.setActive(true);
+        individualR.setActive(individual.getActive());
 
         addressMapper.updateAddress(individual.getAddresses(),individualR.getAddresses());
 
         for(Address address : individualR.getAddresses()){
-            if(address.getIndividual() == null){
-                address.setIndividual(individualR);
-            }
+            address.setIndividual(individualR);
         }
     }
 }

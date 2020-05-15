@@ -25,7 +25,7 @@ public class IndividualService {
     @Autowired
     private IndividualMapper individualMapper;
 
-    public Long insert(IndividualDTO individualDTO) {
+    public Response insert(IndividualDTO individualDTO) {
 
         if (!individualRepository.existsByDocument(individualDTO.getDocument()) &&
             !individualRepository.existsByRg(individualDTO.getRg())) {
@@ -39,7 +39,7 @@ public class IndividualService {
 
             Individual individual = individualMapper.individualDTOToIndividual(individualDTO);
 
-            return individualRepository.save(individual).getId();
+            return convertObject(individualRepository.save(individual).getId().toString());
         }
 
         throw new IndividualException(Messages.DOCUMENT_ALREADY_EXISTS);

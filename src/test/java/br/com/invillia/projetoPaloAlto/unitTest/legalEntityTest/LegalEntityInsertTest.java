@@ -80,7 +80,7 @@ public class LegalEntityInsertTest {
         when(individualRepository.findByRg(Mockito.anyString())).thenReturn(Optional.of(individual));
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class))).thenReturn(legalEntityMapperTest.createLegalEntity(1L));
 
-        Long id = legalEntityService.insert(legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.insert(legalEntityDTO).getResponse());
 
         Assert.assertNotNull(id);
         Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
@@ -125,7 +125,7 @@ public class LegalEntityInsertTest {
                 .thenReturn(legalEntityMapperTest.createLegalEntity(1L));
         when(individualRepository.findByDocument(Mockito.anyString())).thenReturn(Optional.empty());
 
-        Long id = legalEntityService.insert(legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.insert(legalEntityDTO).getResponse());
 
         Assert.assertNotNull(id);
         Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));
@@ -161,7 +161,7 @@ public class LegalEntityInsertTest {
         when(legalEntityRepository.save(Mockito.any(LegalEntity.class)))
                 .thenReturn(legalEntityMapperTest.createLegalEntity(1L));
 
-        Long id = legalEntityService.insert(legalEntityDTO);
+        Long id = Long.valueOf(legalEntityService.insert(legalEntityDTO).getResponse());
 
         Assert.assertNotNull(id);
         Mockito.verify(legalEntityRepository,times(1)).save(Mockito.any(LegalEntity.class));

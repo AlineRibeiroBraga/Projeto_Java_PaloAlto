@@ -29,7 +29,7 @@ public class LegalEntityMapper {
         legalEntity.setDocument(legalEntityDTO.getDocument());
         legalEntity.setTradeName(legalEntityDTO.getTradeName());
         legalEntity.setCreatedAt(LocalDateTime.now());
-        legalEntity.setActive(true);
+        legalEntity.setActive(legalEntityDTO.getActive());
         legalEntity.setAddresses(addressMapper.listAddressDTOToListAddress(legalEntityDTO.getAddressesDTO()));
 
         addressMapper.setAddressLegalEntity(legalEntity.getAddresses(),legalEntity);

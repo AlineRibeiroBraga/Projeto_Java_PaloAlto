@@ -5,6 +5,7 @@ import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import br.com.invillia.projetoPaloAlto.domain.model.Individual;
 import br.com.invillia.projetoPaloAlto.domain.model.LegalEntity;
+import br.com.invillia.projetoPaloAlto.domain.response.Response;
 import br.com.invillia.projetoPaloAlto.exception.AddressException;
 import br.com.invillia.projetoPaloAlto.exception.IndividualException;
 import br.com.invillia.projetoPaloAlto.exception.LegalEntityException;
@@ -33,24 +34,46 @@ public class LegalEntityService {
     @Autowired
     IndividualMapper individualMapper;
 
-    public Long insert(LegalEntityDTO legalEntityDTO) {
+    public Response insert(LegalEntityDTO legalEntityDTO) {
 
-        if(!legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())){
-            if(mainAddressValidator(legalEntityDTO.getAddressesDTO())){
-                LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
+        if(legalEntityRepository.existsByDocument(legalEntityDTO.getDocument())) {
+            throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
+        }
 
-                if(partners(legalEntity.getIndividuals())){
-
-                    return legalEntityRepository.save(legalEntity).getId();
-                }
-
-                throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
-            }
-
+        if(!mainAddressValidator(legalEntityDTO.getAddressesDTO())) {
             throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
         }
 
-        throw new LegalEntityException(Messages.DOCUMENT_ALREADY_EXISTS);
+        if(!legalEntityDTO.getActive()){
+            throw new LegalEntityException(Messages.FALSE_LEGAL_ENTITY);
+        }
+
+        if(!addressPartners(legalEntityDTO.getIndividualsDTO())){
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        }
+
+        LegalEntity legalEntity = legalEntityMapper.legalEntityDTOTolegalEntity(legalEntityDTO);
+
+        if(!partners(legalEntity.getIndividuals())){
+            throw new IndividualException(Messages.INVALIDATED_INDIVIDUAL);
+        }
+
+        return convertObject(legalEntityRepository.save(legalEntity).getId().toString());
+    }
+
+    private Boolean addressPartners(List<IndividualDTO> individualsDTO) {
+
+        if(individualsDTO == null){
+            return true;
+        }
+
+        for(IndividualDTO individualDTO : individualsDTO){
+            if(!mainAddressValidator(individualDTO.getAddressesDTO())){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public LegalEntityDTO findById(Long id) {
@@ -67,7 +90,7 @@ public class LegalEntityService {
         return legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
     }
 
-    public String deleteByDocument(String document) {
+    public Response deleteByDocument(String document) {
 
         LegalEntity legalEntity = legalEntityRepository.findByDocument(document).
                 orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
@@ -77,13 +100,13 @@ public class LegalEntityService {
         if(legalEntity.getActive()){
             legalEntity.setActive(false);
 
-            return legalEntity.getDocument();
+            return convertObject(legalEntityRepository.save(legalEntity).getDocument());
         }
 
         throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
     }
 
-    public Long deleteById(Long id) {
+    public Response deleteById(Long id) {
 
         LegalEntity legalEntity = legalEntityRepository.findById(id).
                 orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
@@ -93,7 +116,7 @@ public class LegalEntityService {
         if(legalEntity.getActive()){
             legalEntity.setActive(false);
 
-            return legalEntity.getId();
+            return convertObject(legalEntityRepository.save(legalEntity).getId().toString());
         }
 
         throw new LegalEntityException(Messages.LEGAL_ENTITY_WAS_ALREADY_DELETED);
@@ -114,7 +137,7 @@ public class LegalEntityService {
         }
     }
 
-    public String updateByDocument(LegalEntityDTO legalEntityDTO) {
+    public Response updateByDocument(LegalEntityDTO legalEntityDTO) {
 
         LegalEntity legalEntity = legalEntityRepository.findByDocument(legalEntityDTO.getDocument())
                 .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
@@ -139,7 +162,7 @@ public class LegalEntityService {
 
         legalEntityRepository.save(legalEntity);
 
-        return legalEntity.getDocument();
+        return convertObject(legalEntity.getDocument());
     }
 
     private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
@@ -179,47 +202,38 @@ public class LegalEntityService {
         }
 
         int tam = individuals.size();
-        int nullId = 0;
-        int validatedId = 0;
 
-        Optional<Individual> individual1 = Optional.empty();
-        Optional<Individual> individual2 = Optional.empty();
+        Optional<Individual> individual1;
+        Optional<Individual> individual2;
 
         for(int i=0; i < tam; i++){
             Individual individual = individuals.get(i);
 
             if(individual.getId() == null){
-                nullId++;
                 individual1 = individualRepository.findByDocument(individual.getDocument());
                 individual2 = individualRepository.findByRg(individual.getRg());
 
-                if(!individual1.isEmpty()) {
-                    if(!individual2.isEmpty()) {
+                if(!individual1.isEmpty() && individual2.isEmpty()) return false;
+                if(individual1.isEmpty() && !individual2.isEmpty()) return false;
+                if(!individual.getActive()) return false;
+
+                if(!individual1.isEmpty()){
+                    if(!individual2.isEmpty()){
 
                         Individual individualR1 = individual1.get();
-                        Individual individualR2 = individual2.get();
 
-                        if (individualR1.getRg().equals(individualR2.getRg()) &&
-                                individualR1.getDocument().equals(individualR2.getDocument())) {
-
-                            individualMapper.updateIndividual(individual, individualR1);
-                            individuals.remove(i);
-                            individuals.add(i, individualR1);
-                            ++validatedId;
-                        }
+                        individualMapper.updateIndividual(individual, individualR1);
+                        individuals.remove(i);
+                        individuals.add(i, individualR1);
                     }
                 }
             }
         }
 
-        if(nullId == validatedId){
-            return true;
-        }
-
-        return individual1.isEmpty() && individual2.isEmpty();
+        return true;
     }
 
-    public Long updateById(Long id, LegalEntityDTO legalEntityDTO) {
+    public Response updateById(Long id, LegalEntityDTO legalEntityDTO) {
 
         LegalEntity legalEntity = legalEntityRepository.findById(id)
                 .orElseThrow(() -> new LegalEntityException(Messages.LEGAL_ENTITY_WAS_NOT_FOUND));
@@ -241,6 +255,10 @@ public class LegalEntityService {
 
         legalEntityRepository.save(legalEntity);
 
-        return legalEntity.getId();
+        return convertObject(legalEntity.getId().toString());
+    }
+
+    private Response convertObject(String document) {
+        return new Response(document);
     }
 }

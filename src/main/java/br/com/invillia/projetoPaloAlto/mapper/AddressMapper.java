@@ -104,16 +104,16 @@ public class AddressMapper {
         }
     }
 
-    private void setAddress(List<Address> addresses, Address address1) {
+    private void setAddress(List<Address> addressesR, Address address) {
 
-        for(Address address : addresses){
-            if(address.getZipCode().equals(address1.getZipCode())){
-                address.setMain(address1.getMain());
-                address.setDistrict(address1.getDistrict());
-                address.setNumber(address1.getNumber());
-                address.setCity(address1.getCity());
-                address.setState(address1.getState());
-                address.setIndividual(address1.getIndividual());
+        for(Address addressR : addressesR){
+            if(addressR.getZipCode().equals(address.getZipCode())){
+                addressR.setMain(address.getMain());
+                addressR.setDistrict(address.getDistrict());
+                addressR.setNumber(address.getNumber());
+                addressR.setCity(address.getCity());
+                addressR.setState(address.getState());
+                addressR.setIndividual(address.getIndividual());
             }
         }
     }

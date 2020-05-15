@@ -19,15 +19,8 @@ public class IndividualController{
     private IndividualService individualService;
 
     @PostMapping
-    public ResponseEntity insert(@RequestBody @Valid IndividualDTO individualDTO) {
-
-        Long id = individualService.insert(individualDTO);
-
-        final URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/individual/{id}")
-                .build(id);
-
-        return ResponseEntity.created(location).build();
+    public Response insert(@RequestBody @Valid IndividualDTO individualDTO) {
+        return individualService.insert(individualDTO);
     }
 
     @GetMapping("/document/{document}")
@@ -36,7 +29,7 @@ public class IndividualController{
     }
 
     @GetMapping("/{id}")
-    public IndividualDTO findByDocument(@PathVariable Long id) {
+    public IndividualDTO Id(@PathVariable Long id) {
         return individualService.findById(id);
     }
 

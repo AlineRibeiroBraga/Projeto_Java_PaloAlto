@@ -73,7 +73,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
 
-        String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
+        String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);
@@ -90,7 +90,7 @@ public class LegalEntityDeleteTest {
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
 
-        String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
+        String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);
@@ -108,7 +108,7 @@ public class LegalEntityDeleteTest {
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
 
-        String document = legalEntityService.deleteByDocument(legalEntity.getDocument());
+        String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);
@@ -178,7 +178,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
 
-        Long id = legalEntityService.deleteById(1L);
+        Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);
@@ -195,7 +195,7 @@ public class LegalEntityDeleteTest {
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
 
-        Long id = legalEntityService.deleteById(1L);
+        Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);
@@ -213,7 +213,7 @@ public class LegalEntityDeleteTest {
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
 
-        Long id = legalEntityService.deleteById(1L);
+        Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
 
         fieldsValidator(legalEntityDTO,legalEntity,0);

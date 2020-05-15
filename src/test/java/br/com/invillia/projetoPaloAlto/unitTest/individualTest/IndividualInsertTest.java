@@ -58,7 +58,7 @@ public class IndividualInsertTest {
         when(individualRepository.existsByRg(individualDTO.getRg())).thenReturn(false);
         when(individualRepository.save(Mockito.any(Individual.class))).thenReturn(individualMapperTest.createIndividual(1L));
 
-        Long id = individualService.insert(individualDTO);
+        Long id = Long.valueOf(individualService.insert(individualDTO).getResponse());
 
         Assertions.assertNotNull(id);
         verify(individualRepository,times(1)).save(Mockito.any(Individual.class));
