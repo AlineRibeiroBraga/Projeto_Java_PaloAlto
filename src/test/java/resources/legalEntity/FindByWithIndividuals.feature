@@ -1,6 +1,6 @@
-Feature: Find a Legal Entity by key
+Feature: Find a Legal Entity with partners by key
 
-  Scenario Outline: Find a Legal Entity by key
+  Scenario Outline: Find a Legal Entity with partners by key
     Given a url is "<url>"
     And a key is "<key>"
     And Verify if this legal entity is registered "<name>","<tradeName>","<document>","<active>","<district>","<number>","<city>","<state>","<zipCode>","<main>","<nameI>","<documentI>","<rgI>","<motherNameI>", "<birthDateI>", "<activeI>", "<districtI>","<numberI>","<cityI>","<stateI>","<zipCodeI>","<mainI>"

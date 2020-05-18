@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import static io.restassured.RestAssured.given;
 
-public class LegalEntitytFindByBadRequest {
+public class FindByBadRequest {
 
     private String url = "/legal-entity";
 
@@ -44,12 +44,20 @@ public class LegalEntitytFindByBadRequest {
     @When("The user makes a Get")
     public void theUserMakesAGet() {
 
+
         do {
             this.requestSpecification = given();
             this.response = this.requestSpecification.get(this.url);
 
             if(this.response.getStatusCode() == 200){
-                this.url = this.key.concat(faker.number().digit());
+                int tam = 14;
+
+                if(key.length() == tam){
+                    this.url = this.key.concat(faker.number().digits(14));
+                }
+                else{
+                    this.url = this.key.concat(faker.number().digit());
+                }
             }
 
         }while(this.response.getStatusCode() == 200);

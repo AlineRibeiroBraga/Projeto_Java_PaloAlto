@@ -1,6 +1,6 @@
 Feature: Find a Legal Entity by key
 
-  Scenario Outline: Find a Legal Entity by key
+  Scenario Outline: Find a Legal Entity without individuals by key
     Given a url "<url>"
     And a key "<key>"
     And Verify if this Legal Entity is registered "<name>","<tradeName>","<document>","<active>","<district>","<number>","<city>","<state>","<zipCode>","<main>"

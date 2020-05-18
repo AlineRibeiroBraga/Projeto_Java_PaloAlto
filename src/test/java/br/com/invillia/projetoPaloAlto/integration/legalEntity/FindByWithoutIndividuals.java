@@ -25,7 +25,7 @@ public class FindByWithoutIndividuals {
     private AddressDTO addressDTO;
 
     private String url = "/legal-entity";
-
+    private String secondDocument;
     private RequestSpecification requestSpecification;
 
     private Response response;
@@ -55,40 +55,76 @@ public class FindByWithoutIndividuals {
                                          String number, String city, String state, String zipCode, String main) {
 
         boolean flg;
+        secondDocument = document;
+        do{
+            flg = false;
+            this.requestSpecification = given();
+            this.response = this.requestSpecification.get(this.url);
 
-        flg = false;
-        this.requestSpecification = given();
-        this.response = this.requestSpecification.get(url);
+            if (this.response.getStatusCode() == 200) {
 
-        if (this.response.getStatusCode() == 200) {
-
-            do {
                 this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
 
                 if (!this.legalEntityDTO.getDocument().equals(document)) {
-                    String url = "/legal-entity/document/";
-                    url = url.concat(document);
+                    this.url = "/legal-entity/document/";
+                    this.url = this.url.concat(document);
                     this.requestSpecification = given();
                     this.response = this.requestSpecification.get(url);
 
                     if (this.response.getStatusCode() == 200) {
                         document = faker.number().digits(14);
+                        secondDocument = document;
+                        this.url = "/legal-entity/document/";
+                        this.url = url.concat(document);
                         flg = true;
                     }
                     else{
+                        this.legalEntityDTO = createLegalEntity(name,tradeName,document,active);
+                        this.addressDTO = createAddress(district,number,city,state,zipCode,main);
+                        this.addressDTO.setLegalEntityDTO(legalEntityDTO);
+                        this.legalEntityDTO.getAddressesDTO().add(this.addressDTO);
+
                         this.requestSpecification = given().contentType(ContentType.JSON).with().body(legalEntityDTO);
                         this.response = this.requestSpecification.post( "/legal-entity");
                         this.id = response.getBody().path("response");
-                        url = "/legal-entity/";
-                        url = url.concat(id);
-                        this.requestSpecification = given().contentType(ContentType.JSON).with().body(legalEntityDTO);
+                        this.url = "/legal-entity/";
+                        this.url = this.url.concat(id);
+                        this.requestSpecification = given();
                         this.response = this.requestSpecification.get(url);
                         this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
                     }
                 }
-            }while(flg);
-        }
+            }
+            else{
+                this.url = "/legal-entity/document/";
+                this.url = this.url.concat(document);
+                this.requestSpecification = given();
+                this.response = this.requestSpecification.get(url);
 
+                if (this.response.getStatusCode() == 200) {
+                    document = faker.number().digits(14);
+                    secondDocument = document;
+                    this.url = "/legal-entity/document/";
+                    this.url = this.url.concat(document);
+                    flg = true;
+                }
+                else{
+                    this.legalEntityDTO = createLegalEntity(name,tradeName,document,active);
+                    this.addressDTO = createAddress(district,number,city,state,zipCode,main);
+                    this.addressDTO.setLegalEntityDTO(legalEntityDTO);
+                    this.legalEntityDTO.getAddressesDTO().add(this.addressDTO);
+
+                    this.requestSpecification = given().contentType(ContentType.JSON).with().body(legalEntityDTO);
+                    this.response = this.requestSpecification.post( "/legal-entity");
+                    this.id = response.getBody().path("response");
+                    this.url = "/legal-entity/";
+                    this.url = this.url.concat(id);
+                    this.requestSpecification = given();
+                    this.response = this.requestSpecification.get(url);
+                    this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
+                }
+            }
+        }while(flg);
     }
 
     private void createLegalEntity(String name, String tradeName, String document, String active, String district,
@@ -143,7 +179,7 @@ public class FindByWithoutIndividuals {
 
     @And("Any document {string}")
     public void anyDocument(String document) {
-        Assertions.assertEquals(document,this.legalEntityDTO.getDocument());
+        Assertions.assertEquals(secondDocument,this.legalEntityDTO.getDocument());
     }
 
     @And("Any active {string}")
@@ -224,7 +260,6 @@ public class FindByWithoutIndividuals {
         legalEntityDTO.setDocument(document);
         legalEntityDTO.setActive(Boolean.valueOf(active));
         legalEntityDTO.setAddressesDTO(new ArrayList<>());
-        legalEntityDTO.getAddressesDTO().add(addressDTO);
 
         return legalEntityDTO;
     }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
 
-public class LegalEntityFindByWithIndividual {
+public class FindByWithIndividual {
 
     private String url = "/legal-entity";
     private String secondDocument;
@@ -62,55 +62,89 @@ public class LegalEntityFindByWithIndividual {
                                 String nameI, String documentI, String rgI, String motherNameI, String birthDateI,
                                 String activeI, String districtI, String numberI, String cityI, String stateI,
                                                     String zipCodeI, String mainI) {
+        boolean flg;
+        secondDocument = document;
+        do {
+            flg = false;
+            this.requestSpecification = given();
+            this.response = this.requestSpecification.get(this.url);
 
-        RequestSpecification requestSpecification = given();
-        Response response = requestSpecification.get(this.url);
+            if (this.response.getStatusCode() == 200) {
 
-        if(response.getStatusCode() == 200){
-            this.legalEntityDTO = response.getBody().as(LegalEntityDTO.class);
+                this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
 
-            if(!this.legalEntityDTO.getDocument().equals(document)){
-                legalEntityDTO = createLegalEntity(name,tradeName,document,active);
-                legalEntityDTO.getAddressesDTO().add(createAddress(district,number,city,state,zipCode,main));
-                legalEntityDTO.getAddressesDTO().get(0).setLegalEntityDTO(legalEntityDTO);
-                legalEntityDTO.setIndividualsDTO(new ArrayList<>());
-                legalEntityDTO.getIndividualsDTO().add(individualDTO);
-                individualDTO = createIndividual(nameI,documentI,rgI,motherNameI,birthDateI,activeI);
-                individualDTO.getAddressesDTO().add(createAddress(districtI,numberI,cityI,stateI,zipCodeI,mainI));
-                individualDTO.getAddressesDTO().get(0).setIndividualDTO(individualDTO);
-                endPointValidation(legalEntityDTO);
-            }
-        }
-        else if(response.getStatusCode() == 404){
+                if (!this.legalEntityDTO.getDocument().equals(document)) {
+                    this.url = "/legal-entity/document/";
+                    this.url = this.url.concat(document);
+                    this.requestSpecification = given();
+                    this.response = this.requestSpecification.get(url);
 
-            int flag;
+                    if (this.response.getStatusCode() == 200) {
+                        document = faker.number().digits(14);
+                        secondDocument = document;
+                        this.url = "/legal-entity/document/";
+                        this.url = url.concat(document);
+                        flg = true;
+                    } else {
+                        this.legalEntityDTO = createLegalEntity(name,tradeName,document,active);
+                        this.addressDTO = createAddress(district,number,city,state,zipCode,main);
+                        this.addressDTO.setLegalEntityDTO(legalEntityDTO);
+                        this.legalEntityDTO.getAddressesDTO().add(this.addressDTO);
+                        this.legalEntityDTO.setIndividualsDTO(new ArrayList<>());
 
-            do {
-                flag = 0;
-                this.url = "legal-entity/document/";
-                document = faker.number().digits(14);
-                this.secondDocument = document;
-                this.url = this.url.concat(document);
+                        this.individualDTO = createIndividual(nameI, documentI, rgI, motherNameI, birthDateI, activeI);
+                        this.addressDTOI = createAddress(districtI, numberI, cityI, stateI, zipCodeI, mainI);
+                        this.addressDTOI.setIndividualDTO(this.individualDTO);
+                        this.individualDTO.getAddressesDTO().add(this.addressDTOI);
+                        this.legalEntityDTO.getIndividualsDTO().add(this.individualDTO);
 
-                requestSpecification = given();
-                response = requestSpecification.get(this.url);
-
-                if (response.getStatusCode() == 200) {
-                    flag = 1;
+                        this.requestSpecification = given().contentType(ContentType.JSON).with().body(legalEntityDTO);
+                        this.response = this.requestSpecification.post("/legal-entity");
+                        this.id = response.getBody().path("response");
+                        this.url = "/legal-entity/";
+                        this.url = this.url.concat(id);
+                        this.requestSpecification = given();
+                        this.response = this.requestSpecification.get(url);
+                        this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
+                    }
                 }
+            } else {
+                this.url = "/legal-entity/document/";
+                this.url = this.url.concat(document);
+                this.requestSpecification = given();
+                this.response = this.requestSpecification.get(url);
 
-            }while(flag == 1);
+                if (this.response.getStatusCode() == 200) {
+                    document = faker.number().digits(14);
+                    secondDocument = document;
+                    this.url = "/legal-entity/document/";
+                    this.url = this.url.concat(document);
+                    flg = true;
+                }
+                else {
+                    this.legalEntityDTO = createLegalEntity(name,tradeName,document,active);
+                    this.addressDTO = createAddress(district,number,city,state,zipCode,main);
+                    this.addressDTO.setLegalEntityDTO(legalEntityDTO);
+                    this.legalEntityDTO.getAddressesDTO().add(this.addressDTO);
+                    this.legalEntityDTO.setIndividualsDTO(new ArrayList<>());
 
-            individualDTO = createIndividual(nameI,documentI,rgI,motherNameI,birthDateI,activeI);
-            individualDTO.getAddressesDTO().add(createAddress(districtI,numberI,cityI,stateI,zipCodeI,mainI));
-            individualDTO.getAddressesDTO().get(0).setIndividualDTO(individualDTO);
-            legalEntityDTO = createLegalEntity(name,tradeName,document,active);
-            legalEntityDTO.getAddressesDTO().add(createAddress(district,number,city,state,zipCode,main));
-            legalEntityDTO.getAddressesDTO().get(0).setLegalEntityDTO(legalEntityDTO);
-            legalEntityDTO.setIndividualsDTO(new ArrayList<>());
-            legalEntityDTO.getIndividualsDTO().add(individualDTO);
-            endPointValidation(legalEntityDTO);
-        }
+                    this.individualDTO = createIndividual(nameI, documentI, rgI, motherNameI, birthDateI, activeI);
+                    this.addressDTOI = createAddress(districtI, numberI, cityI, stateI, zipCodeI, mainI);
+                    this.addressDTOI.setIndividualDTO(this.individualDTO);
+                    this.individualDTO.getAddressesDTO().add(this.addressDTOI);
+                    this.legalEntityDTO.getIndividualsDTO().add(this.individualDTO);
+
+                    this.requestSpecification = given().contentType(ContentType.JSON).with().body(legalEntityDTO);
+                    this.response = this.requestSpecification.post("/legal-entity");
+                    this.id = response.getBody().path("response");
+                    this.url = "/legal-entity/";
+                    this.url = this.url.concat(id);
+                    this.requestSpecification = given();
+                    this.response = this.requestSpecification.get(url);
+                    this.legalEntityDTO = this.response.as(LegalEntityDTO.class);
+                }
+            }
+        } while (flg);
     }
 
     @When("the user executes a get")
@@ -137,11 +171,7 @@ public class LegalEntityFindByWithIndividual {
     @And("any document {string}")
     public void anyDocument(String document) {
 
-        if(!document.equals(legalEntityDTO.getDocument())){
-            document = this.secondDocument;
-        }
-
-        Assertions.assertEquals(document,this.legalEntityDTO.getDocument());
+        Assertions.assertEquals(secondDocument,this.legalEntityDTO.getDocument());
     }
 
     @And("any active {string}")
