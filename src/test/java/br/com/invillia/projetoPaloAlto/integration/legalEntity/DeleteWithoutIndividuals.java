@@ -1,28 +1,32 @@
 package br.com.invillia.projetoPaloAlto.integration.legalEntity;
 
 import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 import br.com.invillia.projetoPaloAlto.domain.dto.LegalEntityDTO;
 import com.github.javafaker.Faker;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
 
-public class LegalEntityDeleteWithIndividuals {
+public class DeleteWithoutIndividuals {
 
     private String url = "/legal-entity";
-    private String id;
     private String secondDocument;
+    private String id;
+
+    private LegalEntityDTO legalEntityDTO;
+
+    private AddressDTO addressDTO;
 
     private Faker faker = new Faker();
 
@@ -30,45 +34,39 @@ public class LegalEntityDeleteWithIndividuals {
 
     private Response response;
 
-    private LegalEntityDTO legalEntityDTO;
+    @BeforeAll
+    public void setUp(){
+        RestAssured.baseURI = "http://localhost:8080";
+    }
 
-    private AddressDTO addressDTO;
-
-    private IndividualDTO individualDTO;
-
-    private AddressDTO addressDTOI;
-
-    @Given("any url {string}")
+    @Given("Any url {string}")
     public void anyUrl(String url) {
         this.url = this.url.concat(url);
     }
 
-    @And("any key {string}")
+    @And("Any key {string}")
     public void anyKey(String key) {
         this.url = this.url.concat(key);
     }
 
     @And("Verify if this Legal entity is registered {string},{string},{string},{string},{string},{string},{string}," +
-        "{string},{string},{string}, {string},{string},{string},{string}, {string}, {string}, {string},{string}," +
-            "{string},{string},{string},{string}")
+            "{string},{string},{string}")
     public void verifyIfThisLegalEntityIsRegistered(String name, String tradeName, String document, String active,
-                                                    String district, String number, String city, String state, String zipCode, String main,
-                                                    String nameI, String documentI, String rgI, String motherNameI, String birthDateI,
-                                                    String activeI, String districtI, String numberI, String cityI, String stateI,
-                                                    String zipCodeI, String mainI){
-
+                                                    String district, String number, String city, String state,
+                                                    String zipCode, String main) {
+        this.secondDocument = document;
         this.requestSpecification = given();
         this.response = this.requestSpecification.get(this.url);
 
-        int flag;
+        boolean flag;
 
         if(response.getStatusCode() == 200){
             this.legalEntityDTO = this.response.getBody().as(LegalEntityDTO.class);
 
-            if(!this.legalEntityDTO.getDocument().equals(document)){
+            if(!this.legalEntityDTO.getDocument().equals(document) || !this.legalEntityDTO.getActive()){
 
                 do {
-                    flag = 0;
+                    flag = false;
 
                     this.url = "legal-entity/document/";
                     this.url = this.url.concat(document);
@@ -77,21 +75,15 @@ public class LegalEntityDeleteWithIndividuals {
                     response = requestSpecification.get(this.url);
 
                     if (response.getStatusCode() == 200) {
-                        flag = 1;
+                        document = faker.number().digits(14);
+                        this.secondDocument = document;
+                        flag = true;
                     }
-
-                    document = faker.number().digits(14);
-                    this.secondDocument = document;
-                }while(flag == 1);
+                }while(flag);
 
                 legalEntityDTO = createLegalEntity(name,tradeName,document,active);
                 legalEntityDTO.getAddressesDTO().add(createAddress(district,number,city,state,zipCode,main));
                 legalEntityDTO.getAddressesDTO().get(0).setLegalEntityDTO(legalEntityDTO);
-                legalEntityDTO.setIndividualsDTO(new ArrayList<>());
-                individualDTO = createIndividual(nameI,documentI,rgI,motherNameI,birthDateI,activeI);
-                individualDTO.getAddressesDTO().add(createAddress(districtI,numberI,cityI,stateI,zipCodeI,mainI));
-                individualDTO.getAddressesDTO().get(0).setIndividualDTO(individualDTO);
-                legalEntityDTO.getIndividualsDTO().add(individualDTO);
 
                 endPointValidation(legalEntityDTO);
             }
@@ -99,7 +91,7 @@ public class LegalEntityDeleteWithIndividuals {
         else if(response.getStatusCode() == 404){
 
             do {
-                flag = 0;
+                flag = false;
 
                 this.url = "legal-entity/document/";
                 this.url = this.url.concat(document);
@@ -108,32 +100,27 @@ public class LegalEntityDeleteWithIndividuals {
                 response = requestSpecification.get(this.url);
 
                 if (response.getStatusCode() == 200) {
-                    flag = 1;
+                    document = faker.number().digits(14);
+                    this.secondDocument = document;
+                    flag = true;
                 }
-
-                document = faker.number().digits(14);
-                this.secondDocument = document;
-            }while(flag == 1);
+            }while(flag);
 
             legalEntityDTO = createLegalEntity(name,tradeName,document,active);
             legalEntityDTO.getAddressesDTO().add(createAddress(district,number,city,state,zipCode,main));
             legalEntityDTO.getAddressesDTO().get(0).setLegalEntityDTO(legalEntityDTO);
-            individualDTO = createIndividual(nameI,documentI,rgI,motherNameI,birthDateI,activeI);
-            individualDTO.getAddressesDTO().add(createAddress(districtI,numberI,cityI,stateI,zipCodeI,mainI));
-            individualDTO.getAddressesDTO().get(0).setIndividualDTO(individualDTO);
-            legalEntityDTO.getIndividualsDTO().add(individualDTO);
             endPointValidation(legalEntityDTO);
         }
     }
 
-    @When("the user makes a Delete")
+    @When("The user makes a Delete")
     public void theUserMakesADelete() {
         this.requestSpecification = given();
         this.response = this.requestSpecification.delete(this.url);
     }
 
-    @Then("The server must return the statusCode {int}")
-    public void theServerMustReturnTheStatusCodeHttpStatusCode(int httpStatusCode) {
+    @Then("A statusCode is {int}")
+    public void aStatusCodeIsHttpStatusCode(int httpStatusCode) {
         Assertions.assertEquals(httpStatusCode,this.response.getStatusCode());
     }
 
@@ -161,22 +148,6 @@ public class LegalEntityDeleteWithIndividuals {
         return addressDTO;
     }
 
-    private IndividualDTO createIndividual(String nameI, String documentI, String rgI, String motherNameI,
-                                           String birthDateI, String activeI) {
-
-        IndividualDTO individualDTO = new IndividualDTO();
-
-        individualDTO.setName(nameI);
-        individualDTO.setDocument(documentI);
-        individualDTO.setRg(rgI);
-        individualDTO.setMotherName(motherNameI);
-        individualDTO.setBirthDate(LocalDate.parse(birthDateI));
-        individualDTO.setActive(Boolean.valueOf(activeI));
-        individualDTO.setAddressesDTO(new ArrayList<>());
-
-        return individualDTO;
-    }
-
     private LegalEntityDTO createLegalEntity(String name, String tradeName, String document, String active) {
 
         LegalEntityDTO legalEntityDTO = new LegalEntityDTO();
@@ -186,7 +157,6 @@ public class LegalEntityDeleteWithIndividuals {
         legalEntityDTO.setDocument(document);
         legalEntityDTO.setActive(Boolean.valueOf(active));
         legalEntityDTO.setAddressesDTO(new ArrayList<>());
-        legalEntityDTO.setIndividualsDTO(new ArrayList<>());
 
         return legalEntityDTO;
     }

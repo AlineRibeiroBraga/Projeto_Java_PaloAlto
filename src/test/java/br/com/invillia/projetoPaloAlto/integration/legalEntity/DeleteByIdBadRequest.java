@@ -1,6 +1,5 @@
 package br.com.invillia.projetoPaloAlto.integration.legalEntity;
 
-
 import com.github.javafaker.Faker;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -14,12 +13,12 @@ import org.junit.jupiter.api.BeforeAll;
 
 import static io.restassured.RestAssured.given;
 
-public class LegalEntityDeleteByIdBadRequest {
+public class DeleteByIdBadRequest {
 
     private String url = "/legal-entity";
     private String id;
 
-    private Faker faker;
+    private Faker faker = new Faker();
 
     private RequestSpecification requestSpecification;
 
@@ -41,23 +40,30 @@ public class LegalEntityDeleteByIdBadRequest {
         this.id = key;
     }
 
-    @And("Verify if this Legal Entity exists")
+    @And("Verify if this Legal Entity with partners exists")
     public void verifyIfThisLegalEntityExists() {
 
-        int flg;
+        boolean flg;
 
         do{
-            flg = 0;
+            flg = false;
             this.requestSpecification = given();
-            this.response = this.requestSpecification.get(this.url);
+            this.response = this.requestSpecification.delete(this.url);
 
             if(this.response.getStatusCode() == 200){
-                flg = 1;
+                flg = true;
                 this.url = "/legal-entity/";
-                this.id = faker.number().digit();
+
+                if(this.id.length() == 14){
+                    this.id = faker.number().digits(14);
+                }
+                else{
+                    this.id = faker.number().digit();
+                }
+
                 this.url = this.url.concat(id);
             }
-        }while(flg == 1);
+        }while(flg);
     }
 
     @When("The User makes a Delete")
@@ -72,7 +78,7 @@ public class LegalEntityDeleteByIdBadRequest {
     }
 
     @And("The Message {string}")
-    public void theMessage(String message) {
+    public void theMessage(String message){
         Assertions.assertEquals(message,this.response.getBody().path("message"));
     }
 }

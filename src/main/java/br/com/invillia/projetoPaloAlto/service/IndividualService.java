@@ -153,4 +153,6 @@ public class IndividualService {
     public IndividualDTO findIndividualDTOById(Long id) {
         return findById(id);
     }
+
+
 }
