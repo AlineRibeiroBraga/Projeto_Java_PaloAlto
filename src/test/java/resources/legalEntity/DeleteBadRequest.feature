@@ -10,5 +10,5 @@ Feature: Delete Legal Entity with a wrong key
 
     Examples:
       |    url     |       key      | statusCode |                message                 |
-      |     /      |      3000      |     404    | This Legal Entity wasn't found!        |
+      |     /      |      7000      |     404    | This Legal Entity wasn't found!        |
       | /document/ | 39838621000184 |     404    | This Legal Entity wasn't found!        |

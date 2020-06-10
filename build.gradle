@@ -6,7 +6,7 @@ plugins {
 
 group = 'br.com.invillia.projetoPaloAlto'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '12'
+sourceCompatibility = '11'
 
 configurations {
 	developmentOnly

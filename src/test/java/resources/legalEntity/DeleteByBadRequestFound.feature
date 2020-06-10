@@ -10,9 +10,9 @@ Feature: Delete Legal Entity with a wrong key
 
     Examples:
       |    url     |       key      | statusCode |             message                    |
-      |     /      |       53       |    404     | This Legal Entity was already deleted! |
-      |     /      |       87       |    404     | This Legal Entity was already deleted! |
+      |     /      |       9        |    404     | This Legal Entity was already deleted! |
+      |     /      |       10       |    404     | This Legal Entity was already deleted! |
       |     /      |      3000      |    404     | This Legal Entity was already deleted! |
       | /document/ | 53405195202487 |    404     | This Legal Entity was already deleted! |
-      | /document/ | 72617005513928 |    404     | This Legal Entity was already deleted! |
+      | /document/ | 71053522149853 |    404     | This Legal Entity was already deleted! |
       | /document/ | 83518084000187 |    404     | This Legal Entity was already deleted! |

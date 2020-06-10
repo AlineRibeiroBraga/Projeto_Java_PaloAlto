@@ -146,11 +146,8 @@ public class LegalEntityService {
             throw new LegalEntityException(Messages.INVALIDATED_LEGAL_ENTITY);
         }
 
-        if(!mainAddressValidator(legalEntityDTO.getAddressesDTO())) {
-            throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
-        }
-
-        if(!addressesIndividualsValidator(legalEntityDTO.getIndividualsDTO())){
+        if(!mainAddressValidator(legalEntityDTO.getAddressesDTO()) ||
+                !addressesIndividualsValidator(legalEntityDTO.getIndividualsDTO())) {
             throw new AddressException(Messages.MUCH_MAIN_ADDRESS);
         }
 
@@ -163,6 +160,46 @@ public class LegalEntityService {
         legalEntityRepository.save(legalEntity);
 
         return convertObject(legalEntity.getDocument());
+    }
+
+    private Boolean partners(List<Individual> individuals) {
+
+        if(individuals == null){
+            return true;
+        }
+
+        int tam = individuals.size();
+
+        Optional<Individual> individual1;
+        Optional<Individual> individual2;
+
+        for(int i=0; i < tam; i++){
+            Individual individual = individuals.get(i);
+
+            if(!individual.getActive()) return false;
+
+            if(individual.getId() == null){
+                individual1 = individualRepository.findByDocument(individual.getDocument());
+                individual2 = individualRepository.findByRg(individual.getRg());
+
+                if(!individual1.isEmpty() && individual2.isEmpty()) return false;
+                if(individual1.isEmpty() && !individual2.isEmpty()) return false;
+
+                if(!individual1.isEmpty() && !individual2.isEmpty()) {
+                    if (!individual1.get().getDocument().equals(individual2.get().getDocument()) ||
+                            !individual1.get().getRg().equals(individual2.get().getRg()))
+                        return false;
+
+                    Individual individualR1 = individual1.get();
+
+                    individualMapper.updateIndividual(individual, individualR1);
+                    individuals.remove(i);
+                    individuals.add(i, individualR1);
+                }
+            }
+        }
+
+        return true;
     }
 
     private boolean mainAddressValidator(List<AddressDTO> addressesDTO) {
@@ -195,43 +232,43 @@ public class LegalEntityService {
         return true;
     }
 
-    private Boolean partners(List<Individual> individuals) {
-
-        if(individuals == null){
-            return true;
-        }
-
-        int tam = individuals.size();
-
-        Optional<Individual> individual1;
-        Optional<Individual> individual2;
-
-        for(int i=0; i < tam; i++){
-            Individual individual = individuals.get(i);
-
-            if(individual.getId() == null){
-                individual1 = individualRepository.findByDocument(individual.getDocument());
-                individual2 = individualRepository.findByRg(individual.getRg());
-
-                if(!individual1.isEmpty() && individual2.isEmpty()) return false;
-                if(individual1.isEmpty() && !individual2.isEmpty()) return false;
-                if(!individual.getActive()) return false;
-
-                if(!individual1.isEmpty()){
-                    if(!individual2.isEmpty()){
-
-                        Individual individualR1 = individual1.get();
-
-                        individualMapper.updateIndividual(individual, individualR1);
-                        individuals.remove(i);
-                        individuals.add(i, individualR1);
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
+//    private Boolean partners(List<Individual> individuals) {
+//
+//        if(individuals == null){
+//            return true;
+//        }
+//
+//        int tam = individuals.size();
+//
+//        Optional<Individual> individual1;
+//        Optional<Individual> individual2;
+//
+//        for(int i=0; i < tam; i++){
+//            Individual individual = individuals.get(i);
+//
+//            if(individual.getId() == null){
+//                individual1 = individualRepository.findByDocument(individual.getDocument());
+//                individual2 = individualRepository.findByRg(individual.getRg());
+//
+//                if(!individual1.isEmpty() && individual2.isEmpty()) return false;
+//                if(individual1.isEmpty() && !individual2.isEmpty()) return false;
+//                if(!individual.getActive()) return false;
+//
+//                if(!individual1.isEmpty()){
+//                    if(!individual2.isEmpty()){
+//
+//                        Individual individualR1 = individual1.get();
+//
+//                        individualMapper.updateIndividual(individual, individualR1);
+//                        individuals.remove(i);
+//                        individuals.add(i, individualR1);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return true;
+//    }
 
     public Response updateById(Long id, LegalEntityDTO legalEntityDTO) {
 

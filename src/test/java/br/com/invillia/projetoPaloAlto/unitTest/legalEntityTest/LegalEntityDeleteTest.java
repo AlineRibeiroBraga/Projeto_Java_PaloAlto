@@ -72,6 +72,7 @@ public class LegalEntityDeleteTest {
         LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
@@ -89,6 +90,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
@@ -107,6 +109,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         String document = legalEntityService.deleteByDocument(legalEntity.getDocument()).getResponse();
         LegalEntityDTO legalEntityDTO = legalEntityService.findByDocument(document);
@@ -177,6 +180,7 @@ public class LegalEntityDeleteTest {
         LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
@@ -194,6 +198,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(false);
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);
@@ -212,6 +217,7 @@ public class LegalEntityDeleteTest {
 
         when(legalEntityRepository.findById(1L)).thenReturn(Optional.of(legalEntity));
         when(individualRepository.findLegalEntityById(1L)).thenReturn(true);
+        when(legalEntityRepository.save(legalEntity)).thenReturn(legalEntity);
 
         Long id = Long.valueOf(legalEntityService.deleteById(1L).getResponse());
         LegalEntityDTO legalEntityDTO = legalEntityService.findById(id);

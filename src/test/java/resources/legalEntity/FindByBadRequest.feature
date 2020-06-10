@@ -9,5 +9,5 @@ Feature: Find a Legal Entity with wrong key
 
     Examples:
       |    url    |       key      | statusCode |         message                 |
-      |     /     |      1000      |    404     | This Legal Entity wasn't found! |
+      |     /     |      5000      |    404     | This Legal Entity wasn't found! |
       |/document/ | 11248845000117 |    404     | This Legal Entity wasn't found! |

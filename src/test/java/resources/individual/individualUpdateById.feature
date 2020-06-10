@@ -21,12 +21,12 @@ Feature: Update a Individual by Id
     And the id "<id>"
 
     Examples:
-      | id |      name        |    motherName   |   document  |    rg     |  birthDate | active |  district    | number |  city  |    state     | zipCode  | main | httpStatusCode |        message        |
-      | 10 | Vinicius fausto  | Gabriela Fausto | 94305391830 | 447132118 | 2001-02-21 | true   | Av. Portugal | 899    | Osasco | São Paulo    | 98180100 | true |      200       | Update the name       |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-02-21 | true   | Av. Portugal | 899    | Osasco | São Paulo    | 98180100 | true |      200       | Update the motherName |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. Portugal | 899    | Osasco | São Paulo    | 98180100 | true |      200       | Update the birthDate  |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. portugal | 899    | Osasco | São Paulo    | 98180100 | true |      200       | Update the district   |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. portugal | 879    | Osasco | São Paulo    | 98180100 | true |      200       | Update the number     |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. portugal | 879    | Bauru  | São Paulo    | 98180100 | true |      200       | Update the city       |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. portugal | 879    | Bauru  | Minas Gerais | 98180100 | true |      200       | Update the state      |
-      | 10 | Vinicius fausto  | Gabriela fausto | 94305391830 | 447132118 | 2001-03-11 | true   | Av. portugal | 879    | Bauru  | Minas Gerais | 78180100 | true |      200       | Update the zipCode    |
+      | id |    name    | motherName   |   document  |    rg     |  birthDate | active |     district      | number |   city  |    state  | zipCode  | main | httpStatusCode |        message        |
+      | 9  |Amanda Piza | Rafaela Piza | 15381698194 | 468527643 | 1999-12-25 | true   | Rua 7 de setembro | 89     | Leme    | São Paulo | 98180109 |true  | 200            | Update the name       |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-25 | true   | Rua 7 de setembro | 89     | Leme    | São Paulo | 98180109 |true  | 200            | Update the motherName |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Rua 7 de setembro | 89     | Leme    | São Paulo | 98180109 |true  | 200            | Update the birthDate  |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Av. 7 de setembro | 89     | Leme    | São Paulo | 98180109 |true  | 200            | Update the district   |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Av. 7 de setembro | 90     | Leme    | São Paulo | 98180109 |true  | 200            | Update the number     |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Av. 7 de setembro | 90     | Araras  | São Paulo | 98180109 |true  | 200            | Update the city       |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Av. 7 de setembro | 90     | Araras  | Alagoas   | 98180109 |true  | 200            | Update the state      |
+      | 9  |Amanda Piza | Rafaela piza | 15381698194 | 468527643 | 1999-12-20 | true   | Av. 7 de setembro | 90     | Araras  | Alagoas   | 98180101 |true  | 200            | Update the zipCode    |

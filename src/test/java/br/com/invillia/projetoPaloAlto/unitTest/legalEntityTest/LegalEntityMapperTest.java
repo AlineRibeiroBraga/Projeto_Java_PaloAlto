@@ -20,7 +20,7 @@ public class LegalEntityMapperTest {
 
         legalEntity.setId(id);
         legalEntity.setActive(true);
-        legalEntity.setDocument(faker.number().digits(11));
+        legalEntity.setDocument(faker.number().digits(14));
         legalEntity.setCreatedAt(LocalDateTime.now());
         legalEntity.setTradeName(faker.name().name());
         legalEntity.setName(faker.name().name());

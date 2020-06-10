@@ -21,7 +21,7 @@ Feature: Find a Legal Entity by key
 
     Examples:
       |     url    |       key      |httpStatusCode|         name         |  tradeName  |    document    | active |            district               | number |    city    |   state   | zipCode  | main |
-      |     /      |        2       |      200     | DXC Tecnology        |   DXC       | 39409257000137 | true   | Via de Acesso Engenheiro Ivo Najm | 3800   | Araraquara | São Paulo | 14808100 | true |
-      |     /      |       100      |      200     | AACD                 | Sorrisos    | 67737478000170 | true   | Rua Hilário Gouveia               | 98     | Araras     | São Paulo | 04384010 | true |
+      |     /      |        1       |      200     | DXC Tecnology        |   DXC       | 39409257000137 | true   | Via de Acesso Engenheiro Ivo Najm | 3800   | Araraquara | São Paulo | 14808100 | true |
+      |     /      |      4000      |      200     | AACD                 | Sorrisos    | 67737478000170 | true   | Rua Hilário Gouveia               | 98     | Araras     | São Paulo | 04384010 | true |
       | /document/ | 25288750000131 |      200     | JN Moura Informática |   Moura     | 25288750000131 | true   | R. Dr. Aldo Cariani               | 733    | Araraquara | São Paulo | 14801470 | true |
       | /document/ | 23981274000104 |      200     | Avon                 | Nova Pessoa | 42988800000102 |true    | Rua Alcantilado                   | 134    | Tambaú     | São Paulo | 02979120 | true |
