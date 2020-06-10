@@ -243,23 +243,6 @@ public class LegalEntityUpdateTest {
         Assertions.assertThrows(IndividualException.class, ()-> legalEntityService.updateByDocument(legalEntityDTO));
     }
 
-//    @Test
-//    public void updateByDocumentInvalidedPartnersDifferent(){
-//
-//        LegalEntity legalEntity = legalEntityMapperTest.createLegalEntity(1L);
-//        legalEntity.setIndividuals(individualMapperTest.createListIndividual());
-//        legalEntity.getIndividuals().get(0).setId(null);
-//        LegalEntityDTO legalEntityDTO = legalEntityMapper.legalEntityToLegalEntityDTO(legalEntity);
-//        Individual individualR = individualMapperTest.newIndividual(legalEntity.getIndividuals().get(0));
-//
-//        when(legalEntityRepository.findByDocument(legalEntity.getDocument())).thenReturn(Optional.of(legalEntity));
-//        when(individualRepository.findByDocument(individualR.getDocument())).thenReturn(Optional.of(individualR));
-//        when(individualRepository.findByRg(individualR.getRg()))
-//                .thenReturn(Optional.of(individualMapperTest.createIndividual(2L)));
-//
-//        Assertions.assertThrows(IndividualException.class, ()-> legalEntityService.updateByDocument(legalEntityDTO));
-//    }
-
     @Test
     public void updateByDocumentInvalidedPartnersDifferent(){
 

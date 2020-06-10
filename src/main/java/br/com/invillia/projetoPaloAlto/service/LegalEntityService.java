@@ -232,44 +232,6 @@ public class LegalEntityService {
         return true;
     }
 
-//    private Boolean partners(List<Individual> individuals) {
-//
-//        if(individuals == null){
-//            return true;
-//        }
-//
-//        int tam = individuals.size();
-//
-//        Optional<Individual> individual1;
-//        Optional<Individual> individual2;
-//
-//        for(int i=0; i < tam; i++){
-//            Individual individual = individuals.get(i);
-//
-//            if(individual.getId() == null){
-//                individual1 = individualRepository.findByDocument(individual.getDocument());
-//                individual2 = individualRepository.findByRg(individual.getRg());
-//
-//                if(!individual1.isEmpty() && individual2.isEmpty()) return false;
-//                if(individual1.isEmpty() && !individual2.isEmpty()) return false;
-//                if(!individual.getActive()) return false;
-//
-//                if(!individual1.isEmpty()){
-//                    if(!individual2.isEmpty()){
-//
-//                        Individual individualR1 = individual1.get();
-//
-//                        individualMapper.updateIndividual(individual, individualR1);
-//                        individuals.remove(i);
-//                        individuals.add(i, individualR1);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
-
     public Response updateById(Long id, LegalEntityDTO legalEntityDTO) {
 
         LegalEntity legalEntity = legalEntityRepository.findById(id)
