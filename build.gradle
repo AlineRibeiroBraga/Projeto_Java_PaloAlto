@@ -42,8 +42,8 @@ dependencies {
 	testImplementation "io.cucumber:cucumber-java:4.8.0"
 	testImplementation "io.cucumber:cucumber-junit:4.8.0"
 	testImplementation "io.cucumber:cucumber-spring:4.8.0"
-	testImplementation "io.rest-assured:rest-assured:4.1.2"
 	//Rest Assured
+	testImplementation "io.rest-assured:rest-assured:4.1.2"
 	implementation "io.rest-assured:rest-assured-all:4.1.2"
 
 	testCompile group: 'junit', name: 'junit', version: '4.12'

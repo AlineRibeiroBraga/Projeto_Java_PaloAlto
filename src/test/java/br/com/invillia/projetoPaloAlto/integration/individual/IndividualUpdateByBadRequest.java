@@ -1,21 +1,20 @@
 package br.com.invillia.projetoPaloAlto.integration.individual;
 
-import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
-import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-
+import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Given;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assertions;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import br.com.invillia.projetoPaloAlto.domain.dto.AddressDTO;
+import br.com.invillia.projetoPaloAlto.domain.dto.IndividualDTO;
 
 import static io.restassured.RestAssured.given;
 

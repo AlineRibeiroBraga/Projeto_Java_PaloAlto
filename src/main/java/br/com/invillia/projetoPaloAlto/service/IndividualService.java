@@ -52,7 +52,7 @@ public class IndividualService {
         if(addressesDTO != null){
 
             for(AddressDTO addressDTO :  addressesDTO){
-                if(addressDTO.getMain()){
+                if(addressTO.getMain()){
                     ++main;
                 }
             }
